@@ -42,7 +42,6 @@ exports.getPermission = function(req,res){
 exports.addPermission = function(req,res){
 	var userid = req.params.userid,
 		lockid = req.params.lockid,
-		physicalId = req.params.physicalId,
 		frequency = req.params.frequency,
 		duration1 = req.params.duration1,
 		duration2 = req.params.duration2,
@@ -59,7 +58,6 @@ exports.addPermission = function(req,res){
 		var permission = new Permission({
 			userid: userid,
 			lockid: lockid,
-			physicalId: physicalId,
 			frequency: frequency,
 			duration: [duration1, duration2, duration3, duration4, duration5, duration6, duration7]
 		});
@@ -100,12 +98,9 @@ exports.removePermission = function(req,res){
 	return;
 };
 
-
-
 exports.updatePermission = function(req,res){
 	var userid = req.params.userid,
 		lockid = req.params.lockid,
-		physicalId = req.params.physicalId,
 		frequency = req.params.frequency,
 		duration1 = req.params.duration1,
 		duration2 = req.params.duration2,
@@ -128,7 +123,6 @@ exports.updatePermission = function(req,res){
 				res.status(500);
 				res.json({error:err});
 			} else {
-				permission.physicalId = physicalId;
 				permission.frequency = frequency;
 				permission.duration = [duration1, duration2, duration3, duration4, duration5, duration6, duration7];
 
@@ -140,4 +134,31 @@ exports.updatePermission = function(req,res){
 	}
 	return;
 
+};
+
+exports.updatePhysicalId = function(req,res){
+	var userid = req.params.userid,
+		lockid = req.params.lockid,
+		physicalId = req.params.physicalId;
+
+	if(!userid && !lockid){
+		res.status(500);
+		res.json({"error":"userid and lockid weren't supplied"});
+	} else {
+		Permission.findOne({ "userid":userid, "lockid":lockid }, function (err, permission){
+			if(!permission){
+				res.status(404);
+				res.json({error: "Permission doesn't exist"});
+			}else if(err){
+				res.status(500);
+				res.json({error:err});
+			} else {
+				permission.physicalId = physicalId;
+				permission.save();
+				res.status(200);
+				res.json({"success":"succeed update permission."});
+			}
+		});
+	}
+	return;
 };

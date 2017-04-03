@@ -3,9 +3,9 @@ var schema = mongoose.Schema;
 
 var PermissionSchema = new schema({
     userid: {type: Number, required:true},
-    lockid: {type: Number, required:true},
-    physicalId: {type: Number},
-    frequency: { type:Number, required:true},
+    lockid: {type: String, required:true},
+    physicalId: {type: String},
+    frequency: { type:String, required:true},
     duration: [String]
 },  {collection: 'permissions'});
 
