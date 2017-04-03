@@ -2,41 +2,43 @@
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LOCK~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-app.get('/api/getLocks', locks.getLocks);
+https://smartlockproject.herokuapp.com/api/getLocks
 
-app.get('/api/getLock/:lockid', locks.getLock);
+https://smartlockproject.herokuapp.com/api/getLock/:lockid
 
-app.get('/api/addLock/:lockid/:lstatus', locks.addLock);
+https://smartlockproject.herokuapp.comapi/addLock/:lockid/:lstatus
 
-app.get('/api/removeLock/:lockid', locks.removeLock);
+https://smartlockproject.herokuapp.com/api/removeLock/:lockid 
 
-app.get('/api/updateLockStatus/:lockid/:lstatus', locks.updateLockStatus);
+https://smartlockproject.herokuapp.com/api/updateLockStatus/:lockid/:lstatus    
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PERMISSION~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-app.get('/api/getPermissions', permissions.getPermissions);
+https://smartlockproject.herokuapp.com/api/getPermissions     
 
-app.get('/api/getPermission/:userid/:lockid', permissions.getPermission);
+https://smartlockproject.herokuapp.com/api/getPermission/:userid/:lockid    
 
-app.get('/api/addPermission/:userid/:lockid/:physicalId/:frequency/:duration1/:duration2/:duration3/:duration4/:duration5/:duration6/:duration7', permissions.addPermission);
+https://smartlockproject.herokuapp.com/api/addPermission/:userid/:lockid/:frequency/:duration1/:duration2/:duration3/:duration4/:duration5/:duration6/:duration7
 
-app.get('/api/removePermission/:userid/:lockid/', permissions.removePermission);
+https://smartlockproject.herokuapp.com/api/removePermission/:userid/:lockid/
 
-app.get('/api/updatePermission/:userid/:lockid/:physicalId/:frequency/:duration1/:duration2/:duration3/:duration4/:duration5/:duration6/:duration7', permissions.updatePermission);
+https://smartlockproject.herokuapp.com/api/updatePermission/:userid/:lockid/:frequency/:duration1/:duration2/:duration3/:duration4/:duration5/:duration6/:duration7
+
+https://smartlockproject.herokuapp.com/api/updatePhysicalId/:userid/:lockid/:physicalId
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~USER~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-app.get('/api/getUsers', users.getUsers);
+https://smartlockproject.herokuapp.com/api/getUsers
 
-app.get('/api/getUser/:userid', users.getUser);
+https://smartlockproject.herokuapp.com/api/getUser/:userid
 
-app.get('/api/removeUser/:userid', users.removeUser);
+https://smartlockproject.herokuapp.com/api/removeUser/:userid
 
-app.get('/api/addUser/:username/:phone/:password', users.addUser);
+https://smartlockproject.herokuapp.com/api/addUser/:userid/:username/:phone/:password
 
-app.get('/api/updateUser/:username/:phone/:password', users.updateUser);
+https://smartlockproject.herokuapp.com/api/updateUser/:userid/:username/:phone/:password
 
-app.all('/api/*', users.errorMessage);
+https://smartlockproject.herokuapp.com/api/*
 
