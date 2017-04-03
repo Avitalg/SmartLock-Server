@@ -19,11 +19,13 @@ https://smartlockproject.herokuapp.com/api/getPermissions
 
 https://smartlockproject.herokuapp.com/api/getPermission/:userid/:lockid    
 
-https://smartlockproject.herokuapp.com/api/addPermission/:userid/:lockid/:physicalId/:frequency/:duration1/:duration2/:duration3/:duration4/:duration5/:duration6/:duration7
+https://smartlockproject.herokuapp.com/api/addPermission/:userid/:lockid/:frequency/:duration1/:duration2/:duration3/:duration4/:duration5/:duration6/:duration7
 
-https://smartlockproject.herokuapp.com/api/removePermission/:userid/:lockid
+https://smartlockproject.herokuapp.com/api/removePermission/:userid/:lockid/
 
-https://smartlockproject.herokuapp.com/api/updatePermission/:userid/:lockid/:physicalId/:frequency/:duration1/:duration2/:duration3/:duration4/:duration5/:duration6/:duration7    
+https://smartlockproject.herokuapp.com/api/updatePermission/:userid/:lockid/:frequency/:duration1/:duration2/:duration3/:duration4/:duration5/:duration6/:duration7
+
+https://smartlockproject.herokuapp.com/api/updatePhysicalId/:userid/:lockid/:physicalId
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~USER~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
