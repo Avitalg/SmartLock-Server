@@ -127,7 +127,7 @@ exports.updateUser = function(req,res){
 };
 
 exports.errorMessage = function(req,res){
-	res.json({"error":"wrong url"});
+	res.json({"error":"wrong url - look at the api - https://github.com/Avitalg/SmartLock-Server/blob/master/README.md"});
 }
 
 exports.errorMessageAll = function(req,res){
