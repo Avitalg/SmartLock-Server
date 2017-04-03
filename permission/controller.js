@@ -67,7 +67,7 @@ exports.addPermission = function(req,res){
 			function(err, doc){
 				if (err){
 					res.status(500);
-					res.json({ error: err });
+					res.json({ error: "Permission already exists" });
 				}else{
 					res.status(200);
 					res.json({"success":"Permission was saved"});
@@ -88,7 +88,7 @@ exports.removePermission = function(req,res){
 		Permission.remove({"userid": userid, "lockid": lockid}, function(err,permission){
 			if(err){
 				res.status(500);
-				res.json({"error":err});
+				res.json(err);
 			}else{	
 				res.status(200);
 				res.json({"success":"Permission was deleted successfully"});
@@ -121,7 +121,7 @@ exports.updatePermission = function(req,res){
 				res.json({error: "Permission doesn't exist"});
 			}else if(err){
 				res.status(500);
-				res.json({error:err});
+				res.json(err);
 			} else {
 				permission.frequency = frequency;
 				permission.duration = [duration1, duration2, duration3, duration4, duration5, duration6, duration7];
