@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ca14b589-1762-47fd-bdf2-2c134c27adf9" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/permission/controller.js" afterPath="$PROJECT_DIR$/permission/controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/permission/schema.js" afterPath="$PROJECT_DIR$/permission/schema.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.js" afterPath="$PROJECT_DIR$/server.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/user/controller.js" afterPath="$PROJECT_DIR$/user/controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/user/schema.js" afterPath="$PROJECT_DIR$/user/schema.js" />
-    </list>
+    <list default="true" id="ca14b589-1762-47fd-bdf2-2c134c27adf9" name="Default" comment="" />
     <ignored path="SmartLock-Server.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path=".idea/dataSources.local.xml" />
