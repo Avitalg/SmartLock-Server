@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var schema = mongoose.Schema;
 
 var PermissionSchema = new schema({
-    userid: {type: Number, required:true},
+    userid: {type: String, required:true},
     lockid: {type: String, required:true},
     physicalId: {type: String},
     frequency: { type:String, required:true},
