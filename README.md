@@ -36,7 +36,7 @@ https://smartlockproject.herokuapp.com/api/getUser/:userid
 
 https://smartlockproject.herokuapp.com/api/removeUser/:userid
 
-https://smartlockproject.herokuapp.com/api/addUser/:userid/:username/:phone/:password
+https://smartlockproject.herokuapp.com/api/addUser/:username/:phone/:password
 
 https://smartlockproject.herokuapp.com/api/updateUser/:userid/:username/:phone/:password
 
