@@ -20,7 +20,7 @@ exports.getUser = function(req,res){
 		res.status(404);
 		res.json({"error":"userid wasn't supplied"});
 	}else{	
-		User.findOne({"userid":userid}, function(err,user){
+		User.findOne({"_id":userid}, function(err,user){
 			if(err){
 				res.status(500);
 				res.json({"error":err});
@@ -37,17 +37,15 @@ exports.getUser = function(req,res){
 };
 
 exports.addUser = function(req,res){
-	var userid = req.params.userid,
-		username = req.params.username,
+	var username = req.params.username,
 		phone = req.params.phone,
 		password = req.params.password;
 
-	if(!userid){
+	if(!username){
 		res.status(500);
-		res.json({"error":"No userid was entered"});
+		res.json({"error":"No username was entered"});
 	} else {
 		var user = new User({
-			userid: userid,
 		  	username: username,
 		  	phone: phone,
 		  	password: password
@@ -82,7 +80,7 @@ exports.removeUser = function(req,res){
 		res.status(404);
 		res.json({"error":"Userid wasn't supplied"});
 	}else{
-		User.remove({"userid":userid}, function(err,user){
+		User.remove({"_id":userid}, function(err,user){
 			if(err){
 				res.status(500);
 				res.json({"error":err});
@@ -105,7 +103,7 @@ exports.updateUser = function(req,res){
 		res.status(500);
 		res.json({"error":"No userid was entered"});
 	} else {
-		User.findOne({ "userid": userid }, function (err, user){
+		User.findOne({ "_id": userid }, function (err, user){
 			if(!user){
 				res.status(404);
 				res.json({error: "User with the userid "+userid+" isn't exist"});
