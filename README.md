@@ -1,6 +1,6 @@
 # SmartLock-Server
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LOCK~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LOCK~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 app.get('/api/getLocks', locks.getLocks);
 app.get('/api/getLock/:lockid', locks.getLock);
@@ -9,7 +9,7 @@ app.get('/api/removeLock/:lockid', locks.removeLock);
 app.get('/api/updateLockStatus/:lockid/:lstatus', locks.updateLockStatus);
 
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PERMISSION~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PERMISSION~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 app.get('/api/getPermissions', permissions.getPermissions);
 app.get('/api/getPermission/:userid/:lockid', permissions.getPermission);
@@ -18,7 +18,7 @@ app.get('/api/removePermission/:userid/:lockid/', permissions.removePermission);
 app.get('/api/updatePermission/:userid/:lockid/:physicalId/:frequency/:duration1/:duration2/:duration3/:duration4/:duration5/:duration6/:duration7', permissions.updatePermission);
 
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~USER~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~USER~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 app.get('/api/getUsers', users.getUsers);
 app.get('/api/getUser/:userid', users.getUser);
