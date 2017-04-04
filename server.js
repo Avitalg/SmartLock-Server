@@ -8,9 +8,9 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 
 var db = require('./database');
-var permissions = require('./permission/controller');
-var users = require('./user/controller');
-var locks = require('./lock/controller');
+var permissions = require('./controllers/permission');
+var users = require('./controllers/user');
+var locks = require('./controllers/lock');
 
 var port = process.env.PORT || 3000;
 

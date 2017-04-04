@@ -1,4 +1,4 @@
-var User=require('./schema');
+var User=require('../models/user');
 
 exports.getUsers = function(req,res){
 	User.find({},

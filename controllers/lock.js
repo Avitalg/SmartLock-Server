@@ -1,4 +1,4 @@
-var Lock = require('./schema');
+var Lock = require('../models/lock');
 
 exports.getLocks = function(req,res){
 	Lock.find({},

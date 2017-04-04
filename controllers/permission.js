@@ -1,4 +1,4 @@
-var Permission=require('./schema');
+var Permission=require('../models/permission');
 
 exports.getPermissions = function(req,res){
 	Permission.find({},
