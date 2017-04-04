@@ -1,5 +1,4 @@
 var Lock = require('./schema');
-var path = require("path");
 
 exports.getLocks = function(req,res){
 	Lock.find({},

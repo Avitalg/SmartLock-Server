@@ -1,19 +1,20 @@
 {
-  "name": "ex11",
+  "name": "smartlock",
   "version": "1.0.0",
   "description": "",
-  "main": "ws.js",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "Avital Glazer",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.2",
-    "cloudinary": "^1.4.1",
     "express": "^4.13.4",
-    "mongoose": "^4.4.20",
-    "path": "^0.12.7"
+    "mongoose": "^4.4.20"
+  },
+  "devDependencies": {
+    "mocha": "^3.2.0"
   }
 }

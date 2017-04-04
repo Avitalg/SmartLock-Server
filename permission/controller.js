@@ -1,5 +1,4 @@
 var Permission=require('./schema');
-var path = require("path");
 
 exports.getPermissions = function(req,res){
 	Permission.find({},
@@ -43,13 +42,20 @@ exports.addPermission = function(req,res){
 	var userid = req.params.userid,
 		lockid = req.params.lockid,
 		frequency = req.params.frequency,
-		duration1 = req.params.duration1,
-		duration2 = req.params.duration2,
-		duration3 = req.params.duration3,
-		duration4 = req.params.duration4,
-		duration5 = req.params.duration5,
-		duration6 = req.params.duration6,
-		duration7 = req.params.duration7;
+		start1 = req.params.start1,
+		start2 = req.params.start2,
+		start3 = req.params.start3,
+		start4 = req.params.start4,
+		start5 = req.params.start5,
+		start6 = req.params.start6,
+		start7 = req.params.start7,
+		end1   = req.params.end1,
+		end2   = req.params.end2,
+		end3   = req.params.end3,
+		end4   = req.params.end4,
+		end5   = req.params.end5,
+		end6   = req.params.end6,
+		end7   = req.params.end7;
 
 	if(!userid && !lockid){
 		res.status(500);
@@ -59,7 +65,36 @@ exports.addPermission = function(req,res){
 			userid: userid,
 			lockid: lockid,
 			frequency: frequency,
-			duration: [duration1, duration2, duration3, duration4, duration5, duration6, duration7]
+			duration: {
+				Sunday : {
+					start : start1,
+					end	  : end1
+				},
+				Monday : {
+					start : start2,
+					end	  : end2
+				},
+				Tuesday : {
+					start : start3,
+					end	  : end3
+				},
+				Wednesday : {
+					start : start4,
+					end	  : end4
+				},
+				Thursday : {
+					start : start5,
+					end	  : end5
+				},
+				Friday : {
+					start : start6,
+					end	  : end6
+				},
+				Saturday : {
+					start : start7,
+					end	  : end7
+				}
+			}
 		});
 
 		//if User exist, won't save him.
@@ -102,13 +137,20 @@ exports.updatePermission = function(req,res){
 	var userid = req.params.userid,
 		lockid = req.params.lockid,
 		frequency = req.params.frequency,
-		duration1 = req.params.duration1,
-		duration2 = req.params.duration2,
-		duration3 = req.params.duration3,
-		duration4 = req.params.duration4,
-		duration5 = req.params.duration5,
-		duration6 = req.params.duration6,
-		duration7 = req.params.duration7;
+		start1 = req.params.start1,
+		start2 = req.params.start2,
+		start3 = req.params.start3,
+		start4 = req.params.start4,
+		start5 = req.params.start5,
+		start6 = req.params.start6,
+		start7 = req.params.start7,
+		end1   = req.params.end1,
+		end2   = req.params.end2,
+		end3   = req.params.end3,
+		end4   = req.params.end4,
+		end5   = req.params.end5,
+		end6   = req.params.end6,
+		end7   = req.params.end7;
 
 
 	if(!userid && !lockid){
@@ -124,7 +166,36 @@ exports.updatePermission = function(req,res){
 				res.json(err);
 			} else {
 				permission.frequency = frequency;
-				permission.duration = [duration1, duration2, duration3, duration4, duration5, duration6, duration7];
+				permission.duration = {
+					Sunday : {
+						start : start1,
+						end	  : end1
+					},
+					Monday : {
+						start : start2,
+						end	  : end2
+					},
+					Tuesday : {
+						start : start3,
+						end	  : end3
+					},
+					Wednesday : {
+						start : start4,
+						end	  : end4
+					},
+					Thursday : {
+						start : start5,
+						end	  : end5
+					},
+					Friday : {
+						start : start6,
+						end	  : end6
+					},
+					Saturday : {
+						start : start7,
+						end	  : end7
+					}
+				};
 
 				permission.save();
 			  	res.status(200);
