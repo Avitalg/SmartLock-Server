@@ -47,7 +47,7 @@ app.get('/api/updatePhysicalId/:userid/:lockid/:physicalId', permissions.updateP
 
 app.get('/api/getUsers', users.getUsers);
 app.get('/api/getUser/:userid', users.getUser);
-app.get('/api/addUser/:username/:phone/:password', users.addUser);
+app.post('/api/addUser', users.addUser);
 app.get('/api/removeUser/:userid', users.removeUser);
 app.get('/api/updateUser/:userid/:username/:phone/:password', users.updateUser);
 
