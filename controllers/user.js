@@ -37,9 +37,9 @@ exports.getUser = function(req,res){
 };
 
 exports.addUser = function(req,res){
-	var username = req.params.username,
-		phone = req.params.phone,
-		password = req.params.password;
+	var username = req.body.username,
+		phone = req.body.phone,
+		password = req.body.password;
 
 	if(!username){
 		res.status(500);

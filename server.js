@@ -28,8 +28,35 @@ require('./routes/user')(app);
 require('./routes/message')(app);
 
 
+<<<<<<< HEAD
 if(!module.parent){
 	app.listen(port);
 }
+=======
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PERMISSION~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+app.get('/api/getPermissions', permissions.getPermissions);
+app.get('/api/getPermission/:userid/:lockid', permissions.getPermission);
+app.get('/api/addPermission/:userid/:lockid/:frequency/:start1/:end1/:start2/:end2/:start3/:end3/:start4/:end4/:start5/:end5/:start6/:end6/:start7/:end7', permissions.addPermission);
+app.get('/api/removePermission/:userid/:lockid/', permissions.removePermission);
+app.get('/api/updatePermission/:userid/:lockid/:frequency/:start1/:end1/:start2/:end2/:start3/:end3/:start4/:end4/:start5/:end5/:start6/:end6/:start7/:end7', permissions.updatePermission);
+app.get('/api/updatePhysicalId/:userid/:lockid/:physicalId', permissions.updatePhysicalId);
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~USER~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+app.get('/api/getUsers', users.getUsers);
+app.get('/api/getUser/:userid', users.getUser);
+app.post('/api/addUser', users.addUser);
+app.get('/api/removeUser/:userid', users.removeUser);
+app.get('/api/updateUser/:userid/:username/:phone/:password', users.updateUser);
+
+app.all('/api/*', users.errorMessage);
+app.all('/*', users.errorMessageAll);
+
+
+app.listen(port);
+>>>>>>> 264eb8f89cba97512224169ae390bae4f5ef1d02
 
 console.log('The server is running on port '+ port);

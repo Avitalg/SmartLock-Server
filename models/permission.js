@@ -6,6 +6,7 @@ var PermissionSchema = new schema({
     lockid: {type: String, required:true},
     physicalId: {type: String},
     frequency: { type:String, required:true},
+    date: {type:Date},
     duration: {
         Sunday: {
             start :{type: String},
@@ -34,9 +35,9 @@ var PermissionSchema = new schema({
         Saturday: {
             start :{type: String},
             end : {type: String}
-        },
-
-    }
+        }
+    },
+    expiration: { type: Number }
 },  {collection: 'permissions'});
 
 var Permissions = mongoose.model('Permissions', PermissionSchema);

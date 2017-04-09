@@ -1,4 +1,4 @@
-var Permission=require('../models/permission');
+var Permission  = require('../models/permission');
 
 exports.getPermissions = function(req,res){
 	Permission.find({},
@@ -42,6 +42,7 @@ exports.addPermission = function(req,res){
 	var userid = req.params.userid,
 		lockid = req.params.lockid,
 		frequency = req.params.frequency,
+		date = req.params.date,
 		start1 = req.params.start1,
 		start2 = req.params.start2,
 		start3 = req.params.start3,
@@ -61,41 +62,53 @@ exports.addPermission = function(req,res){
 		res.status(500);
 		res.json({"error":"userid and lockid weren't supplied"});
 	} else {
+
 		var permission = new Permission({
 			userid: userid,
 			lockid: lockid,
-			frequency: frequency,
-			duration: {
-				Sunday : {
-					start : start1,
-					end	  : end1
-				},
-				Monday : {
-					start : start2,
-					end	  : end2
-				},
-				Tuesday : {
-					start : start3,
-					end	  : end3
-				},
-				Wednesday : {
-					start : start4,
-					end	  : end4
-				},
-				Thursday : {
-					start : start5,
-					end	  : end5
-				},
-				Friday : {
-					start : start6,
-					end	  : end6
-				},
-				Saturday : {
-					start : start7,
-					end	  : end7
-				}
-			}
+			frequency: frequency
 		});
+
+		switch(frequency) {
+			case "always":
+				permission.duration = {
+					Sunday: {
+						start: start1,
+						end: end1
+					},
+					Monday: {
+						start: start2,
+						end: end2
+					},
+					Tuesday: {
+						start: start3,
+						end: end3
+					},
+					Wednesday: {
+						start: start4,
+						end: end4
+					},
+					Thursday: {
+						start: start5,
+						end: end5
+					},
+					Friday: {
+						start: start6,
+						end: end6
+					},
+					Saturday: {
+						start: start7,
+						end: end7
+					}
+				};
+				break;
+			case "once":
+				permission.date = date;
+
+		}
+
+
+
 
 		//if User exist, won't save him.
 		Permission.findOneAndUpdate({"userid": userid, "lockid": lockid}, permission, {upsert:true},
