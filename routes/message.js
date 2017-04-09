@@ -7,4 +7,4 @@ module.exports = function(app) {
     app.all('/api/home', message.helloMessage);
     app.all('/api/*', message.errorMessage);
     app.all('/*', message.errorMessageAll);
-}
+};
