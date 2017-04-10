@@ -1,6 +1,6 @@
 # SmartLock-Server
 
-##LOCK
+## LOCK
 
 https://smartlockproject.herokuapp.com/api/getLocks  
     Method : GET  
@@ -22,7 +22,7 @@ https://smartlockproject.herokuapp.com/api/updateLockStatus/:lockid/:lstatus
    Params : lockid & lstatus (lock status)  
 
 
-##PERMISSION
+## PERMISSION
 
 https://smartlockproject.herokuapp.com/api/getPermissions  
    Method : GET  
@@ -59,7 +59,7 @@ https://smartlockproject.herokuapp.com/api/updatePhysicalId/:userid/:lockid/:phy
     Method : PUT  
     params: userid & lockid & physicalId  
 
-##USER
+## USER
 
 https://smartlockproject.herokuapp.com/api/getUsers  
     Method : GET  
