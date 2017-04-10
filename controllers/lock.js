@@ -37,12 +37,12 @@ exports.getLock = function(req, res){
 };
 
 exports.addLock = function(req,res){
-	var lock = req.params.lockid,
-		status = req.params.lstatus;
+	var lock = req.body.lockid,
+		status = req.body.lstatus;
 
 	if(!lock){
 		res.status(500);
-		res.json({"error":"No lock name was entered"});
+		res.json({"error":"No lockid was entered"});
 	} else {
 		var newlock = new Lock({
 			lockid: lock,
@@ -57,7 +57,7 @@ exports.addLock = function(req,res){
 					res.json({ error: err });
 				}else{
 					res.status(200);
-					res.json({"success":"Lock was saved"});
+					res.json({"success":"Lock "+lock+" was saved"});
 				}
 			});
 	}
@@ -77,7 +77,7 @@ exports.removeLock = function(req,res){
 			}else{	
 				res.status(200);
 				console.log("err:"+err+", lock:"+lock);
-				res.json({"success":"Lock was removed successfully"});
+				res.json({"success":"Lock "+lock+" was removed successfully"});
 			}
 		});
 	}

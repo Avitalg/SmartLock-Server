@@ -39,24 +39,24 @@ exports.getPermission = function(req,res){
 };
 
 exports.addPermission = function(req,res){
-	var userid = req.params.userid,
-		lockid = req.params.lockid,
-		frequency = req.params.frequency,
-		date = req.params.date,
-		start1 = req.params.start1,
-		start2 = req.params.start2,
-		start3 = req.params.start3,
-		start4 = req.params.start4,
-		start5 = req.params.start5,
-		start6 = req.params.start6,
-		start7 = req.params.start7,
-		end1   = req.params.end1,
-		end2   = req.params.end2,
-		end3   = req.params.end3,
-		end4   = req.params.end4,
-		end5   = req.params.end5,
-		end6   = req.params.end6,
-		end7   = req.params.end7;
+	var userid = req.body.userid,
+		lockid = req.body.lockid,
+		frequency = req.body.frequency,
+		date = req.body.date,
+		start1 = req.body.start1,
+		start2 = req.body.start2,
+		start3 = req.body.start3,
+		start4 = req.body.start4,
+		start5 = req.body.start5,
+		start6 = req.body.start6,
+		start7 = req.body.start7,
+		end1   = req.body.end1,
+		end2   = req.body.end2,
+		end3   = req.body.end3,
+		end4   = req.body.end4,
+		end5   = req.body.end5,
+		end6   = req.body.end6,
+		end7   = req.body.end7;
 
 	if(!userid && !lockid){
 		res.status(500);
@@ -71,6 +71,10 @@ exports.addPermission = function(req,res){
 
 		switch(frequency) {
 			case "always":
+				console.log("always.");
+				console.log(frequency);
+				delete permission.date;
+				delete permission.hours;
 				permission.duration = {
 					Sunday: {
 						start: start1,
@@ -103,7 +107,12 @@ exports.addPermission = function(req,res){
 				};
 				break;
 			case "once":
+				delete permission.duration;
 				permission.date = date;
+				permission.hours = {
+					start : start1,
+					end : end1
+				}
 
 		}
 
@@ -150,6 +159,7 @@ exports.updatePermission = function(req,res){
 	var userid = req.params.userid,
 		lockid = req.params.lockid,
 		frequency = req.params.frequency,
+		date = req.params.date,
 		start1 = req.params.start1,
 		start2 = req.params.start2,
 		start3 = req.params.start3,
@@ -178,37 +188,52 @@ exports.updatePermission = function(req,res){
 				res.status(500);
 				res.json(err);
 			} else {
-				permission.frequency = frequency;
-				permission.duration = {
-					Sunday : {
-						start : start1,
-						end	  : end1
-					},
-					Monday : {
-						start : start2,
-						end	  : end2
-					},
-					Tuesday : {
-						start : start3,
-						end	  : end3
-					},
-					Wednesday : {
-						start : start4,
-						end	  : end4
-					},
-					Thursday : {
-						start : start5,
-						end	  : end5
-					},
-					Friday : {
-						start : start6,
-						end	  : end6
-					},
-					Saturday : {
-						start : start7,
-						end	  : end7
-					}
-				};
+				switch(frequency) {
+					case "always":
+						console.log("always.");
+						console.log(frequency);
+						delete permission.date;
+						delete permission.hours;
+						permission.duration = {
+							Sunday: {
+								start: start1,
+								end: end1
+							},
+							Monday: {
+								start: start2,
+								end: end2
+							},
+							Tuesday: {
+								start: start3,
+								end: end3
+							},
+							Wednesday: {
+								start: start4,
+								end: end4
+							},
+							Thursday: {
+								start: start5,
+								end: end5
+							},
+							Friday: {
+								start: start6,
+								end: end6
+							},
+							Saturday: {
+								start: start7,
+								end: end7
+							}
+						};
+						break;
+					case "once":
+						delete permission.duration;
+						permission.date = Date(date).toLocaleString();
+						permission.hours = {
+							start : start1,
+							end : end1
+						}
+
+				}
 
 				permission.save();
 			  	res.status(200);
