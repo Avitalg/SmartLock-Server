@@ -59,7 +59,7 @@ https://smartlockproject.herokuapp.com/api/updatePhysicalId/:userid/:lockid/:phy
     Method : PUT
     params: userid & lockid & physicalId
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~USER~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##USER
 
 https://smartlockproject.herokuapp.com/api/getUsers
     Method : GET
