@@ -2,7 +2,7 @@
 exports.helloMessage = function(req,res){
     res.status(200);
     res.send("Hello World");
-}
+};
 
 exports.errorMessage = function(req,res){
     res.status(404);

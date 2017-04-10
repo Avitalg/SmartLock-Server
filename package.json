@@ -1,8 +1,8 @@
 {
-  "name": "smartlock",
+  "name": "ex11",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "ws.js",
   "scripts": {
     "start": "node server.js",
     "test": "mocha"
