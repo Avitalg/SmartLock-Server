@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 var db = require('./database');
 
-var port = process.env.PORT || (process.argv[2] || 3000);
+var port = process.env.PORT || 3000;
 port = (typeof port === "number") ? port : 3000;
 
 app.set('port', port);
