@@ -52,13 +52,15 @@ exports.addUser = function(req,res){
 		});
 		User.findOne({ "username": username }, function (err, resultUser){
 			if(!resultUser){
-					user.save(function(saveErr){
+					user.save(function(saveErr, newUser){
 					if(saveErr){
 						res.status(500);
 						res.json({error:saveErr});
 					} else{
+						console.log("new user");
+						console.log(newUser);
 						res.status(200);
-   						res.json({"success":"User was saved"});
+   						res.json({"success":"User was saved", "userid": newUser._id});
    					}
    				});
 			}else if(err){
