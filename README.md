@@ -2,22 +2,22 @@
 
 ##LOCK
 
-https://smartlockproject.herokuapp.com/api/getLocks
+https://smartlockproject.herokuapp.com/api/getLocks  
     Method : GET
 
-https://smartlockproject.herokuapp.com/api/getLock/:lockid
+https://smartlockproject.herokuapp.com/api/getLock/:lockid  
     Method : GET
     Params : lockid
 
-https://smartlockproject.herokuapp.comapi/addLock
+https://smartlockproject.herokuapp.comapi/addLock  
     Method : POST
     Params : lockid & lstatus (lock status)
 
-https://smartlockproject.herokuapp.com/api/removeLock/:lockid
+https://smartlockproject.herokuapp.com/api/removeLock/:lockid  
     Method : DELETE
     Params : lockid
 
-https://smartlockproject.herokuapp.com/api/updateLockStatus/:lockid/:lstatus
+https://smartlockproject.herokuapp.com/api/updateLockStatus/:lockid/:lstatus  
    Method : PUT
    Params : lockid & lstatus (lock status)
 
