@@ -1,7 +1,7 @@
 /**
  * Created by avitalg on 4/4/2017.
  */
-var message = require('../controllers/message');
+var message = require('../middlewares/message');
 
 module.exports = function(app) {
     app.all('/api/home', message.helloMessage);

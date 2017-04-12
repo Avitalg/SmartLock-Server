@@ -1,4 +1,4 @@
-var users = require('../controllers/user');
+var users = require('../middlewares/user');
 
 module.exports = function(app){
     app.get('/api/getUsers', users.getUsers);

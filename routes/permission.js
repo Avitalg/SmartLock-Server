@@ -1,4 +1,4 @@
-var permissions = require('../controllers/permission');
+var permissions = require('../middlewares/permission');
 
 module.exports = function(app){
     app.get('/api/getPermissions', permissions.getPermissions);

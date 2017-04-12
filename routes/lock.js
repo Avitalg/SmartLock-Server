@@ -1,4 +1,4 @@
-var locks = require('../controllers/lock');
+var locks = require('../middlewares/lock');
 
 module.exports = function(app) {
     app.get('/api/getLocks', locks.getLocks);
