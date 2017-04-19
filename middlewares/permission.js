@@ -108,7 +108,7 @@ exports.addPermission = function(req,res){
 				break;
 			case "once":
 				delete permission.duration;
-				permission.date = date;
+				permission.date = new Date(date).toLocaleString() ;
 				permission.hours = {
 					start : start1,
 					end : end1
@@ -187,13 +187,15 @@ exports.updatePermission = function(req,res){
 			}else if(err){
 				res.status(500);
 				res.json(err);
+
 			} else {
 				switch(frequency) {
 					case "always":
 						console.log("always.");
 						console.log(frequency);
-						delete permission.date;
-						delete permission.hours;
+						permission.frequency = frequency;
+						permission.date = undefined;
+						permission.hours = undefined;
 						permission.duration = {
 							Sunday: {
 								start: start1,
@@ -226,12 +228,20 @@ exports.updatePermission = function(req,res){
 						};
 						break;
 					case "once":
-						delete permission.duration;
-						permission.date = Date(date).toLocaleString();
-						permission.hours = {
-							start : start1,
-							end : end1
+						if(!start2){
+							console.log(start2);
+							permission.frequency = frequency;
+							permission.duration = undefined;
+							permission.date = date.toLocaleString();
+							permission.hours = {
+								start : start1,
+								end : end1
+							}
+						} else {
+							res.json({"status":"error","message":"frequency 'once' but you gave multiple hours."});
+							return;
 						}
+						break;
 
 				}
 

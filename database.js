@@ -16,7 +16,7 @@ db.on('open', function(){
 });
 
 db.on('disconnected', function(){
-	console.log('Mongoose: Connection stopped, recconect');
+	console.log('Mongoose: Connection stopped');
 	//mongoose.connect(config.mongoUrl, options);
 });
 

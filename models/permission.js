@@ -40,8 +40,7 @@ var PermissionSchema = new schema({
             start :{type: String},
             end : {type: String}
         }
-    },
-    expiration: { type: Number }
+    }
 },  {collection: 'permissions'});
 
 var Permissions = mongoose.model('Permissions', PermissionSchema);
