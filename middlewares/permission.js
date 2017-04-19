@@ -71,8 +71,6 @@ exports.addPermission = function(req,res){
 
 		switch(frequency) {
 			case "always":
-				console.log("always.");
-				console.log(frequency);
 				delete permission.date;
 				delete permission.hours;
 				permission.duration = {
