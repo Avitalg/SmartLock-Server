@@ -111,11 +111,7 @@ exports.addPermission = function(req,res){
 					start : start1,
 					end : end1
 				}
-
 		}
-
-
-
 
 		//if User exist, won't save him.
 		Permission.findOneAndUpdate({"userid": userid, "lockid": lockid}, permission, {upsert:true},
@@ -189,8 +185,6 @@ exports.updatePermission = function(req,res){
 			} else {
 				switch(frequency) {
 					case "always":
-						console.log("always.");
-						console.log(frequency);
 						permission.frequency = frequency;
 						permission.date = undefined;
 						permission.hours = undefined;
