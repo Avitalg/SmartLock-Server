@@ -53,7 +53,8 @@ https://smartlockproject.herokuapp.com/api/updatePermission/:userid/:lockid/:fre
 
 https://smartlockproject.herokuapp.com/api/updatePermission/:userid/:lockid/:frequency/:date/:start1/:end1  
     Method : PUT  
-    params: userid & lockid & frequency & date & start1 & end1  
+    params: userid & lockid & frequency & start1 & end1
+            & date (format: YYYY-MM-DD)
 
 https://smartlockproject.herokuapp.com/api/updatePhysicalId/:userid/:lockid/:physicalId  
     Method : PUT  
