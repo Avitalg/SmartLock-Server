@@ -252,6 +252,33 @@ exports.updatePermission = function(req,res){
 
 };
 
+exports.changeUserType = function(req, res){
+	var userid = req.params.userid,
+		lockid = req.params.lockid,
+		type = req.params.type;
+
+	if(!userid && !lockid){
+		res.status(500);
+		res.json({"status":"error","message":"userid and lockid weren't supplied"});
+	} else {
+		Permission.findOne({ "userid":userid, "lockid":lockid }, function (err, permission){
+			if(!permission){
+				res.status(404);
+				res.json({"status":"error","message": "Permission doesn't exist"});
+			}else if(err){
+				res.status(500);
+				res.json({"status":"error","message":err});
+			} else {
+				permission.type = type;
+				permission.save();
+				res.status(200);
+				res.json({"status":"success","message":"succeed update user type."});
+			}
+		});
+	}
+	return;
+};
+
 exports.updatePhysicalId = function(req,res){
 	var userid = req.params.userid,
 		lockid = req.params.lockid,

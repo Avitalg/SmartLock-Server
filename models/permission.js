@@ -11,7 +11,7 @@ var PermissionSchema = new schema({
         start: {type: String},
         end: {type: String}
     },
-    type: {type: String},
+    type: {type: Number},
     duration: {
         Sunday: {
             start :{type: String},

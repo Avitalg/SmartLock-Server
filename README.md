@@ -34,7 +34,8 @@ https://smartlockproject.herokuapp.com/api/getPermission/:userid/:lockid
 https://smartlockproject.herokuapp.com/api/addPermission  
     Method : POST  
     params : userid & lockid  
-            frequency (always/once)  
+            frequency (always/once)
+            type (0- manager, 1-user with physical id 2- user without physical id)
             start1,start2,...,start7 - start1 is the hour of the starting permission in day 1.  
             end1, end2,....,end7 - end1 us the hour od the ending permission in day 1.  
             example:  
@@ -56,8 +57,13 @@ https://smartlockproject.herokuapp.com/api/updatePermission/:userid/:lockid/:fre
     params: userid & lockid & frequency & start1 & end1
             & date (format: YYYY-MM-DD)
 
-https://smartlockproject.herokuapp.com/api/updatePhysicalId/:userid/:lockid/:physicalId  
-    Method : PUT  
+https://smartlockproject.herokuapp.com/api/changeUserType/:userid/:lockid/:type
+    Method : PUT
+    params: userid & lockid &
+            type (0- manager, 1-user with physical id 2- user without physical id)
+
+https://smartlockproject.herokuapp.com/api/updatePhysicalId/:userid/:lockid/:physicalId
+    Method : PUT
     params: userid & lockid & physicalId  
 
 ## USER
