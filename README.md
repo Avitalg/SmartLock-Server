@@ -64,26 +64,26 @@ https://smartlockproject.herokuapp.com/api/changeUserType/:userid/:lockid/:type
 
 https://smartlockproject.herokuapp.com/api/updatePhysicalId/:userid/:lockid/:physicalId
     Method : PUT
-    params: userid & lockid & physicalId   
+    params: userid & lockid & physicalId
 
 ## USER
 
-https://smartlockproject.herokuapp.com/api/getUsers  
+https://smartlockproject.herokuapp.com/api/getUsers
     Method : GET  
 
-https://smartlockproject.herokuapp.com/api/getUser/:userid  
+https://smartlockproject.herokuapp.com/api/getUser/:userid
     Method : GET  
     params : userid  
 
-https://smartlockproject.herokuapp.com/api/removeUser/:userid  
+https://smartlockproject.herokuapp.com/api/removeUser/:userid
     Method : DELETE  
     params : userid  
 
-https://smartlockproject.herokuapp.com/api/addUser  
+https://smartlockproject.herokuapp.com/api/addUser
     Method : POST  
     params : username & phone & password  
 
-https://smartlockproject.herokuapp.com/api/updateUser/:userid/:username/:phone/:password  
+https://smartlockproject.herokuapp.com/api/updateUser/:userid/:username/:phone/:password
     Method : PUT  
     params : username & phone & password  
 

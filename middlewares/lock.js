@@ -83,7 +83,6 @@ exports.removeLock = function(req,res){
 	return;
 };
 
-
 exports.updateLockStatus= function(req,res){
 	var lockid = req.params.lockid,
 		status = req.params.lstatus;
@@ -109,3 +108,4 @@ exports.updateLockStatus= function(req,res){
 	}
 	return;
 };
+
