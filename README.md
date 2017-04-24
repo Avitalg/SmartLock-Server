@@ -64,7 +64,7 @@ https://smartlockproject.herokuapp.com/api/changeUserType/:userid/:lockid/:type
 
 https://smartlockproject.herokuapp.com/api/updatePhysicalId/:userid/:lockid/:physicalId
     Method : PUT
-    params: userid & lockid & physicalId  
+    params: userid & lockid & physicalId   
 
 ## USER
 
