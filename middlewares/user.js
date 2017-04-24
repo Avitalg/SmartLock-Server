@@ -15,12 +15,12 @@ exports.getUsers = function(req,res){
 };
 
 exports.getUser = function(req,res){
-	var userid= req.params.userid;
-	if(!userid){
+	var username= req.params.username;
+	if(!username){
 		res.status(404);
-		res.json({"status":"error","message":"userid wasn't supplied"});
+		res.json({"status":"error","message":"username wasn't supplied"});
 	}else{	
-		User.findOne({"_id":userid}, function(err,user){
+		User.findOne({"username":username}, function(err,user){
 			if(err){
 				res.status(500);
 				res.json({"status":"error","message":err});

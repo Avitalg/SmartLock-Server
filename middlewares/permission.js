@@ -43,6 +43,7 @@ exports.addPermission = function(req,res){
 		lockid = req.body.lockid,
 		frequency = req.body.frequency,
 		date = req.body.date,
+		type = req.body.type,
 		start1 = req.body.start1,
 		start2 = req.body.start2,
 		start3 = req.body.start3,
@@ -66,7 +67,8 @@ exports.addPermission = function(req,res){
 		var permission = new Permission({
 			userid: userid,
 			lockid: lockid,
-			frequency: frequency
+			frequency: frequency,
+			type: type
 		});
 
 		switch(frequency) {
@@ -153,6 +155,7 @@ exports.updatePermission = function(req,res){
 	var userid = req.params.userid,
 		lockid = req.params.lockid,
 		frequency = req.params.frequency,
+		type = req.params.type,
 		date = req.params.date,
 		start1 = req.params.start1,
 		start2 = req.params.start2,
@@ -183,9 +186,11 @@ exports.updatePermission = function(req,res){
 				res.json(err);
 
 			} else {
+				permission.type = type;
+				permission.frequency = frequency;
+
 				switch(frequency) {
 					case "always":
-						permission.frequency = frequency;
 						permission.date = undefined;
 						permission.hours = undefined;
 						permission.duration = {
