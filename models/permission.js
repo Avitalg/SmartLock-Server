@@ -6,7 +6,7 @@ var PermissionSchema = new schema({
     lockid: {type: String, required:true},
     physicalId: {type: String},
     frequency: { type:String, required:true},
-    date: {type: Number},
+    date: {type: Date},
     hours : {
         start: {type: String},
         end: {type: String}

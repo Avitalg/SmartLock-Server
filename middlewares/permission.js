@@ -38,7 +38,7 @@ exports.getPermission = function(req,res){
 	return;
 };
 
-exports.checkPermission = function(req,res){
+exports.checkPermission = function(req, res, next){
 	var userid= req.params.userid,
 		lockid = req.params.lockid;
 
@@ -54,14 +54,20 @@ exports.checkPermission = function(req,res){
 				res.status(404);
 				res.json({"status":"error","message":"Permission doesn't exist"});
 			}else{
-				console.log(perResult);
 
 				switch(perResult.frequency){
 					case "once":
-
-					break;
+						var currHour = new Date().getHours() + ":" + new Date().getMinutes();
+						if(perResult.date == new Date().setHours(0,0,0,0) && (currHour >= perResult.hours.start && currHour <= perResult.hours.end)){
+							next();
+						} else {
+							res.status(200);
+							res.json({"status":"error","message":"No permissions"});
+						}
+						break;
 					case "always":
 						next();
+						break;
 				}
 			}
 		});
@@ -89,10 +95,6 @@ exports.addPermission = function(req,res){
 		end5   = req.body.end5,
 		end6   = req.body.end6,
 		end7   = req.body.end7;
-
-		var myDate = date.split("-");
-		var newDate = myDate[1]+"/"+myDate[0]+"/"+myDate[2];
-		var date = new Date(newDate).getTime();
 
 	if(!userid && !lockid){
 		res.status(500);
@@ -143,7 +145,7 @@ exports.addPermission = function(req,res){
 				break;
 			case "once":
 				delete permission.duration;
-				permission.date = date ;
+				permission.date = new Date(date)+3;
 				permission.hours = {
 					start : start1,
 					end : end1
@@ -264,7 +266,7 @@ exports.updatePermission = function(req,res){
 							console.log(start2);
 							permission.frequency = frequency;
 							permission.duration = undefined;
-							permission.date = date.toLocaleString();
+							permission.date = (date.toLocaleString()+3);
 							permission.hours = {
 								start : start1,
 								end : end1
