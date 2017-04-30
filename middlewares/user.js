@@ -1,4 +1,5 @@
 var User=require('../models/user');
+var Message = require('./message');
 
 exports.getUsers = function(req,res){
 	User.find({},
@@ -15,21 +16,20 @@ exports.getUsers = function(req,res){
 };
 
 exports.getUser = function(req,res){
-	var username= req.params.username;
+	var username= req.params.username,
+		lockid = req.params.lockid
+
 	if(!username){
 		res.status(404);
 		res.json({"status":"error","message":"username wasn't supplied"});
 	}else{	
 		User.findOne({"username":username}, function(err,user){
 			if(err){
-				res.status(500);
-				res.json({"status":"error","message":err});
+				Message.messageRes(req, res, 500, "error", err);
 			}else if(!user){
-				res.status(404);
-				res.json({"status":"error","message":"User doesn't exist"});
+				Message.messageRes(req, res, 404, "error", "User doesn't exist");
 			}else{	
-				res.status(200);
-				res.json(user);
+				Message.messageRes(req, res, 200, "success", user);
 			}
 		});
 	}

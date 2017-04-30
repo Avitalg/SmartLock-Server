@@ -14,15 +14,33 @@ exports.getPermissions = function(req,res){
 	return;
 };
 
+exports.getPermissionsByLock = function(req,res){
+	var lockid = req.params.lockid;
+
+	Permission.findOne({"lockid":lockid}, function(err,perResult){
+		if(err){
+				res.status(500);
+				res.json({"error":err});
+			}else if(!perResult){
+				res.status(404);
+				res.json({"status":"error","message":"Permission doesn't exist"});
+			}else{	
+				res.status(200);
+				res.json(perResult);
+			}
+	});
+	return;
+};
+
 exports.getPermission = function(req,res){
-	var userid= req.params.userid,
+	var username= req.params.username,
 		lockid = req.params.lockid;
 
-	if(!userid && !lockid){
+	if(!username && !lockid){
 		res.status(404);
 		res.json({"status":"error","message":"Details weren't supplied"});
 	}else{
-		Permission.findOne({"userid":userid, "lockid":lockid}, function(err,perResult){
+		Permission.findOne({"username":username, "lockid":lockid}, function(err,perResult){
 			if(err){
 				res.status(500);
 				res.json({"error":err});
@@ -39,14 +57,14 @@ exports.getPermission = function(req,res){
 };
 
 exports.checkPermission = function(req, res, next){
-	var userid= req.params.userid,
+	var username= req.params.username,
 		lockid = req.params.lockid;
 
-	if(!userid && !lockid){
+	if(!username && !lockid){
 		res.status(404);
 		res.json({"status":"error","message":"Details weren't supplied"});
 	}else{
-		Permission.findOne({"userid":userid, "lockid":lockid}, function(err,perResult){
+		Permission.findOne({"username":username, "lockid":lockid}, function(err,perResult){
 			if(err){
 				res.status(500);
 				res.json({"error":err});
@@ -76,7 +94,7 @@ exports.checkPermission = function(req, res, next){
 };
 
 exports.addPermission = function(req,res){
-	var userid = req.body.userid,
+	var username = req.body.username,
 		lockid = req.body.lockid,
 		frequency = req.body.frequency,
 		date = req.body.date,
@@ -96,13 +114,13 @@ exports.addPermission = function(req,res){
 		end6   = req.body.end6,
 		end7   = req.body.end7;
 
-	if(!userid && !lockid){
+	if(!username && !lockid){
 		res.status(500);
-		res.json({"status":"error","message":"userid and lockid weren't supplied"});
+		res.json({"status":"error","message":"username and lockid weren't supplied"});
 	} else {
 
 		var permission = new Permission({
-			userid: userid,
+			username: username,
 			lockid: lockid,
 			frequency: frequency,
 			type: type
@@ -153,7 +171,7 @@ exports.addPermission = function(req,res){
 		}
 
 		//if User exist, won't save him.
-		Permission.findOneAndUpdate({"userid": userid, "lockid": lockid}, permission, {upsert:true},
+		Permission.findOneAndUpdate({"username": username, "lockid": lockid}, permission, {upsert:true},
 			function(err, doc){
 				if (err){
 					res.status(500);
@@ -169,13 +187,13 @@ exports.addPermission = function(req,res){
 };
 
 exports.removePermission = function(req,res){
-	var userid = req.params.userid,
+	var username = req.params.username,
 		lockid = req.params.lockid;
-	if(!userid && !lockid){
+	if(!username && !lockid){
 		res.status(404);
-		res.json({"status":"error","message":"userid and lockid weren't supplied"});
+		res.json({"status":"error","message":"username and lockid weren't supplied"});
 	}else{
-		Permission.remove({"userid": userid, "lockid": lockid}, function(err,permission){
+		Permission.remove({"username": username, "lockid": lockid}, function(err,permission){
 			if(err){
 				res.status(500);
 				res.json({"status":"error","message":err});
@@ -189,7 +207,7 @@ exports.removePermission = function(req,res){
 };
 
 exports.updatePermission = function(req,res){
-	var userid = req.params.userid,
+	var username = req.params.username,
 		lockid = req.params.lockid,
 		frequency = req.params.frequency,
 		type = req.params.type,
@@ -210,11 +228,11 @@ exports.updatePermission = function(req,res){
 		end7   = req.params.end7;
 
 
-	if(!userid && !lockid){
+	if(!username && !lockid){
 		res.status(500);
-		res.json({"status":"error","message":"userid and lockid weren't supplied"});
+		res.json({"status":"error","message":"username and lockid weren't supplied"});
 	} else {
-		Permission.findOne({ "userid":userid, "lockid":lockid }, function (err, permission){
+		Permission.findOne({ "username":username, "lockid":lockid }, function (err, permission){
 			if(!permission){
 				res.status(404);
 				res.json({"status":"error","message": "Permission doesn't exist"});
@@ -290,15 +308,15 @@ exports.updatePermission = function(req,res){
 };
 
 exports.changeUserType = function(req, res){
-	var userid = req.params.userid,
+	var username = req.params.username,
 		lockid = req.params.lockid,
 		type = req.params.type;
 
-	if(!userid && !lockid){
+	if(!username && !lockid){
 		res.status(500);
-		res.json({"status":"error","message":"userid and lockid weren't supplied"});
+		res.json({"status":"error","message":"username and lockid weren't supplied"});
 	} else {
-		Permission.findOne({ "userid":userid, "lockid":lockid }, function (err, permission){
+		Permission.findOne({ "username":username, "lockid":lockid }, function (err, permission){
 			if(!permission){
 				res.status(404);
 				res.json({"status":"error","message": "Permission doesn't exist"});
@@ -317,15 +335,15 @@ exports.changeUserType = function(req, res){
 };
 
 exports.updatePhysicalId = function(req,res){
-	var userid = req.params.userid,
+	var username = req.params.username,
 		lockid = req.params.lockid,
 		physicalId = req.params.physicalId;
 
-	if(!userid && !lockid){
+	if(!username && !lockid){
 		res.status(500);
-		res.json({"status":"error","message":"userid and lockid weren't supplied"});
+		res.json({"status":"error","message":"username and lockid weren't supplied"});
 	} else {
-		Permission.findOne({ "userid":userid, "lockid":lockid }, function (err, permission){
+		Permission.findOne({ "username":username, "lockid":lockid }, function (err, permission){
 			if(!permission){
 				res.status(404);
 				res.json({"status":"error","message": "Permission doesn't exist"});

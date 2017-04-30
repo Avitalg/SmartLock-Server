@@ -27,6 +27,11 @@ https://smartlockproject.herokuapp.com/api/updateLockStatus/:lockid/:lstatus
 https://smartlockproject.herokuapp.com/api/getPermissions  
    Method : GET  
 
+
+https://smartlockproject.herokuapp.com/api/getPermissionsByLock  
+    Method : GET  
+    params : lockid  
+
 https://smartlockproject.herokuapp.com/api/getPermission/:userid/:lockid  
     Method : GET  
     params : userid & lockid  

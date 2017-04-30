@@ -14,3 +14,10 @@ exports.errorMessageAll = function(req,res){
     res.json({"status":"error","message":"URL starts with /api/"});
 };
 
+
+exports.messageRes = function(req,res, status,type, message){
+    res.status(status);
+    res.json({"status":type,"message": message});
+};
+
+
