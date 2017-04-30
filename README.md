@@ -28,7 +28,7 @@ https://smartlockproject.herokuapp.com/api/getPermissions
    Method : GET  
 
 
-https://smartlockproject.herokuapp.com/api/getPermissionsByLock  
+https://smartlockproject.herokuapp.com/api/getPermissionsByLock/:lockid 
     Method : GET  
     params : lockid  
 
