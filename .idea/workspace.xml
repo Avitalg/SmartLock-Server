@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ca14b589-1762-47fd-bdf2-2c134c27adf9" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/middlewares/permission.js" afterPath="$PROJECT_DIR$/middlewares/permission.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/middlewares/user.js" afterPath="$PROJECT_DIR$/middlewares/user.js" />
-    </list>
+    <list default="true" id="ca14b589-1762-47fd-bdf2-2c134c27adf9" name="Default" comment="" />
     <ignored path="SmartLock-Server.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path=".idea/dataSources.local.xml" />
@@ -48,8 +45,8 @@
       <file leaf-file-name="permission.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/middlewares/permission.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="3.9911895">
-              <caret line="151" column="48" selection-start-line="151" selection-start-column="48" selection-end-line="151" selection-end-column="48" />
+            <state vertical-scroll-proportion="2.1409693">
+              <caret line="159" column="35" selection-start-line="159" selection-start-column="26" selection-end-line="159" selection-end-column="35" />
               <folding />
             </state>
           </provider>
@@ -697,8 +694,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/middlewares/permission.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="3.9911895">
-          <caret line="151" column="48" selection-start-line="151" selection-start-column="48" selection-end-line="151" selection-end-column="48" />
+        <state vertical-scroll-proportion="2.1409693">
+          <caret line="159" column="35" selection-start-line="159" selection-start-column="26" selection-end-line="159" selection-end-column="35" />
           <folding />
         </state>
       </provider>
