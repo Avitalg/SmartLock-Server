@@ -17,7 +17,7 @@ exports.getUsers = function(req,res){
 
 exports.getUser = function(req,res){
 	var username= req.params.username,
-		lockid = req.params.lockid
+		lockid = req.params.lockid;
 
 	if(!username){
 		res.status(404);
@@ -54,19 +54,15 @@ exports.addUser = function(req,res){
 			if(!resultUser){
 					user.save(function(saveErr, newUser){
 					if(saveErr){
-						res.status(500);
-						res.json({"status":"error","message":saveErr});
+                        Message.messageRes(req, res, 500, "error", saveErr);
 					} else{
-						res.status(200);
-   						res.json({"status":"success","message":"User was saved", "userid": newUser._id});
+                        Message.messageRes(req, res, 200, "success", {"message":"User was saved", "userid": newUser._id});
    					}
    				});
 			}else if(err){
-				res.status(500);
-				res.json({"status":"error","message":err});
+                Message.messageRes(req, res, 500, "error", err);
 			} else {
-				res.status(200);
-   				res.json({"status":"error","message":"username already exist"});
+                Message.messageRes(req, res, 200, "error", "User already exists");
 			}
 			return;
 	});
@@ -77,17 +73,14 @@ exports.addUser = function(req,res){
 exports.removeUser = function(req,res){
 	var userid= req.params.userid;
 	if(!userid){
-		res.status(404);
-		res.json({"status":"error","message":"Userid wasn't supplied"});
+        Message.messageRes(req, res, 404, "error", "Userid wasn't supplied");
 		return;
 	}
 	User.remove({"_id":userid}, function(err,user){
 		if(err){
-			res.status(500);
-			res.json({"status":"error","message":err});
+            Message.messageRes(req, res, 500, "error", err);
 		}else{
-			res.status(200);
-			res.json({"status":"success","message":"User was deleted successfully"});
+            Message.messageRes(req, res, 200, "success", "User was deleted successfully");
 		}
 	});
 
@@ -101,25 +94,21 @@ exports.updateUser = function(req,res){
 		password = req.params.password;
 
 	if(!userid){
-		res.status(500);
-		res.json({"status":"error","message":"No userid was entered"});
+        Message.messageRes(req, res, 500, "error", "No userid was entered");
 		return;
 	}
 
 	User.findOne({ "username": username }, function (err, user){
 		if(!user){
-			res.status(404);
-			res.json({"status":"error","message": "User with the username "+username+" isn't exist"});
+            Message.messageRes(req, res, 404, "error", "User with the username "+username+" isn't exist");
 		}else if(err){
-			res.status(500);
-			res.json({error:err});
+            Message.messageRes(req, res, 500, "error", err);
 		} else {
 			user.username = username;
 			user.phone = phone;
 			user.password = password;
 			user.save();
-			res.status(200);
-			res.json({"status":"success","message":"succeed update user's details."});
+            Message.messageRes(req, res, 200, "success", "succeed update user's details.");
 		}
 	});
 
