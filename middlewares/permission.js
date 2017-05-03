@@ -149,7 +149,7 @@ exports.addPermission = function(req,res){
 				break;
 			case "once":
 				delete permission.duration;
-				permission.date = new Date(date)+3;
+				permission.date = new Date(date);
 				permission.hours = {
 					start : start1,
 					end : end1
@@ -174,8 +174,7 @@ exports.removePermission = function(req,res){
 	var username = req.params.username,
 		lockid = req.params.lockid;
 	if(!username && !lockid){
-		res.status(404);
-		res.json({"status":"error","message":"username and lockid weren't supplied"});
+		Message.messageRes(req, res, 404, "error", "username and lockid weren't supplied");
 	}else{
 		Permission.remove({"username": username, "lockid": lockid}, function(err,permission){
 			if(err){
@@ -259,7 +258,6 @@ exports.updatePermission = function(req,res){
 						break;
 					case "once":
 						if(!start2){
-							console.log(start2);
 							permission.frequency = frequency;
 							permission.duration = undefined;
 							permission.date = date.toLocaleString();

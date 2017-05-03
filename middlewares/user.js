@@ -18,8 +18,7 @@ exports.getUser = function(req,res){
 		lockid = req.params.lockid;
 
 	if(!username){
-		res.status(404);
-		res.json({"status":"error","message":"username wasn't supplied"});
+        Message.messageRes(req, res, 404, "error", "username wasn't supplied");
 	}else{	
 		User.findOne({"username":username}, function(err,user){
 			if(err){
