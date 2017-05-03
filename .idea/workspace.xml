@@ -40,7 +40,7 @@
         <entry file="file://$PROJECT_DIR$/middlewares/user.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="31" column="67" selection-start-line="31" selection-start-column="16" selection-end-line="31" selection-end-column="67" />
+              <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -49,8 +49,8 @@
       <file leaf-file-name="permission.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/middlewares/permission.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.6666665">
-              <caret line="7" column="60" selection-start-line="7" selection-start-column="12" selection-end-line="7" selection-end-column="60" />
+            <state vertical-scroll-proportion="12.777778">
+              <caret line="279" column="0" selection-start-line="279" selection-start-column="0" selection-end-line="279" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -59,8 +59,8 @@
       <file leaf-file-name="lock.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/middlewares/lock.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5506608">
-              <caret line="87" column="26" selection-start-line="87" selection-start-column="26" selection-end-line="87" selection-end-column="26" />
+            <state vertical-scroll-proportion="0.5741556">
+              <caret line="23" column="28" selection-start-line="23" selection-start-column="28" selection-end-line="23" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -170,9 +170,9 @@
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/routes/lock.js" />
         <option value="$PROJECT_DIR$/models/permission.js" />
+        <option value="$PROJECT_DIR$/middlewares/lock.js" />
         <option value="$PROJECT_DIR$/middlewares/user.js" />
         <option value="$PROJECT_DIR$/middlewares/permission.js" />
-        <option value="$PROJECT_DIR$/middlewares/lock.js" />
       </list>
     </option>
   </component>
@@ -733,23 +733,23 @@
     <entry file="file://$PROJECT_DIR$/middlewares/user.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="31" column="67" selection-start-line="31" selection-start-column="16" selection-end-line="31" selection-end-column="67" />
+          <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/middlewares/permission.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.6666665">
-          <caret line="7" column="60" selection-start-line="7" selection-start-column="12" selection-end-line="7" selection-end-column="60" />
+        <state vertical-scroll-proportion="12.777778">
+          <caret line="279" column="0" selection-start-line="279" selection-start-column="0" selection-end-line="279" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/middlewares/lock.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5506608">
-          <caret line="87" column="26" selection-start-line="87" selection-start-column="26" selection-end-line="87" selection-end-column="26" />
+        <state vertical-scroll-proportion="0.5741556">
+          <caret line="23" column="28" selection-start-line="23" selection-start-column="28" selection-end-line="23" selection-end-column="28" />
           <folding />
         </state>
       </provider>

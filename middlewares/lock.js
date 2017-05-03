@@ -22,8 +22,6 @@ exports.getLock = function(req, res){
 			if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			}else if(!lock){
-				res.status(404);
-				res.json([{"error":"Lock doesn't exist"}]);
 				Message.messageRes(req, res, 404, "error", "Lock doesn't exist");
 			}else{
 				Message.messageRes(req, res, 200, "success", lock);

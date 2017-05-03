@@ -5,11 +5,9 @@ exports.getUsers = function(req,res){
 	User.find({},
 	function(err,userRes){
 		if(err){
-			res.status(500);
-			res.json({"status":"error","message": "No result found."});
+            Message.messageRes(req, res, 500, "error", "No result found.");
 		}else{
-			res.status(200);
-			res.json(userRes);
+            Message.messageRes(req, res, 200, "success", userRes);
 		}
 		return;
 	});
@@ -42,8 +40,7 @@ exports.addUser = function(req,res){
 		password = req.body.password;
 
 	if(!username){
-		res.status(500);
-		res.json({"status":"error","message":"No username was entered"});
+        Message.messageRes(req, res, 500, "error", "No username was entered");
 	} else {
 		var user = new User({
 		  	username: username,

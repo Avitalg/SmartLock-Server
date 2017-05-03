@@ -262,7 +262,7 @@ exports.updatePermission = function(req,res){
 							console.log(start2);
 							permission.frequency = frequency;
 							permission.duration = undefined;
-							permission.date = (date.toLocaleString()+3);
+							permission.date = date.toLocaleString();
 							permission.hours = {
 								start : start1,
 								end : end1
@@ -276,9 +276,7 @@ exports.updatePermission = function(req,res){
 				}
 
 				permission.save();
-			  	res.status(200);
 				Message.messageRes(req, res, 200, "success", "succeed update permission.");
-				res.json({"status":"success","message":"succeed update permission."});
 			}
 		});
 	}
