@@ -3,7 +3,7 @@ var permissions = require('../middlewares/permission');
 module.exports = function(app){
     app.get('/api/getPermissions', permissions.getPermissions);
     app.get('/api/getPermission/:username/:lockid', permissions.getPermission);
-    app.get('/api/getPermissionByUser/:username', permissions.getPermissionByUser);
+    app.get('/api/getPermissionsByUser/:username', permissions.getPermissionByUser);
     app.get('/api/getPermissionsByLock/:lockid', permissions.getPermissionsByLock);
     app.post('/api/addPermission', permissions.addPermission);
     app.delete('/api/removePermission/:username/:lockid/', permissions.removePermission);
