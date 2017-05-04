@@ -43,6 +43,10 @@ https://smartlockproject.herokuapp.com/api/getPermissionsByLock/:lockid
     Method : GET  
     params : lockid  
 
+https://smartlockproject.herokuapp.com/api/getLockManager/:lockid   
+    Method : GET  
+    params : lockid  
+
 https://smartlockproject.herokuapp.com/api/addPermission  
     Method : POST  
     params : userid & lockid  
