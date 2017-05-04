@@ -80,26 +80,26 @@ https://smartlockproject.herokuapp.com/api/updatePhysicalId/:userid/:lockid/:phy
 
 ## USER
 
-https://smartlockproject.herokuapp.com/api/getUsers
+https://smartlockproject.herokuapp.com/api/getUsers 
     Method : GET  
 
-https://smartlockproject.herokuapp.com/api/getUser/:userid
+https://smartlockproject.herokuapp.com/api/getUser/:userid 
     Method : GET  
     params : userid  
 
-https://smartlockproject.herokuapp.com/api/removeUser/:username
+https://smartlockproject.herokuapp.com/api/removeUser/:username 
     Method : DELETE  
     params : username  
 
-https://smartlockproject.herokuapp.com/api/addUser
+https://smartlockproject.herokuapp.com/api/addUser 
     Method : POST  
     params : username & phone & password  
 
-https://smartlockproject.herokuapp.com/api/updateUser/:userid/:username/:phone
+https://smartlockproject.herokuapp.com/api/updateUser/:userid/:username/:phone 
     Method : PUT  
     params : userid & username & phone  
 
-https://smartlockproject.herokuapp.com/api/changePassword/:username/:password
+https://smartlockproject.herokuapp.com/api/changePassword/:username/:password 
     Method : PUT  
     params : username & password     
 
