@@ -87,16 +87,20 @@ https://smartlockproject.herokuapp.com/api/getUser/:userid
     Method : GET  
     params : userid  
 
-https://smartlockproject.herokuapp.com/api/removeUser/:userid
+https://smartlockproject.herokuapp.com/api/removeUser/:username
     Method : DELETE  
-    params : userid  
+    params : username  
 
 https://smartlockproject.herokuapp.com/api/addUser
     Method : POST  
     params : username & phone & password  
 
-https://smartlockproject.herokuapp.com/api/updateUser/:userid/:username/:phone/:password
+https://smartlockproject.herokuapp.com/api/updateUser/:userid/:username/:phone
     Method : PUT  
-    params : username & phone & password  
+    params : userid & username & phone  
+
+https://smartlockproject.herokuapp.com/api/changePassword/:username/:password
+    Method : PUT  
+    params : username & password     
 
 

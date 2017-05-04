@@ -67,12 +67,12 @@ exports.addUser = function(req,res){
 };
 
 exports.removeUser = function(req,res){
-	var userid= req.params.userid;
-	if(!userid){
+	var username= req.params.username;
+	if(!username){
         Message.messageRes(req, res, 404, "error", "Userid wasn't supplied");
 		return;
 	}
-	User.remove({"_id":userid}, function(err,user){
+	User.remove({"username":username}, function(err,user){
 		if(err){
             Message.messageRes(req, res, 500, "error", err);
 		}else{
@@ -86,11 +86,36 @@ exports.removeUser = function(req,res){
 exports.updateUser = function(req,res){
 	var userid = req.params.userid,
 		username = req.params.username,
-		phone = req.params.phone,
-		password = req.params.password;
+		phone = req.params.phone;
 
 	if(!userid){
         Message.messageRes(req, res, 500, "error", "No userid was entered");
+		return;
+	}
+
+	User.findOne({ "_id": userid, "username": username }, function (err, user){
+		if(!user){
+            Message.messageRes(req, res, 404, "error", "User with the username "+username+" isn't exist");
+		}else if(err){
+            Message.messageRes(req, res, 500, "error", err);
+		} else {
+			user.username = username;
+			user.phone = phone;
+			user.save();
+            Message.messageRes(req, res, 200, "success", "succeed update user's details.");
+		}
+	});
+
+	return;
+};
+
+
+exports.changePassword = function(req,res){
+	var username = req.params.username,
+		password = req.params.password;
+	
+	 if(!username || !password){
+        Message.messageRes(req, res, 500, "error", "No username or password was entered");
 		return;
 	}
 
@@ -100,8 +125,6 @@ exports.updateUser = function(req,res){
 		}else if(err){
             Message.messageRes(req, res, 500, "error", err);
 		} else {
-			user.username = username;
-			user.phone = phone;
 			user.password = password;
 			user.save();
             Message.messageRes(req, res, 200, "success", "succeed update user's details.");
@@ -109,4 +132,4 @@ exports.updateUser = function(req,res){
 	});
 
 	return;
-};
+}
