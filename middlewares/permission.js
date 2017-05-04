@@ -70,7 +70,7 @@ exports.getLockManager = function(req, res){
 		if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			}else if(!perResult){
-				Message.messageRes(req, res, 404, "error", "The lock "+lockid+"has no manager");
+				Message.messageRes(req, res, 404, "error", "The lock "+lockid+" has no manager");
 			}else{
 				Message.messageRes(req, res, 200, "success", perResult);
 			}
