@@ -99,9 +99,9 @@ https://smartlockproject.herokuapp.com/api/addUser
     Method : POST  
     params : username & phone & password  
 
-https://smartlockproject.herokuapp.com/api/updateUser/:userid/:username/:phone 
+https://smartlockproject.herokuapp.com/api/updateUser/:username/:nusername/:phone 
     Method : PUT  
-    params : userid & username & phone  
+    params : nusername (new username) & username & phone  
 
 https://smartlockproject.herokuapp.com/api/changePassword/:username/:password 
     Method : PUT  

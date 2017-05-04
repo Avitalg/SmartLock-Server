@@ -84,22 +84,22 @@ exports.removeUser = function(req,res){
 };
 
 exports.updateUser = function(req,res){
-	var userid = req.params.userid,
+	var nusername = req.params.nusername,
 		username = req.params.username,
 		phone = req.params.phone;
 
-	if(!userid){
-        Message.messageRes(req, res, 500, "error", "No userid was entered");
+	if(!username || !nusername){
+        Message.messageRes(req, res, 500, "error", "No username or new username was entered");
 		return;
 	}
 
-	User.findOne({ "_id": userid, "username": username }, function (err, user){
+	User.findOne({"username": username }, function (err, user){
 		if(!user){
             Message.messageRes(req, res, 404, "error", "User with the username "+username+" isn't exist");
 		}else if(err){
             Message.messageRes(req, res, 500, "error", err);
 		} else {
-			user.username = username;
+			user.username = nusername;
 			user.phone = phone;
 			user.save();
             Message.messageRes(req, res, 200, "success", "succeed update user's details.");
