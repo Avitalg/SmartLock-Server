@@ -1,5 +1,6 @@
 var Lock = require('../models/lock');
 var Message = require('./message');
+var Permission = require('../models/permission');
 
 exports.getLocks = function(req,res){
 	Lock.find({},
@@ -29,6 +30,45 @@ exports.getLock = function(req, res){
 		});
 	}
 	return;
+};
+
+exports.getLocksByUser = function(req, res){
+	var username = req.params.username;
+
+	if(!username){
+		Message.messageRes(req, res, 404, "error", "username wasn't entered");
+	}else{
+		Permission.findOne({'username':username}, function(err, perRes){
+			if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			}else if(!perRes){
+				Message.messageRes(req, res, 404, "error", "username doesn't exist");
+			}else{
+				var locks = [];
+
+				if(!perRes.length){
+					locks.push(perRes.lockid);
+				} else {
+					for(var i=0; i<perRes.length; i++){
+						locks.push(perRes[i].lockid);
+					}	
+				}
+				
+				Lock.find({"lockid":{$in:locks}},function(err,data){
+					if(err){
+						Message.messageRes(req, res, 500, "error", err);
+					}else{
+						Message.messageRes(req, res, 200, "success", data);
+
+					}
+					
+				})
+			}
+		});
+	}
+	return;
+
+
 };
 
 exports.addLock = function(req,res){

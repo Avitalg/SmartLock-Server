@@ -9,6 +9,10 @@ https://smartlockproject.herokuapp.com/api/getLock/:lockid
     Method : GET  
     Params : lockid  
 
+https://smartlockproject.herokuapp.com/api/getLocksByUser/:username  
+    Method : GET  
+    Params : username   
+
 https://smartlockproject.herokuapp.comapi/addLock  
     Method : POST  
     Params : lockid & lstatus (lock status)  
@@ -25,16 +29,19 @@ https://smartlockproject.herokuapp.com/api/updateLockStatus/:lockid/:lstatus
 ## PERMISSION
 
 https://smartlockproject.herokuapp.com/api/getPermissions  
-   Method : GET  
-
-
-https://smartlockproject.herokuapp.com/api/getPermissionsByLock/:lockid   
     Method : GET  
-    params : lockid  
 
 https://smartlockproject.herokuapp.com/api/getPermission/:userid/:lockid  
     Method : GET  
     params : userid & lockid  
+
+https://smartlockproject.herokuapp.com/api/getPermissionsByUser/:username    
+    Method : GET   
+    params : username   
+
+https://smartlockproject.herokuapp.com/api/getPermissionsByLock/:lockid   
+    Method : GET  
+    params : lockid  
 
 https://smartlockproject.herokuapp.com/api/addPermission  
     Method : POST  

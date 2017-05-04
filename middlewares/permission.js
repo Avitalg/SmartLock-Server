@@ -13,21 +13,6 @@ exports.getPermissions = function(req,res){
 	return;
 };
 
-exports.getPermissionsByLock = function(req,res){
-	var lockid = req.params.lockid;
-
-	Permission.findOne({"lockid":lockid}, function(err,perResult){
-		if(err){
-				Message.messageRes(req, res, 500, "error", err);
-			}else if(!perResult){
-				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
-			}else{
-				Message.messageRes(req, res, 200, "success", perResult);
-			}
-	});
-	return;
-};
-
 exports.getPermission = function(req,res){
 	var username= req.params.username,
 		lockid = req.params.lockid;
@@ -44,6 +29,37 @@ exports.getPermission = function(req,res){
 			}
 		});
 	}
+	return;
+};
+
+
+exports.getPermissionByUser = function(req,res){
+	var username = req.params.username;
+
+	Permission.findOne({"username":username}, function(err,perResult){
+		if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			}else if(!perResult){
+				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
+			}else{
+				Message.messageRes(req, res, 200, "success", perResult);
+			}
+	});
+	return;
+};
+
+exports.getPermissionsByLock = function(req,res){
+	var lockid = req.params.lockid;
+
+	Permission.findOne({"lockid":lockid}, function(err,perResult){
+		if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			}else if(!perResult){
+				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
+			}else{
+				Message.messageRes(req, res, 200, "success", perResult);
+			}
+	});
 	return;
 };
 
