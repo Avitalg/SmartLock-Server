@@ -83,7 +83,7 @@ exports.removeUser = function(req,res){
 	return;
 };
 
-exports.updateUser = function(req,res){
+exports.updateUser = function(req,res, next){
 	var nusername = req.params.nusername,
 		username = req.params.username,
 		phone = req.params.phone;
@@ -102,7 +102,7 @@ exports.updateUser = function(req,res){
 			user.username = nusername;
 			user.phone = phone;
 			user.save();
-            Message.messageRes(req, res, 200, "success", "succeed update user's details.");
+			next();
 		}
 	});
 

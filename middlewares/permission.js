@@ -33,10 +33,10 @@ exports.getPermission = function(req,res){
 };
 
 
-exports.getPermissionByUser = function(req,res){
+exports.getPermissionsByUser = function(req,res){
 	var username = req.params.username;
 
-	Permission.findOne({"username":username}, function(err,perResult){
+	Permission.find({"username":username}, function(err,perResult){
 		if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			}else if(!perResult){
@@ -51,7 +51,7 @@ exports.getPermissionByUser = function(req,res){
 exports.getPermissionsByLock = function(req,res){
 	var lockid = req.params.lockid;
 
-	Permission.findOne({"lockid":lockid}, function(err,perResult){
+	Permission.find({"lockid":lockid}, function(err,perResult){
 		if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			}else if(!perResult){
@@ -359,3 +359,12 @@ exports.updatePhysicalId = function(req,res){
 	}
 	return;
 };
+
+exports.changePermissionUsername = function(req, res){
+	var nusername = req.params.nusername,
+		username = req.params.username;
+
+	Permission.update({ "username":username}, {username: nusername}, {multi: true}, function (err){
+		Message.messageRes(req, res, 200, "success", "succeed update user's details.");
+	});
+}
