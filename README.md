@@ -9,6 +9,10 @@ https://smartlockproject.herokuapp.com/api/getLock/:lockid
     Method : GET  
     Params : lockid  
 
+https://smartlockproject.herokuapp.com/api/getLocksByUser/:username  
+    Method : GET  
+    Params : username   
+
 https://smartlockproject.herokuapp.comapi/addLock  
     Method : POST  
     Params : lockid & lstatus (lock status)  
@@ -17,19 +21,31 @@ https://smartlockproject.herokuapp.com/api/removeLock/:lockid
     Method : DELETE  
     Params : lockid  
 
-https://smartlockproject.herokuapp.com/api/updateLockStatus/:lockid/:lstatus  
+https://smartlockproject.herokuapp.com/api/updateLockStatus/:username/:lockid/:lstatus  
    Method : PUT  
-   Params : lockid & lstatus (lock status)  
+   Params : username & lockid & lstatus (lock status)  
 
 
 ## PERMISSION
 
 https://smartlockproject.herokuapp.com/api/getPermissions  
-   Method : GET  
+    Method : GET  
 
 https://smartlockproject.herokuapp.com/api/getPermission/:userid/:lockid  
     Method : GET  
     params : userid & lockid  
+
+https://smartlockproject.herokuapp.com/api/getPermissionsByUser/:username    
+    Method : GET   
+    params : username   
+
+https://smartlockproject.herokuapp.com/api/getPermissionsByLock/:lockid   
+    Method : GET  
+    params : lockid  
+
+https://smartlockproject.herokuapp.com/api/getLockManager/:lockid   
+    Method : GET  
+    params : lockid  
 
 https://smartlockproject.herokuapp.com/api/addPermission  
     Method : POST  
@@ -62,29 +78,33 @@ https://smartlockproject.herokuapp.com/api/changeUserType/:userid/:lockid/:type
     params: userid & lockid &
             type (0- manager, 1-user with physical id 2- user without physical id)
 
-https://smartlockproject.herokuapp.com/api/updatePhysicalId/:userid/:lockid/:physicalId
+https://smartlockproject.herokuapp.com/api/updatePhysicalId/:username/:lockid
     Method : PUT
-    params: userid & lockid & physicalId
+    params: username & lockid 
 
 ## USER
 
-https://smartlockproject.herokuapp.com/api/getUsers
+https://smartlockproject.herokuapp.com/api/getUsers 
     Method : GET  
 
-https://smartlockproject.herokuapp.com/api/getUser/:userid
+https://smartlockproject.herokuapp.com/api/getUser/:userid 
     Method : GET  
     params : userid  
 
-https://smartlockproject.herokuapp.com/api/removeUser/:userid
+https://smartlockproject.herokuapp.com/api/removeUser/:username 
     Method : DELETE  
-    params : userid  
+    params : username  
 
-https://smartlockproject.herokuapp.com/api/addUser
+https://smartlockproject.herokuapp.com/api/addUser 
     Method : POST  
     params : username & phone & password  
 
-https://smartlockproject.herokuapp.com/api/updateUser/:userid/:username/:phone/:password
+https://smartlockproject.herokuapp.com/api/updateUser/:username/:nusername/:phone 
     Method : PUT  
-    params : username & phone & password  
+    params : username & nusername (new username) & phone  
+
+https://smartlockproject.herokuapp.com/api/changePassword/:username/:password 
+    Method : PUT  
+    params : username & password     
 
 

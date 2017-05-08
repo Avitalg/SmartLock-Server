@@ -1,14 +1,14 @@
 var Lock = require('../models/lock');
+var Message = require('./message');
+var Permission = require('../models/permission');
 
 exports.getLocks = function(req,res){
 	Lock.find({},
 	function(err,lockRes){
 		if(err){
-			res.status(500);
-			res.json({"status":"error","message":err});
+			Message.messageRes(req, res, 500, "error", err);
 		}else{
-			res.status(200);
-			res.json(lockRes);
+			Message.messageRes(req, res, 200, "success", lockRes);
 		}
 		return;
 	});
@@ -17,23 +17,58 @@ exports.getLocks = function(req,res){
 exports.getLock = function(req, res){
 	var lockid = req.params.lockid;
 	if(!lockid){
-		res.status(404);
-		res.json({"status":"error","message":"Lockid wasn't entered"});
+		Message.messageRes(req, res, 404, "error", "Lockid wasn't entered");
 	}else{
 		Lock.findOne({'lockid':lockid}, function(err, lock){
 			if(err){
-				res.status(500);
-				res.json({"error":err});
+				Message.messageRes(req, res, 500, "error", err);
 			}else if(!lock){
-				res.status(404);
-				res.json([{"error":"Lock doesn't exist"}]);
+				Message.messageRes(req, res, 404, "error", "Lock doesn't exist");
 			}else{
-				res.status(200);
-				res.json(lock);
+				Message.messageRes(req, res, 200, "success", lock);
 			}
 		});
 	}
 	return;
+};
+
+exports.getLocksByUser = function(req, res){
+	var username = req.params.username;
+
+	if(!username){
+		Message.messageRes(req, res, 404, "error", "username wasn't entered");
+	}else{
+		Permission.findOne({'username':username}, function(err, perRes){
+			if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			}else if(!perRes){
+				Message.messageRes(req, res, 404, "error", "username doesn't exist");
+			}else{
+				var locks = [];
+
+				if(!perRes.length){
+					locks.push(perRes.lockid);
+				} else {
+					for(var i=0; i<perRes.length; i++){
+						locks.push(perRes[i].lockid);
+					}	
+				}
+				
+				Lock.find({"lockid":{$in:locks}},function(err,data){
+					if(err){
+						Message.messageRes(req, res, 500, "error", err);
+					}else{
+						Message.messageRes(req, res, 200, "success", data);
+
+					}
+					
+				})
+			}
+		});
+	}
+	return;
+
+
 };
 
 exports.addLock = function(req,res){
@@ -41,8 +76,7 @@ exports.addLock = function(req,res){
 		status = req.body.lstatus;
 
 	if(!lock){
-		res.status(500);
-		res.json({"status":"error","message":"No lockid was entered"});
+		Message.messageRes(req, res, 500, "error", "No lockid was entered");
 	} else {
 		var newlock = new Lock({
 			lockid: lock,
@@ -53,11 +87,9 @@ exports.addLock = function(req,res){
 		Lock.findOneAndUpdate({'lockid': lock}, newlock, {upsert:true},
 			function(err, doc){
 				if (err){
-					res.status(500);
-					res.json({"status":"error","message": err });
+					Message.messageRes(req, res, 500, "error", err);
 				}else{
-					res.status(200);
-					res.json({"status":"success","message":"Lock "+lock+" was saved"});
+					Message.messageRes(req, res, 200, "success", "Lock "+lock+" was saved");
 				}
 			});
 	}
@@ -67,16 +99,14 @@ exports.addLock = function(req,res){
 exports.removeLock = function(req,res){
 	var lock= req.params.lockid;
 	if(!lock){
-		res.status(404);
-		res.json({"status":"error","message":"Lock name wasn't supplied"});
+		Message.messageRes(req, res, 404, "error", "Lock name wasn't supplied");
 	}else{	
 		Lock.remove({"lockid":lock}, function(err,lock){
 			if(err){
-				res.status(500);
-				res.json({"status":"error","message":err});
-			}else{	
-				res.status(200);
-				res.json({"status":"sucess","message":"Lock "+lock+" was removed successfully"});
+				Message.messageRes(req, res, 500, "error", err);
+			}else{
+				Message.messageRes(req, res, 200, "success", "Lock "+lock+" was removed successfully");
+
 			}
 		});
 	}
@@ -88,21 +118,17 @@ exports.updateLockStatus= function(req,res){
 		status = req.params.lstatus;
 
 	if(!lockid){
-		res.status(500);
-		res.json({"status":"error","message":"No lockid was entered"});
+		Message.messageRes(req, res, 500, "error", "No lockid was entered");
 	} else {
 		Lock.findOne({ "lockid": lockid }, function (err, lock){
 			if(!lock){
-				res.status(404);
-				res.json({"status":"error","message": "The lock "+lock+" doesn't exist"});
+				Message.messageRes(req, res, 404, "error", "The lock "+lock+" doesn't exist");
 			}else if(err){
-				res.status(500);
-				res.json({"status":"error","message":err});
+				Message.messageRes(req, res, 500, "error", err);
 			} else {
 				lock.status = status;
 				lock.save();
-				res.status(200);
-				res.json({"status":"success","message":"succeed update lock."});
+				Message.messageRes(req, res, 200, "success", "succeed update lock.");
 			}
 		});
 	}

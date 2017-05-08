@@ -1,76 +1,113 @@
 var Permission  = require('../models/permission');
+var Message = require('./message');
+var moment = require('moment');
+var valid = require('../helpers/validation');
+var physicId = require('../helpers/physicalId');
 
 exports.getPermissions = function(req,res){
 	Permission.find({},
 	function(err,permissionRes){
 		if(err){
-			res.status(500);
-			res.json({"status":"error","message":err});
-		}else{	
-			res.status(200);
-			res.json(permissionRes);
+			Message.messageRes(req, res, 500, "error", err);
+		}else{
+			Message.messageRes(req, res, 200, "success", permissionRes);
 		}
 	});
 	return;
 };
 
 exports.getPermission = function(req,res){
-	var userid= req.params.userid,
+	var username= req.params.username,
 		lockid = req.params.lockid;
 
-	if(!userid && !lockid){
-		res.status(404);
-		res.json({"status":"error","message":"Details weren't supplied"});
+	if(!username && !lockid){
 	}else{
-		Permission.findOne({"userid":userid, "lockid":lockid}, function(err,perResult){
+		Permission.findOne({"username":username, "lockid":lockid}, function(err,perResult){
 			if(err){
-				res.status(500);
-				res.json({"error":err});
+				Message.messageRes(req, res, 500, "error", err);
 			}else if(!perResult){
-				res.status(404);
-				res.json({"status":"error","message":"Permission doesn't exist"});
-			}else{	
-				res.status(200);
-				res.json(perResult);
+				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
+			}else{
+				Message.messageRes(req, res, 200, "success", perResult);
 			}
 		});
 	}
 	return;
 };
 
-exports.checkPermission = function(req,res){
-	var userid= req.params.userid,
+
+exports.getPermissionsByUser = function(req,res){
+	var username = req.params.username;
+
+	Permission.find({"username":username}, function(err,perResult){
+		if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			}else if(!perResult){
+				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
+			}else{
+				Message.messageRes(req, res, 200, "success", perResult);
+			}
+	});
+	return;
+};
+
+exports.getPermissionsByLock = function(req,res){
+	var lockid = req.params.lockid;
+
+	Permission.find({"lockid":lockid}, function(err,perResult){
+		if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			}else if(!perResult){
+				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
+			}else{
+				Message.messageRes(req, res, 200, "success", perResult);
+			}
+	});
+	return;
+};
+
+exports.getLockManager = function(req, res){
+	var lockid = req.params.lockid;
+
+	Permission.findOne({"lockid":lockid, "type":0}, function(err,perResult){
+		if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			}else if(!perResult){
+				Message.messageRes(req, res, 404, "error", "The lock "+lockid+" has no manager");
+			}else{
+				Message.messageRes(req, res, 200, "success", perResult);
+			}
+	});
+	return;
+
+}
+
+exports.checkPermission = function(req, res, next){
+	var username= req.params.username,
 		lockid = req.params.lockid;
 
-	if(!userid && !lockid){
-		res.status(404);
-		res.json({"status":"error","message":"Details weren't supplied"});
+	if(!username && !lockid){
+		Message.messageRes(req, res, 404, "error", "Details weren't supplied");
 	}else{
-		Permission.findOne({"userid":userid, "lockid":lockid}, function(err,perResult){
-			if(err){
-				res.status(500);
-				res.json({"error":err});
-			}else if(!perResult){
-				res.status(404);
-				res.json({"status":"error","message":"Permission doesn't exist"});
-			}else{
-				console.log(perResult);
+		var checkPer = valid.checkPermissions(username, lockid);
 
-				switch(perResult.frequency){
-					case "once":
+		switch(checkPer){
+			case "Has permissions":
+				next();
+				break;
+			case "No permissions":
+				Message.messageRes(req, res, 200, "error", checkPer);
+				break;
+			default:
+				Message.messageRes(req, res, 404, "error", checkPer);
 
-					break;
-					case "always":
-						next();
-				}
-			}
-		});
+		}
 	}
 	return;
 };
 
 exports.addPermission = function(req,res){
-	var userid = req.body.userid,
+	var username = req.body.username,
 		lockid = req.body.lockid,
 		frequency = req.body.frequency,
 		date = req.body.date,
@@ -90,17 +127,12 @@ exports.addPermission = function(req,res){
 		end6   = req.body.end6,
 		end7   = req.body.end7;
 
-		var myDate = date.split("-");
-		var newDate = myDate[1]+"/"+myDate[0]+"/"+myDate[2];
-		var date = new Date(newDate).getTime();
-
-	if(!userid && !lockid){
-		res.status(500);
-		res.json({"status":"error","message":"userid and lockid weren't supplied"});
+	if(!username && !lockid){
+		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
 	} else {
 
 		var permission = new Permission({
-			userid: userid,
+			username: username,
 			lockid: lockid,
 			frequency: frequency,
 			type: type
@@ -143,7 +175,7 @@ exports.addPermission = function(req,res){
 				break;
 			case "once":
 				delete permission.duration;
-				permission.date = date ;
+				permission.date = new Date(date);
 				permission.hours = {
 					start : start1,
 					end : end1
@@ -151,14 +183,12 @@ exports.addPermission = function(req,res){
 		}
 
 		//if User exist, won't save him.
-		Permission.findOneAndUpdate({"userid": userid, "lockid": lockid}, permission, {upsert:true},
+		Permission.findOneAndUpdate({"username": username, "lockid": lockid}, permission, {upsert:true},
 			function(err, doc){
 				if (err){
-					res.status(500);
-					res.json({ "status":"error","message": "Permission already exists" });
+					Message.messageRes(req, res, 500, "error", "Permission already exists");
 				}else{
-					res.status(200);
-					res.json({"status":"success","message":"Permission was saved"});
+					Message.messageRes(req, res, 200, "success", "Permission was saved");
 				}
 			});
 	}
@@ -167,19 +197,16 @@ exports.addPermission = function(req,res){
 };
 
 exports.removePermission = function(req,res){
-	var userid = req.params.userid,
+	var username = req.params.username,
 		lockid = req.params.lockid;
-	if(!userid && !lockid){
-		res.status(404);
-		res.json({"status":"error","message":"userid and lockid weren't supplied"});
+	if(!username && !lockid){
+		Message.messageRes(req, res, 404, "error", "username and lockid weren't supplied");
 	}else{
-		Permission.remove({"userid": userid, "lockid": lockid}, function(err,permission){
+		Permission.remove({"username": username, "lockid": lockid}, function(err,permission){
 			if(err){
-				res.status(500);
-				res.json({"status":"error","message":err});
-			}else{	
-				res.status(200);
-				res.json({"status":"success","message":"Permission was deleted successfully"});
+				Message.messageRes(req, res, 500, "error", err);
+			}else{
+				Message.messageRes(req, res, 200, "error", "Permission was deleted successfully");
 			}
 		});
 	}
@@ -187,7 +214,7 @@ exports.removePermission = function(req,res){
 };
 
 exports.updatePermission = function(req,res){
-	var userid = req.params.userid,
+	var username = req.params.userid,
 		lockid = req.params.lockid,
 		frequency = req.params.frequency,
 		type = req.params.type,
@@ -208,22 +235,18 @@ exports.updatePermission = function(req,res){
 		end7   = req.params.end7;
 
 
-	if(!userid && !lockid){
-		res.status(500);
-		res.json({"status":"error","message":"userid and lockid weren't supplied"});
+	if(!username && !lockid){
+		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
 	} else {
-		Permission.findOne({ "userid":userid, "lockid":lockid }, function (err, permission){
+		Permission.findOne({ "userid":username, "lockid":lockid }, function (err, permission){
 			if(!permission){
-				res.status(404);
-				res.json({"status":"error","message": "Permission doesn't exist"});
+				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
 			}else if(err){
-				res.status(500);
-				res.json(err);
-
+				Message.messageRes(req, res, 500, "error", err);
 			} else {
 				permission.type = type;
-				permission.frequency = frequency;
-
+				permission.frequency = "always";
+				console.log(frequency);
 				switch(frequency) {
 					case "always":
 						permission.date = undefined;
@@ -261,8 +284,6 @@ exports.updatePermission = function(req,res){
 						break;
 					case "once":
 						if(!start2){
-							console.log(start2);
-							permission.frequency = frequency;
 							permission.duration = undefined;
 							permission.date = date.toLocaleString();
 							permission.hours = {
@@ -270,7 +291,7 @@ exports.updatePermission = function(req,res){
 								end : end1
 							}
 						} else {
-							res.json({"status":"error","message":"frequency 'once' but you gave multiple hours."});
+							Message.messageRes(req, res, 200, "error", "frequency 'once' but you gave multiple hours.");
 							return;
 						}
 						break;
@@ -278,8 +299,7 @@ exports.updatePermission = function(req,res){
 				}
 
 				permission.save();
-			  	res.status(200);
-			  	res.json({"status":"success","message":"succeed update permission."});
+				Message.messageRes(req, res, 200, "success", "succeed update permission.");
 			}
 		});
 	}
@@ -288,26 +308,22 @@ exports.updatePermission = function(req,res){
 };
 
 exports.changeUserType = function(req, res){
-	var userid = req.params.userid,
+	var username = req.params.username,
 		lockid = req.params.lockid,
 		type = req.params.type;
 
-	if(!userid && !lockid){
-		res.status(500);
-		res.json({"status":"error","message":"userid and lockid weren't supplied"});
+	if(!username && !lockid){
+		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
 	} else {
-		Permission.findOne({ "userid":userid, "lockid":lockid }, function (err, permission){
+		Permission.findOne({ "username":username, "lockid":lockid }, function (err, permission){
 			if(!permission){
-				res.status(404);
-				res.json({"status":"error","message": "Permission doesn't exist"});
+				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
 			}else if(err){
-				res.status(500);
-				res.json({"status":"error","message":err});
+				Message.messageRes(req, res, 500, "error", err);
 			} else {
 				permission.type = type;
 				permission.save();
-				res.status(200);
-				res.json({"status":"success","message":"succeed update user type."});
+				Message.messageRes(req, res, 200, "success", "succeed update user type.");
 			}
 		});
 	}
@@ -315,28 +331,34 @@ exports.changeUserType = function(req, res){
 };
 
 exports.updatePhysicalId = function(req,res){
-	var userid = req.params.userid,
-		lockid = req.params.lockid,
-		physicalId = req.params.physicalId;
+	var username = req.params.username,
+		lockid = req.params.lockid;
 
-	if(!userid && !lockid){
-		res.status(500);
-		res.json({"status":"error","message":"userid and lockid weren't supplied"});
+	var physicalId = physicId.getPhysicalId(lockid);
+
+	if(!username && !lockid){
+		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
 	} else {
-		Permission.findOne({ "userid":userid, "lockid":lockid }, function (err, permission){
+		Permission.findOne({ "username":username, "lockid":lockid }, function (err, permission){
 			if(!permission){
-				res.status(404);
-				res.json({"status":"error","message": "Permission doesn't exist"});
+				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
 			}else if(err){
-				res.status(500);
-				res.json({"status":"error","message":err});
+				Message.messageRes(req, res, 500, "error", err);
 			} else {
 				permission.physicalId = physicalId;
 				permission.save();
-				res.status(200);
-				res.json({"status":"success","message":"succeed update permission."});
+				Message.messageRes(req, res, 200, "success", "succeed update permission.");
 			}
 		});
 	}
 	return;
 };
+
+exports.changePermissionUsername = function(req, res){
+	var nusername = req.params.nusername,
+		username = req.params.username;
+
+	Permission.update({ "username":username}, {username: nusername}, {multi: true}, function (err){
+		Message.messageRes(req, res, 200, "success", "succeed update user's details.");
+	});
+}
