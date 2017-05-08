@@ -49,7 +49,7 @@ https://smartlockproject.herokuapp.com/api/getLockManager/:lockid
 
 https://smartlockproject.herokuapp.com/api/addPermission  
     Method : POST  
-    params : userid & lockid  
+    params : username & lockid
             frequency (always/once)
             type (0- manager, 1-user with physical id 2- user without physical id)
             start1,start2,...,start7 - start1 is the hour of the starting permission in day 1.  

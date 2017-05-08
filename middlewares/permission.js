@@ -4,7 +4,6 @@ var Permission  = require('../models/permission');
 var Message = require('./message');
 var moment = require('moment');
 var valid = require('../helpers/validation');
-var physicId = require('../helpers/physicalId');
 
 exports.getPermissions = function(req,res){
 	Permission.find({},
@@ -90,7 +89,24 @@ exports.getLockManager = function(req, res){
 	});
 	return;
 
-}
+};
+
+exports.checkIfManager = function(req, res, next){
+	var lockid = req.params.lockid,
+		username = req.params.superuser;
+
+	Permission.findOne({"lockid":lockid, "username":superuser, "type":0}, function(err,perResult){
+		if(err){
+			Message.messageRes(req, res, 500, "error", err);
+		}else if(!perResult){
+			Message.messageRes(req, res, 404, "error", "No permissions.");
+		}else{
+			next();
+		}
+	});
+	return;
+
+};
 
 exports.checkPermission = function(req, res, next){
 	var username= req.params.username,
@@ -256,7 +272,6 @@ exports.updatePermission = function(req,res){
 
 	var validation = false;
 
-
 	if(start2){
 		validation = valid.checkPermissionVars(username,lockid,	frequency, date, type, start1,start2, start3, start4, start5, start6, start7,
 			end1, end2, end3, end4, end5, end6,end7);
@@ -363,7 +378,7 @@ exports.changeUserType = function(req, res){
 	return;
 };
 
-exports.updatePhysicalId = function(req,res, physicalId){
+exports.updatePhysicalId = function(req,res){
 	var username = req.params.username,
 		lockid = req.params.lockid,
 		physicalId = req.physicId;
