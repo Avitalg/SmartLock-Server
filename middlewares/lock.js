@@ -1,6 +1,7 @@
 var Lock = require('../models/lock');
 var Message = require('./message');
 var Permission = require('../models/permission');
+var valid = require('../helpers/validation');
 
 exports.getLocks = function(req,res){
 	Lock.find({},
@@ -16,6 +17,7 @@ exports.getLocks = function(req,res){
 
 exports.getLock = function(req, res){
 	var lockid = req.params.lockid;
+
 	if(!lockid){
 		Message.messageRes(req, res, 404, "error", "Lockid wasn't entered");
 	}else{
@@ -37,6 +39,8 @@ exports.getLocksByUser = function(req, res){
 
 	if(!username){
 		Message.messageRes(req, res, 404, "error", "username wasn't entered");
+	}else if(!valid.checkEmail(username)) {
+		Message.messageRes(req, res, 200, "error", "username is Invalid email");
 	}else{
 		Permission.findOne({'username':username}, function(err, perRes){
 			if(err){
@@ -77,7 +81,9 @@ exports.addLock = function(req,res){
 
 	if(!lock){
 		Message.messageRes(req, res, 500, "error", "No lockid was entered");
-	} else {
+	} else if(!valid.checkStatus(status)) {
+		Message.messageRes(req, res, 500, "error", "Wrong lock status");
+	}else{
 		var newlock = new Lock({
 			lockid: lock,
 			status: status
@@ -119,6 +125,8 @@ exports.updateLockStatus= function(req,res){
 
 	if(!lockid){
 		Message.messageRes(req, res, 500, "error", "No lockid was entered");
+	} else if(!valid.checkStatus(status)) {
+		Message.messageRes(req, res, 500, "error", "Wrong lock status");
 	} else {
 		Lock.findOne({ "lockid": lockid }, function (err, lock){
 			if(!lock){

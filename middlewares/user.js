@@ -1,5 +1,6 @@
 var User=require('../models/user');
 var Message = require('./message');
+var valid = require('../helpers/validation');
 
 exports.getUsers = function(req,res){
 	User.find({},
@@ -40,7 +41,9 @@ exports.addUser = function(req,res){
 
 	if(!username){
         Message.messageRes(req, res, 500, "error", "No username was entered");
-	} else {
+	} else if(!valid.checkEmail(username)){
+		Message.messageRes(req, res, 200, "error", "Invalid email");
+	}  else {
 		var user = new User({
 		  	username: username,
 		  	phone: phone,
@@ -71,14 +74,18 @@ exports.removeUser = function(req,res){
 	if(!username){
         Message.messageRes(req, res, 404, "error", "Userid wasn't supplied");
 		return;
+	}else if(!valid.checkEmail(username)){
+		Message.messageRes(req, res, 200, "error", "Invalid email");
+	}else {
+		User.remove({"username":username}, function(err,user){
+			if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			}else{
+				Message.messageRes(req, res, 200, "success", "User was deleted successfully");
+			}
+		});
 	}
-	User.remove({"username":username}, function(err,user){
-		if(err){
-            Message.messageRes(req, res, 500, "error", err);
-		}else{
-            Message.messageRes(req, res, 200, "success", "User was deleted successfully");
-		}
-	});
+
 
 	return;
 };
@@ -91,20 +98,23 @@ exports.updateUser = function(req,res, next){
 	if(!username || !nusername){
         Message.messageRes(req, res, 500, "error", "No username or new username was entered");
 		return;
+	}else if(!valid.checkEmail(username)){
+		Message.messageRes(req, res, 200, "error", "Invalid email");
+	} else {
+		User.findOne({"username": username }, function (err, user){
+			if(!user){
+				Message.messageRes(req, res, 404, "error", "User with the username "+username+" isn't exist");
+			}else if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			} else {
+				user.username = nusername;
+				user.phone = phone;
+				user.save();
+				next();
+			}
+		});
 	}
 
-	User.findOne({"username": username }, function (err, user){
-		if(!user){
-            Message.messageRes(req, res, 404, "error", "User with the username "+username+" isn't exist");
-		}else if(err){
-            Message.messageRes(req, res, 500, "error", err);
-		} else {
-			user.username = nusername;
-			user.phone = phone;
-			user.save();
-			next();
-		}
-	});
 
 	return;
 };
@@ -117,19 +127,21 @@ exports.changePassword = function(req,res){
 	 if(!username || !password){
         Message.messageRes(req, res, 500, "error", "No username or password was entered");
 		return;
-	}
-
-	User.findOne({ "username": username }, function (err, user){
-		if(!user){
-            Message.messageRes(req, res, 404, "error", "User with the username "+username+" isn't exist");
-		}else if(err){
-            Message.messageRes(req, res, 500, "error", err);
-		} else {
-			user.password = password;
-			user.save();
-            Message.messageRes(req, res, 200, "success", "succeed update user's details.");
-		}
-	});
+	}else if(!valid.checkEmail(username)){
+		 Message.messageRes(req, res, 200, "error", "Invalid email");
+	 } else {
+		 User.findOne({ "username": username }, function (err, user){
+			 if(!user){
+				 Message.messageRes(req, res, 404, "error", "User with the username "+username+" isn't exist");
+			 }else if(err){
+				 Message.messageRes(req, res, 500, "error", err);
+			 } else {
+				 user.password = password;
+				 user.save();
+				 Message.messageRes(req, res, 200, "success", "succeed update user's details.");
+			 }
+		 });
+	 }
 
 	return;
-}
+};

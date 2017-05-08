@@ -1,12 +1,15 @@
 var Permission  = require('../models/permission');
+var Message = require('../middlewares/message');
 
-exports.getPhysicalId = function(lockid){
+exports.getPhysicalId = function(req, res, next){
+	var lockid = req.params.lockid;
 	var physicalId = [];
+	var physicValue;
 	Permission.find({"lockid":lockid}, function(err,perResult){
 		if(err){
-			return -1;
+			Message.messageRes(req, res, 500, "error", err);
 		}else if(!perResult){
-			return -1;
+			Message.messageRes(req, res, 404, "error", "Lock doesn't exist");
 		}else{
 			if(perResult.length>0){
 				for(var i=0; i<perResult.length; i++){
@@ -15,27 +18,24 @@ exports.getPhysicalId = function(lockid){
 					}
 				}
 			} else { // only one permission found
-				physicalId.push(perResult[i].physicalId);
+				physicalId.push(perResult.physicalId);
 			}
-
-			return findMinimumPhysId(physicalId);
-			
+			physicValue = findMinimumPhysId(physicalId);
+			req.physicId = physicValue;
+			next();
 		}
 	});
+	return;
 
 };
 
 //returns minimum value available between 0 and 162
 var findMinimumPhysId = function(pIds){
-	if(pIds.length == 163){
-		return -1;
-	}
 
 	for(var i =0; i<163; i++){
-		if(pIds.indexOf(i)==-1){
-			console.log("find min:"+i);
+		if(pIds.indexOf(i.toString())==-1){
 			return i;
 		}
 	}
-
+	return -1;
 };

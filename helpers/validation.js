@@ -45,7 +45,8 @@ return;
 
 
 exports.checkEmail = function(email){
-	return (email.indexOf("@")+1<email.indexOf(".")) && (email.indexOf(".") +1 < email.length);
+	var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	return re.test(email);
 };
 
 exports.checkFrequency = function(freq){
@@ -67,5 +68,64 @@ exports.checkHour = function(hour){
 	var reg =  /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/;
 
 	return reg.test(hour);
-
 };
+
+exports.checkPermissionVars = function(username,lockid,	frequency, date, type, start1,start2, start3, start4, start5, start6, start7,
+									   end1, end2, end3, end4, end5, end6,end7){
+	var message="ok";
+
+	if(!checkEmail(username)){
+		message = "Invalid email";
+	}
+
+	if(!checkFrequency(frequency)){
+		message = "Wrong frequency";
+	}
+
+	if(!checkDate(date)){
+		message = "Invalid date";
+	}
+
+	if(!checkType(type)){
+		message = "Wrong type";
+	}
+
+	if(!checkHour(start1) || !checkHour(start2) || !checkHour(start3) || !checkHour(start4) ||
+		!checkHour(start5) || !checkHour(start6) || !checkHour(start7) || !checkHour(end1) ||
+		!checkHour(end2) || !checkHour(end3) || !checkHour(end4) || !checkHour(end5) || !checkHour(end6) ||
+		!checkHour(end7)){
+		message = "Not all hours are valid";
+	}
+
+	return message;
+};
+
+exports.checkShortPermissionVars = function(username,lockid, frequency, date, type, start,end){
+	var message="ok";
+
+	if(!checkEmail(username)){
+		message = "Invalid email";
+	}
+
+	if(!checkFrequency(frequency)){
+		message = "Wrong frequency";
+	}
+
+	if(!checkDate(date)){
+		message = "Invalid date";
+	}
+
+	if(!checkType(type)){
+		message = "Wrong type";
+	}
+
+	if(!checkHour(start) || !checkHour(end)){
+		message = "Not all hours are valid";
+	}
+
+	return message;
+};
+
+exports.checkStatus = function(status){
+	return status == "opem" || status == "close";
+}
