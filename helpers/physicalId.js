@@ -1,12 +1,13 @@
+var Permission  = require('../models/permission');
 
 exports.getPhysicalId = function(lockid){
+	var physicalId = [];
 	Permission.find({"lockid":lockid}, function(err,perResult){
 		if(err){
-			return err;
+			return -1;
 		}else if(!perResult){
-			return "Permission doesn't exist";
+			return -1;
 		}else{
-			var physicalId = [];
 			if(perResult.length>0){
 				for(var i=0; i<perResult.length; i++){
 					if(!!perResult[i].physicalId){
@@ -19,10 +20,9 @@ exports.getPhysicalId = function(lockid){
 
 			return findMinimumPhysId(physicalId);
 			
-			
 		}
 	});
-	return;
+
 };
 
 //returns minimum value available between 0 and 162
@@ -32,7 +32,8 @@ var findMinimumPhysId = function(pIds){
 	}
 
 	for(var i =0; i<163; i++){
-		if(x.indexOf(i)==-1){
+		if(pIds.indexOf(i)==-1){
+			console.log("find min:"+i);
 			return i;
 		}
 	}

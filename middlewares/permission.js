@@ -1,3 +1,5 @@
+"use strict";
+
 var Permission  = require('../models/permission');
 var Message = require('./message');
 var moment = require('moment');
@@ -333,23 +335,49 @@ exports.changeUserType = function(req, res){
 exports.updatePhysicalId = function(req,res){
 	var username = req.params.username,
 		lockid = req.params.lockid;
+		let physicalIdPromise;
 
-	var physicalId = physicId.getPhysicalId(lockid);
+		// 	physicalIdPromise = new Promise(function(resolve, reject){
+		// 	console.log("hello");
+		// 	var physicalId = physicId.getPhysicalId(lockid);
+		// 	console.log("xxx-"+physicalId);
 
+		// 	if(physicalId || physicalId == 0){
+		// 		console.log("in promise-"+physicalId);
+		// 		resolve(physicalId);
+		// 	} else{
+		// 		reject("test");
+		// 	}
+		// });	
+	
+
+	
 	if(!username && !lockid){
 		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
 	} else {
-		Permission.findOne({ "username":username, "lockid":lockid }, function (err, permission){
-			if(!permission){
-				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
-			}else if(err){
-				Message.messageRes(req, res, 500, "error", err);
-			} else {
-				permission.physicalId = physicalId;
-				permission.save();
-				Message.messageRes(req, res, 200, "success", "succeed update permission.");
-			}
-		});
+		Message.messageRes(req, res, 200, "error", "Can't update physicalId");
+		// console.log("ok");
+		// physicalIdPromise.then(function(promiseResult){
+		// 	console.log("update:"+promiseResult);
+		// 	if(promiseResult > -1){
+		// 		Permission.findOne({ "username":username, "lockid":lockid }, function (err, permission){
+		// 			if(!permission){
+		// 				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
+		// 			}else if(err){
+		// 				Message.messageRes(req, res, 500, "error", err);
+		// 			} else {
+		// 				permission.physicalId = promiseResult;
+		// 				permission.save();
+		// 				Message.messageRes(req, res, 200, "success", {message : "succeed update physicalId.", physicalId : promiseResult});
+		// 			}
+		// 		});	
+		// 	} else {
+		// 		Message.messageRes(req, res, 200, "error", "Can't update physicalId");
+		// 	}
+
+		// }).catch(function(e) {
+		// 	console.log("error:"+e);
+		// });
 	}
 	return;
 };
