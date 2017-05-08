@@ -1,5 +1,8 @@
 var Permission  = require('../models/permission');
 var Message = require('./message');
+var moment = require('moment');
+var valid = require('../helpers/validation');
+var physicId = require('../helpers/physicalId');
 
 exports.getPermissions = function(req,res){
 	Permission.find({},
@@ -86,28 +89,19 @@ exports.checkPermission = function(req, res, next){
 	if(!username && !lockid){
 		Message.messageRes(req, res, 404, "error", "Details weren't supplied");
 	}else{
-		Permission.findOne({"username":username, "lockid":lockid}, function(err,perResult){
-			if(err){
-				Message.messageRes(req, res, 500, "error", err);
-			}else if(!perResult){
-				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
-			}else{
+		var checkPer = valid.checkPermissions(username, lockid);
 
-				switch(perResult.frequency){
-					case "once":
-						var currHour = new Date().getHours() + ":" + new Date().getMinutes();
-						if(perResult.date == new Date().setHours(0,0,0,0) && (currHour >= perResult.hours.start && currHour <= perResult.hours.end)){
-							next();
-						} else {
-							Message.messageRes(req, res, 200, "error", "No permissions");
-						}
-						break;
-					case "always":
-						next();
-						break;
-				}
-			}
-		});
+		switch(checkPer){
+			case "Has permissions":
+				next();
+				break;
+			case "No permissions":
+				Message.messageRes(req, res, 200, "error", checkPer);
+				break;
+			default:
+				Message.messageRes(req, res, 404, "error", checkPer);
+
+		}
 	}
 	return;
 };
@@ -220,7 +214,7 @@ exports.removePermission = function(req,res){
 };
 
 exports.updatePermission = function(req,res){
-	var username = req.params.username,
+	var username = req.params.userid,
 		lockid = req.params.lockid,
 		frequency = req.params.frequency,
 		type = req.params.type,
@@ -244,15 +238,15 @@ exports.updatePermission = function(req,res){
 	if(!username && !lockid){
 		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
 	} else {
-		Permission.findOne({ "username":username, "lockid":lockid }, function (err, permission){
+		Permission.findOne({ "userid":username, "lockid":lockid }, function (err, permission){
 			if(!permission){
 				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
 			}else if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			} else {
 				permission.type = type;
-				permission.frequency = frequency;
-
+				permission.frequency = "always";
+				console.log(frequency);
 				switch(frequency) {
 					case "always":
 						permission.date = undefined;
@@ -290,7 +284,6 @@ exports.updatePermission = function(req,res){
 						break;
 					case "once":
 						if(!start2){
-							permission.frequency = frequency;
 							permission.duration = undefined;
 							permission.date = date.toLocaleString();
 							permission.hours = {
@@ -339,8 +332,9 @@ exports.changeUserType = function(req, res){
 
 exports.updatePhysicalId = function(req,res){
 	var username = req.params.username,
-		lockid = req.params.lockid,
-		physicalId = req.params.physicalId;
+		lockid = req.params.lockid;
+
+	var physicalId = physicId.getPhysicalId(lockid);
 
 	if(!username && !lockid){
 		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");

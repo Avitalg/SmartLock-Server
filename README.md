@@ -78,9 +78,9 @@ https://smartlockproject.herokuapp.com/api/changeUserType/:userid/:lockid/:type
     params: userid & lockid &
             type (0- manager, 1-user with physical id 2- user without physical id)
 
-https://smartlockproject.herokuapp.com/api/updatePhysicalId/:userid/:lockid/:physicalId
+https://smartlockproject.herokuapp.com/api/updatePhysicalId/:userid/:lockid
     Method : PUT
-    params: userid & lockid & physicalId
+    params: userid & lockid 
 
 ## USER
 
@@ -101,7 +101,7 @@ https://smartlockproject.herokuapp.com/api/addUser
 
 https://smartlockproject.herokuapp.com/api/updateUser/:username/:nusername/:phone 
     Method : PUT  
-    params : nusername (new username) & username & phone  
+    params : username & nusername (new username) & phone  
 
 https://smartlockproject.herokuapp.com/api/changePassword/:username/:password 
     Method : PUT  
