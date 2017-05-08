@@ -1,5 +1,6 @@
 /**
  * Created by I325775 on 06/05/2017.
+
  */
 
 var requests = {};
@@ -18,7 +19,8 @@ exports.requestLockAction = function(req,res,next){
         }
         if (!lockId) {
             res.status(404).send("missing lockId");
-        }//todo:add verify userId and lockId and type
+        }
+        //todo:add verify userId and lockId and type
         //todo: add permission check
         var requestId = userId + time;
         requests[requestId] = {
@@ -64,7 +66,7 @@ exports.checkLockRequest = function (req,res,next) {
             }
         }
 
-        res.status(200).json({"type":"no update"});
+        res.status(200).json({"action":"no action needed"});
 
 };
 exports.updateLockRequest = function (req,res,next) {
