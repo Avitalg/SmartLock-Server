@@ -21,9 +21,9 @@ https://smartlockproject.herokuapp.com/api/removeLock/:lockid
     Method : DELETE  
     Params : lockid  
 
-https://smartlockproject.herokuapp.com/api/updateLockStatus/:lockid/:lstatus  
+https://smartlockproject.herokuapp.com/api/updateLockStatus/:username/:lockid/:lstatus  
    Method : PUT  
-   Params : lockid & lstatus (lock status)  
+   Params : username & lockid & lstatus (lock status)  
 
 
 ## PERMISSION
@@ -78,9 +78,9 @@ https://smartlockproject.herokuapp.com/api/changeUserType/:userid/:lockid/:type
     params: userid & lockid &
             type (0- manager, 1-user with physical id 2- user without physical id)
 
-https://smartlockproject.herokuapp.com/api/updatePhysicalId/:userid/:lockid
+https://smartlockproject.herokuapp.com/api/updatePhysicalId/:username/:lockid
     Method : PUT
-    params: userid & lockid 
+    params: username & lockid 
 
 ## USER
 
