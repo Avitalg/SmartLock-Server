@@ -1,6 +1,5 @@
 var express = require('express');
-var app = module.exports = express();
-
+var app = express();
 var bodyParser = require('body-parser');
 
 app.use(bodyParser.json()); // support json encoded bodies
@@ -21,11 +20,11 @@ app.use(function(req, res, next){
 	next();
 });
 
+require('./routes/lockRequest')(app);
 require('./routes/lock')(app);
 require('./routes/permission')(app);
 require('./routes/user')(app);
 require('./routes/message')(app);
-
 
 app.listen(port);
 
