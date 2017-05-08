@@ -9,7 +9,7 @@ exports.requestLockAction = function(req,res,next){
             lockId = req.body.lockId,
             action = req.params.action,//validate legal type
             time = new  Date().getTime();
-        if(action!='addFingerprint'&&action!='addFingerprint'&&action!='unlock'&&action!='lock'&&action!='checkStatus'){
+        if(action!='addFingerprint'&&action!='delFingerprint'&&action!='unlock'&&action!='lock'&&action!='checkStatus'){
             res.status(404).send("undefine action");
 
         }
