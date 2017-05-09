@@ -93,7 +93,7 @@ exports.getLockManager = function(req, res){
 
 exports.checkIfManager = function(req, res, next){
 	var lockid = req.params.lockid,
-		username = req.params.superuser;
+		superuser = req.params.superuser;
 
 	Permission.findOne({"lockid":lockid, "username":superuser, "type":0}, function(err,perResult){
 		if(err){
@@ -387,7 +387,7 @@ exports.updatePhysicalId = function(req,res){
 		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
 	} else {
 		 	if(physicalId > -1){
-		 		Permission.findOne({ "username":username, "lockid":lockid }, function (err, permission){
+		 		Permission.findOne({ "username":username, "lockid":lockid, $or:[{"type":1}, {"type":0}] }, function (err, permission){
 		 			if(!permission){
 		 				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
 		 			}else if(err){
