@@ -22,14 +22,14 @@ exports.requestLockAction = function(req,res,next){
             res.status(404).send("missing lockId");
         }
         //todo:add verify userId and lockId and type
-        if(!valid.checkType(action)){
-            res.status(404).send("Wrong type");
-        }
+        // if(!valid.checkType(action)){
+        //     res.status(404).send("Wrong type");
+        // }
         //todo: add permission check
 
-        if(valid.checkPermissions(userId, lockId) == "No permissions"){
-            res.status(404).send("missing lockId");
-        }
+        // if(valid.checkPermissions(userId, lockId) == "No permissions"){
+        //     res.status(404).send("missing lockId");
+        // }
 
         var requestId = userId + time;
         requests[requestId] = {
