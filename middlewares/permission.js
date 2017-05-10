@@ -499,8 +499,7 @@ exports.sendEmail = function(req, res){
 
 
 	var transporter = nodemailer.createTransport({
-		service: 'Gmail',
-
+		service: 'Gmail'
 	});
 
 	var mailOptions = {
