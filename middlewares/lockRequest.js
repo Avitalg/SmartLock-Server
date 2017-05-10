@@ -2,33 +2,27 @@
  * Created by I325775 on 06/05/2017.
  */
 var valid = require('../helpers/validation');
+var Message = require('./message');
 
 var requests = {};
 var lockRequestQueue = {};
 exports.requestLockAction = function(req,res,next){
         var username = req.body.username,
-            lockId = req.body.lockId,
+            lockId = req.body.lockid,
             action = req.params.action,//validate legal type
             time = new  Date().getTime();
-        if(action!='addFingerprint'&&action!='delFingerprint'&&action!='unlock'&&action!='lock'&&action!='checkStatus'){
-            res.status(404).send("undefine action");
-
+        if(!valid.checkLockAction(action)){
+            Message.messageRes(req, res, 404, "error", "undefine action");
+            return;
         }
         if (!username) {
-            res.status(404).send("missing username");
+            Message.messageRes(req, res, 404, "error", "missing username");
+            return;
         }
         if (!lockId) {
-            res.status(404).send("missing lockId");
+            Message.messageRes(req, res, 404, "error", "missing lockid");
+            return;
         }
-        //todo:add verify username and lockId and type
-        // if(!valid.checkType(action)){
-        //     res.status(404).send("Wrong type");
-        // }
-        //todo: add permission check
-
-        // if(valid.checkPermissions(username, lockId) == "No permissions"){
-        //     res.status(404).send("missing lockId");
-        // }
 
         var requestId = username + time;
         requests[requestId] = {

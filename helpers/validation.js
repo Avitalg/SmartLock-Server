@@ -89,27 +89,18 @@ exports.checkType = function(type){
 
 exports.checkHour = function(hour){
 	var reg =  /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/;
-
-	return reg.test(hour)|| "0";
+	return reg.test(hour)|| hour =="0";
 };
 
 exports.checkPermissionVars = function(username,lockid,	frequency, date, type, start1,start2, start3, start4, start5, start6, start7,
 									   end1, end2, end3, end4, end5, end6,end7){
 	var message="ok";
 	console.log("here");
-	var promise;
+
 	if(!_this.checkEmail(username)){
 		message = "Invalid email";
 	}
-
-	promise = _this.checkUserExist(username);
-	console.log("pr:"+promise);
 	
-	promise.then(function(result){
-		if(!result){
-			message = "User doesn't exist";
-		}
-	});
 
 	if(!_this.checkFrequency(frequency)){
 		message = "Wrong frequency";
@@ -136,10 +127,12 @@ exports.checkPermissionVars = function(username,lockid,	frequency, date, type, s
 exports.checkShortPermissionVars = function(username,lockid, frequency, date, type, start,end){
 	var message="ok";
 
+	console.log("s:"+start + ",e:"+end);
+
 	if(!_this.checkEmail(username)){
 		message = "Invalid email";
 	}
-	
+
 	if(!_this.checkFrequency(frequency)){
 		message = "Wrong frequency";
 	}
