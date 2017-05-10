@@ -5,6 +5,7 @@ var Message = require('./message');
 var moment = require('moment');
 var valid = require('../helpers/validation');
 var formate = require('../helpers/formate');
+var sendmail = require('sendmail')();
 
 exports.getPermissions = function(req,res){
 	Permission.find({},
@@ -143,7 +144,7 @@ exports.checkPermission = function(req, res, next){
 	return;
 };
 
-exports.addPermission = function(req,res){
+exports.addPermission = function(req,res, next){
 	var username = req.body.username,
 		lockid = req.body.lockid,
 		frequency = req.body.frequency,
@@ -240,6 +241,9 @@ exports.addPermission = function(req,res){
 						if (err){
 							Message.messageRes(req, res, 500, "error", "Permission already exists");
 						}else{
+							if(typeof(next) == "function"){
+								next();
+							}
 							Message.messageRes(req, res, 200, "success", "Permission was saved");
 						}
 					});
@@ -485,3 +489,22 @@ exports.changePermissionUsername = function(req, res){
 	}
 
 };
+
+exports.sendEmail = function(req, res){
+	var username = req.body.username,
+		lockid = req.body.lockid,
+		frequency = req.body.frequency,
+		date = req.body.date,
+		type = req.body.type;
+
+	console.log("send email");
+	sendmail({
+	    from: 'no-reply@smartLock.com',
+	    to: username,
+	    subject: 'Smart Lock New Permissions',
+	    html: "<h1>Congratulations!</h1><p>you've been recived new permissions in SmartLock app.<br>You can download the app from the app store.</p>",
+	  }, function(err, reply) {
+	    console.log(err && err.stack);
+	    console.dir(reply);
+	});
+}
