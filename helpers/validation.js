@@ -25,7 +25,7 @@ exports.checkPermissions = function(username, lockid){
 					case "once":
 						var startHour = perResult.hours.start;
 						var endHour = perResult.hours.end;
-						var x = perResult.date.setHours(perResult.date.getHours() + 3);
+						var x = perResult.date.setHours(perResult.date.getHours());
 						cond =  x == new Date().setHours(0,0,0,0) ;
 						break;
 					case "always":
@@ -37,7 +37,8 @@ exports.checkPermissions = function(username, lockid){
 						var endHour = hours.end;
 						break;
 				}
-
+				
+				
 				if(cond && (currHour >= startHour && (currHour <= endHour)|| endHour == "00:00") ){
 					 return "Has permissions";
 				} else {
