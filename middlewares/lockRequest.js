@@ -43,10 +43,14 @@ exports.requestLockAction = function(req,res,next){
         if(!lockRequestQueue[lockId]){
             lockRequestQueue[lockId] = [];
         }
+
+        console.log(lockRequestQueue);
+
         lockRequestQueue[lockId].push(requestLock);
         res.status(201).json({'status': 'request created', 'requestId' : requestId});
 
 };
+
 exports.checkLockAction = function(req,res,next){
         if(req.params.requestId && requests[req.params.requestId]){
             var responseJson = JSON.parse(JSON.stringify(requests[req.params.requestId]));
@@ -58,7 +62,8 @@ exports.checkLockAction = function(req,res,next){
             res.status(500).json({});
         }
 
-    };
+};
+
 exports.checkLockRequest = function (req,res,next) {
         if(lockRequestQueue[req.params.lockId] && lockRequestQueue[req.params.lockId].length> 0) {
             var now = new Date().getTime();
@@ -69,8 +74,8 @@ exports.checkLockRequest = function (req,res,next) {
         }
 
         res.status(200).json({"action":"no action needed"});
-
 };
+
 exports.updateLockRequest = function (req,res,next) {
         var requestId = req.body.requestId,
             status = req.body.status;

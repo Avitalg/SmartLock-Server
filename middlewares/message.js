@@ -1,7 +1,7 @@
 
 exports.helloMessage = function(req,res){
     res.status(200);
-    res.send("Hello World");
+    res.send("SmartLockApp");
 };
 
 exports.errorMessage = function(req,res){

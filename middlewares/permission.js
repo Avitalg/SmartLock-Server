@@ -361,7 +361,6 @@ exports.updatePermission = function(req,res){
 	var username = req.params.username,
 		lockid = req.params.lockid,
 		frequency = req.params.frequency,
-		type = req.params.type,
 		date = req.params.date,
 		start1 = req.params.start1,
 		start2 = req.params.start2,
@@ -379,12 +378,12 @@ exports.updatePermission = function(req,res){
 		end7   = req.params.end7;
 
 	var validation = false;
-
+ 
 	if(start2){
-		validation = valid.checkPermissionVars(username,lockid,	frequency, date, type, start1,start2, start3, start4, start5, start6, start7,
+		validation = valid.checkPermissionVars(username,lockid,	frequency, "0", start1,start2, start3, start4, start5, start6, start7,
 			end1, end2, end3, end4, end5, end6,end7);
 	} else {
-		validation = valid.checkShortPermissionVars(username,lockid, frequency, date, type, start1,start2);
+		validation = valid.checkShortPermissionVars(username,lockid, frequency, date, "0", start1,start2);
 	}
 
 	if(!username && !lockid){
@@ -398,9 +397,7 @@ exports.updatePermission = function(req,res){
 			}else if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			} else {
-				permission.type = type;
 				permission.frequency = "always";
-				console.log(frequency);
 				switch(frequency) {
 					case "always":
 						permission.date = undefined;

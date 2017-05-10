@@ -38,7 +38,7 @@ exports.checkPermissions = function(username, lockid){
 						break;
 				}
 				
-				
+
 				if(cond && (currHour >= startHour && (currHour <= endHour)|| endHour == "00:00") ){
 					 return "Has permissions";
 				} else {
@@ -96,12 +96,10 @@ exports.checkHour = function(hour){
 exports.checkPermissionVars = function(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
 									   end1, end2, end3, end4, end5, end6,end7){
 	var message="ok";
-	console.log("here");
 
 	if(!_this.checkEmail(username)){
 		message = "Invalid email";
 	}
-	
 
 	if(!_this.checkFrequency(frequency)){
 		message = "Wrong frequency";
@@ -123,8 +121,6 @@ exports.checkPermissionVars = function(username,lockid,	frequency, type, start1,
 
 exports.checkShortPermissionVars = function(username,lockid, frequency, date, type, start,end){
 	var message="ok";
-
-	console.log("s:"+start + ",e:"+end);
 
 	if(!_this.checkEmail(username)){
 		message = "Invalid email";
