@@ -22,7 +22,10 @@ exports.getPhysicalId = function(req, res, next){
 			}
 			physicValue = findMinimumPhysId(physicalId);
 			req.physicId = physicValue;
-			next();
+
+			if(typeof(next) == "function"){
+				next();
+			}
 		}
 	});
 	return;
