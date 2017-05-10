@@ -384,7 +384,7 @@ exports.updatePermission = function(req,res){
 		validation = valid.checkPermissionVars(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
 			end1, end2, end3, end4, end5, end6,end7);
 	} else {
-		validation = valid.checkShortPermissionVars(username,lockid, frequency, date, type, start1,start2);
+		validation = valid.checkShortPermissionVars(username,lockid, frequency, date, type, start1,end1);
 	}
 
 	if(!username && !lockid){
@@ -400,7 +400,6 @@ exports.updatePermission = function(req,res){
 			} else {
 				permission.frequency = "always";
 				permission.type = type;
-				console.log(type);
 				switch(frequency) {
 					case "always":
 						permission.date = undefined;

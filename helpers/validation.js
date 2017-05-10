@@ -137,8 +137,8 @@ exports.checkShortPermissionVars = function(username,lockid, frequency, date, ty
 	if(!_this.checkType(type)){
 		message = "Wrong type";
 	}
-
-	if(!_this.checkHour(start) || !_this.checkHour(end)){
+ 
+ 	if(!_this.checkHour(start) || !_this.checkHour(end)){
 		message = "Not all hours are valid";
 	}
 
