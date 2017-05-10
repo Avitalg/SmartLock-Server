@@ -1,46 +1,69 @@
 var moment = require('moment');
 var Permission  = require('../models/permission');
 var Formate = require('./formate.js');
+var User=require('../models/user');
+var mongoose = require('mongoose');
+
+var _this = this;
 
 exports.checkPermissions = function(username, lockid){
+	var promise = new mongoose.Promise;
 
-	Permission.findOne({"username":username, "lockid":lockid}, function(err,perResult){
-		if(err){
-			return err;
-		}else if(!perResult){
+	return Permission.findOne({"username":username, "lockid":lockid}).exec().then(
+		function(perResult){
+			if(!perResult){
+				return "Permission doesn't exist";
+			}else{
+				var hour = new Date().getHours();
+				if(hour<10){
+					hour = "0"+hour;
+				}
+				var currHour = hour + ":" + new Date().getMinutes();
+				var cond = false;
+
+				switch(perResult.frequency){
+					case "once":
+						var startHour = perResult.hours.start;
+						var endHour = perResult.hours.end;
+						var x = perResult.date.setHours(perResult.date.getHours() + 3);
+						cond =  x == new Date().setHours(0,0,0,0) ;
+						break;
+					case "always":
+						var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+						var currDay = days[new Date().getDay()];
+						var hours = perResult.duration[currDay];
+						cond = true;
+						var startHour = hours.start;
+						var endHour = hours.end;
+						break;
+				}
+
+				if(cond && (currHour >= startHour && (currHour <= endHour)|| endHour == "00:00") ){
+					 return "Has permissions";
+				} else {
+					return "No permissions";
+				}
+			}
+		}, function(){
 			return "Permission doesn't exist";
-		}else{
-			var hour = new Date().getHours();
-			if(hour<10){
-				hour = "0"+hour;
-			}
-			var currHour = hour + ":" + new Date().getMinutes();
-			var cond = false;
-			switch(perResult.frequency){
-				case "once":
-					var startHour = perResult.hours.start;
-					var endHour = perResult.hours.end;
-					cond = perResult.date == new Date().setHours(0,0,0,0) ;
-					break;
-				case "always":
-					var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-					var currDay = days[new Date().getDay()];
-					var hours = perResult.duration[currDay];
-					cond = true;
-					var startHour = hours.start;
-					var endHour = hours.end;
-					break;
-			}
+		});
 
-			if(cond && (currHour >= startHour && currHour <= endHour) ){
-				return "Has permissions";
-			} else {
-				return "No permissions";
-			}
-		}
-	});
+};
 
-return;
+exports.checkUserExist = function(username){
+	var promise = new mongoose.Promise;
+
+	return User.findOne({"username":username}).exec()
+	.then(function(user){
+			if(!user){
+				return false;
+			}else{	
+				return true;
+			}
+		}, function(){
+			return false;
+		});
+	return;
 };
 
 
@@ -67,33 +90,43 @@ exports.checkType = function(type){
 exports.checkHour = function(hour){
 	var reg =  /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/;
 
-	return reg.test(hour);
+	return reg.test(hour)|| "0";
 };
 
 exports.checkPermissionVars = function(username,lockid,	frequency, date, type, start1,start2, start3, start4, start5, start6, start7,
 									   end1, end2, end3, end4, end5, end6,end7){
 	var message="ok";
-
-	if(!checkEmail(username)){
+	console.log("here");
+	var promise;
+	if(!_this.checkEmail(username)){
 		message = "Invalid email";
 	}
 
-	if(!checkFrequency(frequency)){
+	promise = _this.checkUserExist(username);
+	console.log("pr:"+promise);
+	
+	promise.then(function(result){
+		if(!result){
+			message = "User doesn't exist";
+		}
+	});
+
+	if(!_this.checkFrequency(frequency)){
 		message = "Wrong frequency";
 	}
 
-	if(!checkDate(date)){
+	if(!_this.checkDate(date)){
 		message = "Invalid date";
 	}
 
-	if(!checkType(type)){
+	if(!_this.checkType(type)){
 		message = "Wrong type";
 	}
 
-	if(!checkHour(start1) || !checkHour(start2) || !checkHour(start3) || !checkHour(start4) ||
-		!checkHour(start5) || !checkHour(start6) || !checkHour(start7) || !checkHour(end1) ||
-		!checkHour(end2) || !checkHour(end3) || !checkHour(end4) || !checkHour(end5) || !checkHour(end6) ||
-		!checkHour(end7)){
+	if(!_this.checkHour(start1) || !_this.checkHour(start2) || !_this.checkHour(start3) || !_this.checkHour(start4) ||
+		!_this.checkHour(start5) || !_this.checkHour(start6) || !_this.checkHour(start7) || !_this.checkHour(end1) ||
+		!_this.checkHour(end2) || !_this.checkHour(end3) || !_this.checkHour(end4) || !_this.checkHour(end5) || !_this.checkHour(end6) ||
+		!_this.checkHour(end7)){
 		message = "Not all hours are valid";
 	}
 
@@ -103,23 +136,23 @@ exports.checkPermissionVars = function(username,lockid,	frequency, date, type, s
 exports.checkShortPermissionVars = function(username,lockid, frequency, date, type, start,end){
 	var message="ok";
 
-	if(!checkEmail(username)){
+	if(!_this.checkEmail(username)){
 		message = "Invalid email";
 	}
-
-	if(!checkFrequency(frequency)){
+	
+	if(!_this.checkFrequency(frequency)){
 		message = "Wrong frequency";
 	}
 
-	if(!checkDate(date)){
+	if(!_this.checkDate(date)){
 		message = "Invalid date";
 	}
 
-	if(!checkType(type)){
+	if(!_this.checkType(type)){
 		message = "Wrong type";
 	}
 
-	if(!checkHour(start) || !checkHour(end)){
+	if(!_this.checkHour(start) || !_this.checkHour(end)){
 		message = "Not all hours are valid";
 	}
 
@@ -127,5 +160,9 @@ exports.checkShortPermissionVars = function(username,lockid, frequency, date, ty
 };
 
 exports.checkStatus = function(status){
-	return status == "opem" || status == "close";
+	return status == "open" || status == "close";
+}
+
+exports.checkLockAction = function(action){
+	return action=='addFingerprint'||action=='delFingerprint'||action=='unlock'||action=='lock'||action=='checkStatus';
 }

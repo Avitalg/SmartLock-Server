@@ -1,35 +1,29 @@
 /**
  * Created by I325775 on 06/05/2017.
-
  */
 var valid = require('../helpers/validation');
+var Message = require('./message');
 
 var requests = {};
 var lockRequestQueue = {};
 exports.requestLockAction = function(req,res,next){
-        var userId = req.body.userId,
-            lockId = req.body.lockId,
+        var userId = req.body.username,
+            lockId = req.body.lockid,
             action = req.params.action,//validate legal type
             time = new  Date().getTime();
-        if(action!='addFingerprint'&&action!='delFingerprint'&&action!='unlock'&&action!='lock'&&action!='checkStatus'){
-            res.status(404).send("undefine action");
 
+        if(!valid.checkLockAction(action)){
+            Message.messageRes(req, res, 404, "error", "undefine action");
+            return;
         }
         if (!userId) {
-            res.status(404).send("missing userId");
+            Message.messageRes(req, res, 404, "error", "missing userId");
+            return;
         }
         if (!lockId) {
-            res.status(404).send("missing lockId");
+            Message.messageRes(req, res, 404, "error", "missing lockId");
+            return;
         }
-        //todo:add verify userId and lockId and type
-        // if(!valid.checkType(action)){
-        //     res.status(404).send("Wrong type");
-        // }
-        //todo: add permission check
-
-        // if(valid.checkPermissions(userId, lockId) == "No permissions"){
-        //     res.status(404).send("missing lockId");
-        // }
 
         var requestId = userId + time;
         requests[requestId] = {
@@ -51,7 +45,7 @@ exports.requestLockAction = function(req,res,next){
             lockRequestQueue[lockId] = [];
         }
         lockRequestQueue[lockId].push(requestLock);
-        res.status(201).json({'status': 'request created', 'requestId' : requestId});
+        res.status(200).json({'status': 'request created', 'requestId' : requestId});
 
 };
 exports.checkLockAction = function(req,res,next){
