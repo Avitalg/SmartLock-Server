@@ -92,7 +92,7 @@ exports.checkHour = function(hour){
 	return reg.test(hour)|| hour =="0";
 };
 
-exports.checkPermissionVars = function(username,lockid,	frequency, date, type, start1,start2, start3, start4, start5, start6, start7,
+exports.checkPermissionVars = function(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
 									   end1, end2, end3, end4, end5, end6,end7){
 	var message="ok";
 	console.log("here");
@@ -104,10 +104,6 @@ exports.checkPermissionVars = function(username,lockid,	frequency, date, type, s
 
 	if(!_this.checkFrequency(frequency)){
 		message = "Wrong frequency";
-	}
-
-	if(!_this.checkDate(date)){
-		message = "Invalid date";
 	}
 
 	if(!_this.checkType(type)){

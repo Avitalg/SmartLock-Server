@@ -10,6 +10,7 @@ exports.formateHour = function(hour){
 
 //change from format "DDMMYYYY" to "MMDDYYYY" - the moment library formate.
 exports.formateDate = function(date){
+
 	 date = date.split(/[\.\-\,]+/);
 
 	 if(date.length == 3){

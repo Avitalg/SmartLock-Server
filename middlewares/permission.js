@@ -5,7 +5,7 @@ var Message = require('./message');
 var moment = require('moment');
 var valid = require('../helpers/validation');
 var formate = require('../helpers/formate');
-var sendmail = require('sendmail')();
+var nodemailer = require('nodemailer');
 
 exports.getPermissions = function(req,res){
 	Permission.find({},
@@ -168,7 +168,7 @@ exports.addPermission = function(req,res, next){
 	var validation = false; 
 
 	if(frequency == "always"){
-		validation = valid.checkPermissionVars(username,lockid,	frequency, date, type, start1,start2, start3, start4, start5, start6, start7,
+		validation = valid.checkPermissionVars(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
 		end1, end2, end3, end4, end5, end6,end7);
 	} else if (frequency == "once"){
 		validation = valid.checkShortPermissionVars(username,lockid,frequency, date, type, start1,end1);
@@ -497,14 +497,29 @@ exports.sendEmail = function(req, res){
 		date = req.body.date,
 		type = req.body.type;
 
-	console.log("send email");
-	sendmail({
-	    from: 'no-reply@smartLock.com',
-	    to: username,
-	    subject: 'Smart Lock New Permissions',
-	    html: "<h1>Congratulations!</h1><p>you've been recived new permissions in SmartLock app.<br>You can download the app from the app store.</p>",
-	  }, function(err, reply) {
-	    console.log(err && err.stack);
-	    console.dir(reply);
+
+	var transporter = nodemailer.createTransport({
+		service: 'Gmail',
+
 	});
-}
+
+	var mailOptions = {
+		from: 'no-reply@smartLock.com', // sender address
+		to: 'avitalg91@gmail.com', // list of receivers
+		subject: 'Smart Lock New Permissions',
+		//text: text //, // plaintext body
+		html: "<h1>Congratulations!</h1><p>you've been recived new permissions in SmartLock app.<br>You can download the app from the app store.</p>",
+	};
+
+	transporter.sendMail(mailOptions, function(error, info){
+		if(error){
+			console.log(error);
+			console.log({yo: 'error' });
+		}else{
+			console.log('Message sent: ' + info.response);
+			console.log({yo: info.response});
+		};
+	});
+
+
+};
