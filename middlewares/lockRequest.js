@@ -7,7 +7,7 @@ var valid = require('../helpers/validation');
 var requests = {};
 var lockRequestQueue = {};
 exports.requestLockAction = function(req,res,next){
-        var userId = req.body.userId,
+        var username = req.body.username,
             lockId = req.body.lockId,
             action = req.params.action,//validate legal type
             time = new  Date().getTime();
@@ -15,26 +15,26 @@ exports.requestLockAction = function(req,res,next){
             res.status(404).send("undefine action");
 
         }
-        if (!userId) {
-            res.status(404).send("missing userId");
+        if (!username) {
+            res.status(404).send("missing username");
         }
         if (!lockId) {
             res.status(404).send("missing lockId");
         }
-        //todo:add verify userId and lockId and type
+        //todo:add verify username and lockId and type
         // if(!valid.checkType(action)){
         //     res.status(404).send("Wrong type");
         // }
         //todo: add permission check
 
-        // if(valid.checkPermissions(userId, lockId) == "No permissions"){
+        // if(valid.checkPermissions(username, lockId) == "No permissions"){
         //     res.status(404).send("missing lockId");
         // }
 
-        var requestId = userId + time;
+        var requestId = username + time;
         requests[requestId] = {
             'action' : action,
-            'userId' : userId,
+            'username' : username,
             'lockId' : lockId,
             'time' :  time,
             'status' : 'unhandle'
