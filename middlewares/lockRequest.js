@@ -2,33 +2,38 @@
  * Created by I325775 on 06/05/2017.
  */
 var valid = require('../helpers/validation');
-var Message = require('./message');
 
 var requests = {};
 var lockRequestQueue = {};
 exports.requestLockAction = function(req,res,next){
-        var userId = req.body.username,
-            lockId = req.body.lockid,
+        var username = req.body.username,
+            lockId = req.body.lockId,
             action = req.params.action,//validate legal type
             time = new  Date().getTime();
+        if(action!='addFingerprint'&&action!='delFingerprint'&&action!='unlock'&&action!='lock'&&action!='checkStatus'){
+            res.status(404).send("undefine action");
 
-        if(!valid.checkLockAction(action)){
-            Message.messageRes(req, res, 404, "error", "undefine action");
-            return;
         }
-        if (!userId) {
-            Message.messageRes(req, res, 404, "error", "missing userId");
-            return;
+        if (!username) {
+            res.status(404).send("missing username");
         }
         if (!lockId) {
-            Message.messageRes(req, res, 404, "error", "missing lockId");
-            return;
+            res.status(404).send("missing lockId");
         }
+        //todo:add verify username and lockId and type
+        // if(!valid.checkType(action)){
+        //     res.status(404).send("Wrong type");
+        // }
+        //todo: add permission check
 
-        var requestId = userId + time;
+        // if(valid.checkPermissions(username, lockId) == "No permissions"){
+        //     res.status(404).send("missing lockId");
+        // }
+
+        var requestId = username + time;
         requests[requestId] = {
             'action' : action,
-            'userId' : userId,
+            'username' : username,
             'lockId' : lockId,
             'time' :  time,
             'status' : 'unhandle'
@@ -45,7 +50,7 @@ exports.requestLockAction = function(req,res,next){
             lockRequestQueue[lockId] = [];
         }
         lockRequestQueue[lockId].push(requestLock);
-        res.status(200).json({'status': 'request created', 'requestId' : requestId});
+        res.status(201).json({'status': 'request created', 'requestId' : requestId});
 
 };
 exports.checkLockAction = function(req,res,next){
