@@ -93,6 +93,10 @@ exports.checkHour = function(hour){
 	return reg.test(hour)|| hour =="0";
 };
 
+exports.checkStartEndHour = function(start, end){
+	return start < end || end == "00:00";
+}
+
 exports.checkPermissionVars = function(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
 									   end1, end2, end3, end4, end5, end6,end7){
 	var message="ok";
@@ -107,6 +111,12 @@ exports.checkPermissionVars = function(username,lockid,	frequency, type, start1,
 
 	if(!_this.checkType(type)){
 		message = "Wrong type";
+	}
+
+	if(!_this.checkStartEndHour(start1,end1) || !_this.checkStartEndHour(start2,end2) || !_this.checkStartEndHour(start3,end3)
+		|| !_this.checkStartEndHour(start3,end3) || !_this.checkStartEndHour(start4,end4) || !_this.checkStartEndHour(start5,end5)
+		|| !_this.checkStartEndHour(start6,end6) || !_this.checkStartEndHour(start7,end7)){
+			message = "Not all start hours are bigger then the end hours";		
 	}
 
 	if(!_this.checkHour(start1) || !_this.checkHour(start2) || !_this.checkHour(start3) || !_this.checkHour(start4) ||
@@ -140,6 +150,10 @@ exports.checkShortPermissionVars = function(username,lockid, frequency, date, ty
  
  	if(!_this.checkHour(start) || !_this.checkHour(end)){
 		message = "Not all hours are valid";
+	}
+
+	if(!_this.checkStartEndHour(start,end)){
+			message = "Not all start hours are bigger then the end hours";		
 	}
 
 	return message;

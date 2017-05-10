@@ -187,22 +187,23 @@ exports.addPermission = function(req,res, next){
 		frequency = req.body.frequency,
 		date = req.body.date,
 		type = req.body.type,
-		start1 = req.body.start1,
-		start2 = req.body.start2,
-		start3 = req.body.start3,
-		start4 = req.body.start4,
-		start5 = req.body.start5,
-		start6 = req.body.start6,
-		start7 = req.body.start7,
-		end1   = req.body.end1,
-		end2   = req.body.end2,
-		end3   = req.body.end3,
-		end4   = req.body.end4,
-		end5   = req.body.end5,
-		end6   = req.body.end6,
-		end7   = req.body.end7;
+		start1 = formate.formateHour(req.body.start1),
+		start2 = formate.formateHour(req.body.start2),
+		start3 = formate.formateHour(req.body.start3),
+		start4 = formate.formateHour(req.body.start4),
+		start5 = formate.formateHour(req.body.start5),
+		start6 = formate.formateHour(req.body.start6),
+		start7 = formate.formateHour(req.body.start7),
+		end1   = formate.formateHour(req.body.end1),
+		end2   = formate.formateHour(req.body.end2),
+		end3   = formate.formateHour(req.body.end3),
+		end4   = formate.formateHour(req.body.end4),
+		end5   = formate.formateHour(req.body.end5),
+		end6   = formate.formateHour(req.body.end6),
+		end7   = formate.formateHour(req.body.end7);
 
 	var validation = false; 
+
 
 	if(frequency == "always"){
 		validation = valid.checkPermissionVars(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
@@ -296,6 +297,7 @@ exports.addPermission = function(req,res, next){
 exports.removePermission = function(req,res){
 	var username = req.params.username,
 		lockid = req.params.lockid;
+
 	if(!username && !lockid){
 		Message.messageRes(req, res, 404, "error", "username and lockid weren't supplied");
 	}else if(!valid.checkEmail(username)) {
@@ -363,20 +365,20 @@ exports.updatePermission = function(req,res){
 		frequency = req.params.frequency,
 		type = req.params.type,
 		date = req.params.date,
-		start1 = req.params.start1,
-		start2 = req.params.start2,
-		start3 = req.params.start3,
-		start4 = req.params.start4,
-		start5 = req.params.start5,
-		start6 = req.params.start6,
-		start7 = req.params.start7,
-		end1   = req.params.end1,
-		end2   = req.params.end2,
-		end3   = req.params.end3,
-		end4   = req.params.end4,
-		end5   = req.params.end5,
-		end6   = req.params.end6,
-		end7   = req.params.end7;
+		start1 = formate.formateHour(req.params.start1),
+		start2 = formate.formateHour(req.params.start2),
+		start3 = formate.formateHour(req.params.start3),
+		start4 = formate.formateHour(req.params.start4),
+		start5 = formate.formateHour(req.params.start5),
+		start6 = formate.formateHour(req.params.start6),
+		start7 = formate.formateHour(req.params.start7),
+		end1   = formate.formateHour(req.params.end1),
+		end2   = formate.formateHour(req.params.end2),
+		end3   = formate.formateHour(req.params.end3),
+		end4   = formate.formateHour(req.params.end4),
+		end5   = formate.formateHour(req.params.end5),
+		end6   = formate.formateHour(req.params.end6),
+		end7   = formate.formateHour(req.params.end7);
 
 	var validation = false;
  
@@ -545,8 +547,8 @@ exports.sendEmail = function(req, res){
 	var mailOptions = {
 		from: 'no-reply@smartLock.com', 
 		to: username, 
-		subject: 'Smart Lock New Permissions',
-		html: "<h1>Congratulations!</h1><p>you've been recived new permissions in SmartLock app.<br>You can download the app from the app store.</p><p>Best regards,<br>Smart Lock Team</p>",
+		subject: 'Smart Lock - New Permissions',
+		html: "<h1>Congratulations!</h1><p>you've been received new permissions in SmartLock app.<br>You can download the app from the app store.</p><p>Best regards,<br>Smart Lock Team.</p>",
 	};
 
 	transporter.sendMail(mailOptions, function(error, info){
