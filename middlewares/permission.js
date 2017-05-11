@@ -103,9 +103,13 @@ exports.checkIfManager = function(req, res, next){
 		if(err){
 			Message.messageRes(req, res, 500, "error", err);
 		}else if(!perResult){
-			Message.messageRes(req, res, 404, "error", "No permissions.");
+			Message.messageRes(req, res, 404, "error", "No manager");
 		}else{
-			next();
+			if(typeof(next) == "function"){
+				next();
+			} else {
+				Message.messageRes(req, res, 200, "success", "Has manager");
+			}
 		}
 	});
 	return;
@@ -157,9 +161,14 @@ exports.fingerPrintPermission = function(req, res, next){
 			Message.messageRes(req, res, 404, "error", "No permissions.");
 		}else{
 			if(perResult.type == 0 || perResult.type == 1){
-				next();				
+				if(typeof(next) == "function"){
+					next();	
+				} else {
+					Message.messageRes(req, res, 200, "success", "Has permissions.");		
+				}
+								
 			} else {
-				Message.messageRes(req, res, 404, "error", "No permissions.");	
+				Message.messageRes(req, res, 400, "error", "No permissions.");	
 			}
 		}
 	});
