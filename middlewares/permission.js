@@ -535,7 +535,7 @@ exports.sendEmail = function(req, res){
 		date = req.body.date,
 		type = req.body.type;
 
-
+	//need to secure this details
 	var transporter = nodemailer.createTransport({
 		service: 'Gmail',
 		auth: {
