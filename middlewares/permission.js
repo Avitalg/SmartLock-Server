@@ -70,8 +70,8 @@ exports.getPermissionsByLock = function(req,res, next){
 	Permission.find({"lockid":lockid}, function(err,perResult){
 		if(err){
 				Message.messageRes(req, res, 500, "error", err);
-			}else if(!perResult){
-				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
+			}else if(perResult.length == 0){
+				Message.messageRes(req, res, 404, "error", "No permissions for this lockid");
 			}else{
 
 				if(typeof(next)=="function"){
