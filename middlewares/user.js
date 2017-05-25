@@ -40,8 +40,8 @@ exports.getUsersByLock = function(req, res){
 	User.find({"username" : {$in:usernames}},function(err,userRes){
 		if(err){
 			Message.messageRes(req, res, 500, "error", err);
-		}else if(!userRes){
-			Message.messageRes(req, res, 404, "error", "Users don't exist");
+		}else if(userRes.length == 0){
+			Message.messageRes(req, res, 404, "error", "No Users");
 		}else{	
 			Message.messageRes(req, res, 200, "success", userRes);
 		}
