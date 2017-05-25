@@ -91,6 +91,10 @@ https://smartlockproject.herokuapp.com/api/getUser/:userid
     Method : GET  
     params : userid  
 
+https://smartlockproject.herokuapp.com/api/getUsersByLock/:lockid
+    Method : GET  
+    params : lockid  
+
 https://smartlockproject.herokuapp.com/api/removeUser/:username 
     Method : DELETE  
     params : username  
