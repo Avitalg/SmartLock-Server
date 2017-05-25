@@ -64,16 +64,30 @@ exports.getPermissionsByUser = function(req,res){
 	return;
 };
 
-exports.getPermissionsByLock = function(req,res){
+exports.getPermissionsByLock = function(req,res, next){
 	var lockid = req.params.lockid;
-
+	var usersname=[];
 	Permission.find({"lockid":lockid}, function(err,perResult){
 		if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			}else if(!perResult){
 				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
 			}else{
-				Message.messageRes(req, res, 200, "success", perResult);
+
+				if(typeof(next)=="function"){
+
+					for(var i=0; i<perResult.length; i++){
+						usersname.push(perResult[i].username);
+					}
+
+					req.usersname = usersname;
+					next();
+
+				} else {
+					Message.messageRes(req, res, 200, "success", perResult);	
+				}
+
+				
 			}
 	});
 	return;
@@ -213,7 +227,7 @@ exports.addPermission = function(req,res, next){
 
 	var validation = false; 
 
-
+	
 	if(frequency == "always"){
 		validation = valid.checkPermissionVars(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
 		end1, end2, end3, end4, end5, end6,end7);

@@ -34,6 +34,21 @@ exports.getUser = function(req,res){
 	return;
 };
 
+exports.getUsersByLock = function(req, res){
+	var usernames = req.usersname;
+
+	User.find({"username" : {$in:usernames}},function(err,userRes){
+		if(err){
+			Message.messageRes(req, res, 500, "error", err);
+		}else if(!userRes){
+			Message.messageRes(req, res, 404, "error", "Users don't exist");
+		}else{	
+			Message.messageRes(req, res, 200, "success", userRes);
+		}
+	});
+
+};
+
 exports.addUser = function(req,res){
 	var username = req.body.username,
 		phone = req.body.phone,

@@ -131,10 +131,12 @@ exports.checkPermissionVars = function(username,lockid,	frequency, type, start1,
 
 exports.checkShortPermissionVars = function(username,lockid, frequency, date, type, start,end){
 	var message="ok";
-	
+
 	if(!_this.checkEmail(username)){
 		message = "Invalid email";
 	}
+
+	console.log(start + " " + end);
 
 	if(!_this.checkFrequency(frequency)){
 		message = "Wrong frequency";
