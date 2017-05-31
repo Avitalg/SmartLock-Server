@@ -1,19 +1,14 @@
 var Permission  = require('../models/permission');
 var Message = require('../middlewares/message');
+var permission  = require('../middlewares/permission');
+
+var _this = this;
 
 exports.getPhysicalId = function(req, res, next){
-	var lockid;
+	var lockid = req.params.lockid;
 	
 	var physicalId = [];
 	var physicValue;
-
-	//could be in param or from body. need to save for the next callback
-	if(req.params.lockid){
-		lockid = req.params.lockid;
-	}else{
-		lockid = req.params.lockid = req.body.lockid ;
-		req.params.username = req.body.username ;
-	}
 
 	Permission.find({"lockid":lockid}, function(err,perResult){
 		if(err){
@@ -33,9 +28,7 @@ exports.getPhysicalId = function(req, res, next){
 			physicValue = findMinimumPhysId(physicalId);
 			req.physicId = physicValue;
 
-			if(typeof(next) == "function"){
-				next();
-			}
+			permission.updatePhysicalId(req,res,next);
 		}
 	});
 	return;
@@ -52,3 +45,26 @@ var findMinimumPhysId = function(pIds){
 	}
 	return -1;
 };
+
+exports.fingerprintActions = function(req, res, next){
+	var fPrint = req.params.action;
+
+	//could be in param or from body. need to save for the next callback
+	if(!req.params.lockid){
+		req.params.lockid = req.body.lockid ;
+	}
+	if(!req.params.username){
+		req.params.username = req.body.username ;
+	}
+	console.log(fPrint);
+
+	switch(fPrint){
+		case "addFingerprint":
+			_this.getPhysicalId(req, res, next);
+			break;
+		case "delFingerprint":
+			permission.removePhysicalId(req, res, next);
+			break;
+
+	}
+}

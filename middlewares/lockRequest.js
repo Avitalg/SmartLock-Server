@@ -13,6 +13,7 @@ exports.requestLockAction = function(req,res,next){
             physicId = req.physicId, //get physicId from db
             time = new  Date().getTime();
         if(!valid.checkLockAction(action)){
+            console.log("action");
             Message.messageRes(req, res, 404, "error", "undefine action");
             return;
         }

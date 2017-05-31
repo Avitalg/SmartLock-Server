@@ -192,6 +192,11 @@ exports.fingerPrintPermission = function(req, res, next){
 exports.rightPermission = function(req, res, next){
 	var action = req.params.action;
 
+	if(!valid.checkLockAction(action)){
+        console.log("action");
+        Message.messageRes(req, res, 404, "error", "undefine action");
+        return;
+    }
 	console.log(action);
 	switch(action){
 		case "addFingerprint": case "delFingerprint":
@@ -333,6 +338,33 @@ exports.removePermission = function(req,res){
 				Message.messageRes(req, res, 200, "success", "Permission was deleted successfully");
 			}
 		});
+	}
+	return;
+};
+
+exports.removePhysicalId = function(req, res, next){
+	var username = req.body.username,
+		lockid = req.body.lockid;
+	console.log("removePhysicalId");
+	if(!username && !lockid){
+		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
+	} else {
+ 		Permission.findOne({ "username":username, "lockid":lockid }, function (err, permission){
+ 			if(!permission){
+ 				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
+ 			}else if(err){
+ 				Message.messageRes(req, res, 200, "error", "Can't remove physicalId");
+ 			} else {
+ 				permission.physicalId = undefined;
+ 				permission.save();
+ 				console.log("removed p");
+ 				if(typeof(next) == "function"){
+ 					next();
+ 				} else {
+ 					Message.messageRes(req, res, 200, "success", {message : "succeed remove physicalId."});
+ 				}
+ 			}
+ 		});	 
 	}
 	return;
 };

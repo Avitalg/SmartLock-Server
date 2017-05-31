@@ -166,5 +166,6 @@ exports.checkStatus = function(status){
 }
 
 exports.checkLockAction = function(action){
+	console.log("check");
 	return action=='addFingerprint'||action=='delFingerprint'||action=='unlock'||action=='lock'||action=='checkStatus';
 }
