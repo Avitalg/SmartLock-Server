@@ -2,9 +2,19 @@ var Permission  = require('../models/permission');
 var Message = require('../middlewares/message');
 
 exports.getPhysicalId = function(req, res, next){
-	var lockid = req.params.lockid;
+	var lockid;
+	
 	var physicalId = [];
 	var physicValue;
+
+	//could be in param or from body. need to save for the next callback
+	if(req.params.lockid){
+		lockid = req.params.lockid;
+	}else{
+		lockid = req.params.lockid = req.body.lockid ;
+		req.params.username = req.body.username ;
+	}
+
 	Permission.find({"lockid":lockid}, function(err,perResult){
 		if(err){
 			Message.messageRes(req, res, 500, "error", err);

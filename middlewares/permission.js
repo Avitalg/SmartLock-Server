@@ -510,7 +510,7 @@ exports.changeUserType = function(req, res){
 	return;
 };
 
-exports.updatePhysicalId = function(req,res){
+exports.updatePhysicalId = function(req,res,next){
 	var username = req.params.username,
 		lockid = req.params.lockid,
 		physicalId = req.physicId;
@@ -527,7 +527,12 @@ exports.updatePhysicalId = function(req,res){
 		 			} else {
 		 				permission.physicalId = physicalId;
 		 				permission.save();
-		 				Message.messageRes(req, res, 200, "success", {message : "succeed update physicalId.", physicalId : physicalId});
+
+		 				if(typeof(next) == "function"){
+		 					next();
+		 				} else {
+		 					Message.messageRes(req, res, 200, "success", {message : "succeed update physicalId.", physicalId : physicalId});
+		 				}
 		 			}
 		 		});
 		 	} else {

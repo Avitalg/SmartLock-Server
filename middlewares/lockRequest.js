@@ -1,5 +1,5 @@
 /**
- * Created by I325775 on 06/05/2017.
+ * Created by Nir Shchori on 06/05/2017.
  */
 var valid = require('../helpers/validation');
 var Message = require('./message');
@@ -10,6 +10,7 @@ exports.requestLockAction = function(req,res,next){
         var username = req.body.username,
             lockId = req.body.lockid,
             action = req.params.action,//validate legal type
+            physicId = req.physicId, //get physicId from db
             time = new  Date().getTime();
         if(!valid.checkLockAction(action)){
             Message.messageRes(req, res, 404, "error", "undefine action");
@@ -37,7 +38,7 @@ exports.requestLockAction = function(req,res,next){
             'requestId' : requestId
         };
         if(requests[requestId].action =="addFingerprint" ||requests[requestId].action =="delFingerprint"  ){
-            requests[requestId].fingerprintId = (Math.random()*100)%150; //add minimum unuse id between 0 to 162
+            requests[requestId].fingerprintId = physicId; //add minimum unuse id between 0 to 162
             requestLock.fingerprintId = requests[requestId].fingerprintId;
         }
         if(!lockRequestQueue[lockId]){

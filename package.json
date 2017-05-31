@@ -18,7 +18,9 @@
     "express": "^4.13.4",
     "moment": "^2.18.1",
     "mongoose": "^4.4.20",
-    "nodemailer": "^4.0.1"
+    "nodemailer": "^4.0.1",
+    "ejs": "^1.0.0",
+    "express-session": "^1.7.6"
   },
   "devDependencies": {
     "chai": "^3.5.0",
