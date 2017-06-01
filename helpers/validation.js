@@ -20,11 +20,10 @@ exports.checkPermissions = function(username, lockid){
 				// console.log("check path:"+'PATH');
 				// console.log("DYNO:"+DYNO);
 				// console.log("DTNO:"+'DYNO');
-				if (typeof process.env.ENV_VAR !== 'undefined') {
-					console.log(process.env.ENV_VAR);
+				if (typeof process.env.ENV_VAR == 'production') {
+					hour+=3;
 				}
 
-				console.log("after");
 				var minutes = new Date().getMinutes();
 				if(hour<10){
 					hour = "0"+hour;
