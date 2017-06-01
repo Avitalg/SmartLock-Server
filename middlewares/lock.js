@@ -130,7 +130,7 @@ exports.updateLockStatus= function(req,res, next){
 	} else {
 		Lock.findOne({ "lockid": lockid }, function (err, lock){
 			if(!lock){
-				Message.messageRes(req, res, 404, "error", "The lock "+lock+" doesn't exist");
+				Message.messageRes(req, res, 404, "error", "The lock "+lockid+" doesn't exist");
 			}else if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			} else {

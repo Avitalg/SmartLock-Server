@@ -10,9 +10,7 @@ exports.lockActionControl = function(req, res, next){
         Message.messageRes(req, res, 404, "error", "undefine action");
         return;
     }
-
-    console.log("action:"+action);
-
+    
     req.params.lockid = req.body.lockid;
 
 	switch(action){

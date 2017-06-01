@@ -18,10 +18,7 @@ exports.checkPermissions = function(username, lockid){
 				
 				if ( process.env.ENV_VAR == 'production') {
 					hour+=3;
-					console.log("prod");
 				}
-
-				console.log("hour:"+hour);
 
 				var minutes = new Date().getMinutes();
 				if(hour<10){
