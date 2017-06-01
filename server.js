@@ -5,7 +5,7 @@ var bodyParser = require('body-parser');
 var db = require('./database');
 
 
-process.env.ENV = "qa";
+process.env.ENV_VAR = process.env.ENV_VAR || "qa";
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.use(session({secret: 'ssshhhhh'}));

@@ -20,8 +20,8 @@ exports.checkPermissions = function(username, lockid){
 				// console.log("check path:"+'PATH');
 				// console.log("DYNO:"+DYNO);
 				// console.log("DTNO:"+'DYNO');
-				if (typeof process.env !== 'undefined') {
-					console.log(process.env.ENV);
+				if (typeof process.env.ENV_VAR !== 'undefined') {
+					console.log(process.env.ENV_VAR);
 				}
 
 				console.log("after");
