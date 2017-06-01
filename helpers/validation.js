@@ -15,6 +15,11 @@ exports.checkPermissions = function(username, lockid){
 				return "Permission doesn't exist";
 			}else{
 				var hour = new Date().getHours();
+				console.log("check path:"+PATH);
+
+				console.log("check path:"+'PATH');
+				console.log("DYNO:"+DYNO);
+				console.log("DTNO:"+'DYNO');
 				var minutes = new Date().getMinutes();
 				if(hour<10){
 					hour = "0"+hour;

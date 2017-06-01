@@ -357,7 +357,7 @@ exports.removePhysicalId = function(req, res, next){
  			} else {
  				permission.physicalId = undefined;
  				permission.save();
-
+ 				//if next function was defined
  				if(req.route.stack.length > 1){
  					next();
  				} else {
