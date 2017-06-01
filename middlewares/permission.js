@@ -67,15 +67,15 @@ exports.getPermissionsByUser = function(req,res){
 exports.getPermissionsByLock = function(req,res, next){
 	var lockid = req.params.lockid;
 	var usersname=[];
+	console.log("getPermissionsByLock");
 	Permission.find({"lockid":lockid}, function(err,perResult){
 		if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			}else if(perResult.length == 0){
 				Message.messageRes(req, res, 404, "error", "No permissions for this lockid");
 			}else{
-
-				if(typeof(next)=="function"){
-
+				//if given next function
+				if(req.route.stack.length > 1){
 					for(var i=0; i<perResult.length; i++){
 						usersname.push(perResult[i].username);
 					}
@@ -84,6 +84,7 @@ exports.getPermissionsByLock = function(req,res, next){
 					next();
 
 				} else {
+					console.log("else");
 					Message.messageRes(req, res, 200, "success", perResult);	
 				}
 
@@ -119,7 +120,7 @@ exports.checkIfManager = function(req, res, next){
 		}else if(!perResult){
 			Message.messageRes(req, res, 404, "error", "No manager");
 		}else{
-			if(typeof(next) == "function"){
+			if(req.route.stack.length > 1){
 				next();
 			} else {
 				Message.messageRes(req, res, 200, "success", "Has manager");
@@ -133,7 +134,7 @@ exports.checkIfManager = function(req, res, next){
 exports.checkPermission = function(req, res, next){
 	var username= (req.params.username)? req.params.username : req.body.username,
 		lockid = (req.params.lockid)? req.params.lockid : req.body.lockid;
-
+		console.log("checkper:"+req.body.lockid);
 	if(!username && !lockid){
 		Message.messageRes(req, res, 404, "error", "Details weren't supplied");
 	} else if(!valid.checkEmail(username)) {
@@ -145,10 +146,10 @@ exports.checkPermission = function(req, res, next){
 		checkPer.then(function(result){
 			switch(result){
 				case "Has permissions":
-					if(typeof(next) == "function"){
+					if(req.route.stack.length > 1){
 						next();						
 					} else {
-						Message.messageRes(req, res, 200, "error", result);
+						Message.messageRes(req, res, 200, "success", result);
 					}
 					break;
 				case "No permissions":
@@ -175,7 +176,7 @@ exports.fingerPrintPermission = function(req, res, next){
 			Message.messageRes(req, res, 404, "error", "No permissions.");
 		}else{
 			if(perResult.type == 0 || perResult.type == 1){
-				if(typeof(next) == "function"){
+				if(req.route.stack.length > 1){
 					next();	
 				} else {
 					Message.messageRes(req, res, 200, "success", "Has permissions.");		
@@ -193,11 +194,10 @@ exports.rightPermission = function(req, res, next){
 	var action = req.params.action;
 
 	if(!valid.checkLockAction(action)){
-        console.log("action");
         Message.messageRes(req, res, 404, "error", "undefine action");
         return;
     }
-	console.log(action);
+
 	switch(action){
 		case "addFingerprint": case "delFingerprint":
 			_this.fingerPrintPermission(req, res, next);
@@ -307,7 +307,7 @@ exports.addPermission = function(req,res, next){
 						if (err){
 							Message.messageRes(req, res, 500, "error", "Permission already exists");
 						}else{
-							if(typeof(next) == "function"){
+							if(req.route.stack.length > 1){
 								next();
 							}
 							Message.messageRes(req, res, 200, "success", "Permission was saved");
@@ -345,7 +345,7 @@ exports.removePermission = function(req,res){
 exports.removePhysicalId = function(req, res, next){
 	var username = req.body.username,
 		lockid = req.body.lockid;
-	console.log("removePhysicalId");
+
 	if(!username && !lockid){
 		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
 	} else {
@@ -357,8 +357,8 @@ exports.removePhysicalId = function(req, res, next){
  			} else {
  				permission.physicalId = undefined;
  				permission.save();
- 				console.log("removed p");
- 				if(typeof(next) == "function"){
+
+ 				if(req.route.stack.length > 1){
  					next();
  				} else {
  					Message.messageRes(req, res, 200, "success", {message : "succeed remove physicalId."});
@@ -382,7 +382,7 @@ exports.removeUserPermissions = function(req,res, next){
 				Message.messageRes(req, res, 500, "error", err);
 			}else{
 
-				if(typeof(next) == "function"){
+				if(req.route.stack.length > 1){
 					next();
 				} else {
 					Message.messageRes(req, res, 200, "success", "Permissions were deleted successfully");
@@ -403,7 +403,7 @@ exports.removeLockPermissions = function(req,res, next){
 			if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			}else{
-				if(typeof(next) == "function"){
+				if(req.route.stack.length > 1){
 					next();
 				} else {
 					Message.messageRes(req, res, 200, "error", "Permissions were deleted successfully");
@@ -560,7 +560,7 @@ exports.updatePhysicalId = function(req,res,next){
 		 				permission.physicalId = physicalId;
 		 				permission.save();
 
-		 				if(typeof(next) == "function"){
+		 				if(req.route.stack.length > 1){
 		 					next();
 		 				} else {
 		 					Message.messageRes(req, res, 200, "success", {message : "succeed update physicalId.", physicalId : physicalId});

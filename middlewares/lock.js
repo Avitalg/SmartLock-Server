@@ -119,8 +119,8 @@ exports.removeLock = function(req,res){
 	return;
 };
 
-exports.updateLockStatus= function(req,res){
-	var lockid = req.params.lockid,
+exports.updateLockStatus= function(req,res, next){
+	var lockid = (req.params.lockid) ? req.params.lockid:req.body.lockid,
 		status = req.params.lstatus;
 
 	if(!lockid){
@@ -136,7 +136,11 @@ exports.updateLockStatus= function(req,res){
 			} else {
 				lock.status = status;
 				lock.save();
-				Message.messageRes(req, res, 200, "success", "succeed update lock.");
+				if(req.route.stack.length > 1){
+					next();
+				}else {
+					Message.messageRes(req, res, 200, "success", "succeed update lock.");					
+				}
 			}
 		});
 	}

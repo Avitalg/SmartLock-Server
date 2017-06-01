@@ -15,18 +15,29 @@ exports.checkPermissions = function(username, lockid){
 				return "Permission doesn't exist";
 			}else{
 				var hour = new Date().getHours();
+				var minutes = new Date().getMinutes();
 				if(hour<10){
 					hour = "0"+hour;
 				}
-				var currHour = hour + ":" + new Date().getMinutes();
+				if(minutes<10){
+					minutes = "0" + minutes;
+				}
+				var currHour = hour + ":" + minutes;
 				var cond = false;
-
+				console.log("currHour:"+currHour);
 				switch(perResult.frequency){
 					case "once":
 						var startHour = perResult.hours.start;
 						var endHour = perResult.hours.end;
-						var x = perResult.date.setHours(perResult.date.getHours());
-						cond =  x == new Date().setHours(0,0,0,0) ;
+						var perDate = perResult.date.setHours(0,0,0,0);
+						var currDate = new Date().setHours(0,0,0,0) ;
+						cond =  perDate == currDate;
+
+						console.log("cond:"+cond);
+						console.log("starthour:"+startHour);
+						console.log("endHour:"+endHour);
+						console.log("currdate:"+currDate);
+						console.log("perDate:"+perDate);
 						break;
 					case "always":
 						var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -166,6 +177,5 @@ exports.checkStatus = function(status){
 }
 
 exports.checkLockAction = function(action){
-	console.log("check");
 	return action=='addFingerprint'||action=='delFingerprint'||action=='unlock'||action=='lock'||action=='checkStatus';
 }

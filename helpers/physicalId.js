@@ -56,7 +56,6 @@ exports.fingerprintActions = function(req, res, next){
 	if(!req.params.username){
 		req.params.username = req.body.username ;
 	}
-	console.log(fPrint);
 
 	switch(fPrint){
 		case "addFingerprint":
