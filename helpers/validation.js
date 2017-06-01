@@ -15,14 +15,13 @@ exports.checkPermissions = function(username, lockid){
 				return "Permission doesn't exist";
 			}else{
 				var hour = new Date().getHours();
-				// console.log("check path:"+PATH);
-
-				// console.log("check path:"+'PATH');
-				// console.log("DYNO:"+DYNO);
-				// console.log("DTNO:"+'DYNO');
+				
 				if (typeof process.env.ENV_VAR == 'production') {
 					hour+=3;
+					console.log("prod");
 				}
+
+				console.log("hour:"+hour);
 
 				var minutes = new Date().getMinutes();
 				if(hour<10){
