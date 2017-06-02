@@ -34,9 +34,9 @@ exports.checkPermissions = function(username, lockid){
 					case "once":
 						var startHour = perResult.hours.start;
 						var endHour = perResult.hours.end;
-						var perDate = perResult.date.toUTCString();
-						perDate = new Date(perDate).setHours(0,0,0,0);
-						var currDate = new Date().setHours(0,0,0,0) ;
+						var perDate = perResult.date.setHours(0,0,0,0);
+						var currDate = new Date().toUTCString();
+						currDate = new Date(currDate).setHours(0,0,0,0) ;
 						cond =  perDate == currDate;
 
 						console.log("cond:"+cond);
