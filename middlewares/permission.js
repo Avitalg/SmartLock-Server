@@ -141,7 +141,6 @@ exports.checkPermission = function(req, res, next){
 		Message.messageRes(req, res, 200, "error", "username is Invalid email");
 	}
 	else{
-	
 		var checkPer = valid.checkPermissions(username, lockid);
 		checkPer.then(function(result){
 			switch(result){
@@ -158,7 +157,9 @@ exports.checkPermission = function(req, res, next){
 				default:
 					Message.messageRes(req, res, 404, "error", result);
 			}
-		});
+		}, function(reason) {
+  console.log(reason);
+});
 
 		
 	}
