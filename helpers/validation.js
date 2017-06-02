@@ -15,10 +15,6 @@ exports.checkPermissions = function(username, lockid){
 				return "Permission doesn't exist";
 			}else{
 				var hour = new Date().getHours();
-				
-				if ( process.env.ENV_VAR == 'production') {
-					hour+=3;
-				}
 
 				var minutes = new Date().getMinutes();
 				if(hour<10){
