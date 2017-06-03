@@ -181,6 +181,10 @@ exports.checkLockAction = function(action){
 	return action=='addFingerprint'||action=='delFingerprint'||action=='unlock'||action=='lock'||action=='checkStatus';
 }
 
+exports.checkButtonAction = function(action){
+	return action=='unlock'||action=='lock';
+}
+
 exports.checkUrl = function(url){
 	var pattern = new RegExp('^(https?:\/\/)?'+ // protocol
     	'((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|'+ // domain name
