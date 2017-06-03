@@ -4,6 +4,30 @@ var permission  = require('../middlewares/permission');
 
 var _this = this;
 
+//returns minimum value available between 0 and 162
+var findMinimumPhysId = function(pIds){
+
+	for(var i =0; i<163; i++){
+		if(pIds.indexOf(i.toString())==-1){
+			return i;
+		}
+	}
+	return -1;
+};
+
+exports.getUsernameByPhsicId = function(req, res, next){
+	var lockid = req.params.lockid,
+		physicalId = req.physicalId;
+
+		Permission.findOne({"lockid":lockid, "physicalId": physicalId}, function(err,perResult){
+			if(perResult){
+				req.params.username = perResult.username;
+			}
+			next();
+		});
+
+};
+
 exports.getPhysicalId = function(req, res, next){
 	var lockid = req.params.lockid;
 	
@@ -33,17 +57,6 @@ exports.getPhysicalId = function(req, res, next){
 	});
 	return;
 
-};
-
-//returns minimum value available between 0 and 162
-var findMinimumPhysId = function(pIds){
-
-	for(var i =0; i<163; i++){
-		if(pIds.indexOf(i.toString())==-1){
-			return i;
-		}
-	}
-	return -1;
 };
 
 exports.fingerprintActions = function(req, res, next){

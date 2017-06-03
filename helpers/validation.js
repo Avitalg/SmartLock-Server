@@ -14,15 +14,10 @@ exports.checkPermissions = function(username, lockid){
 			if(!perResult){
 				return "Permission doesn't exist";
 			}else{
-				var hour = new Date().getHours();
+				var hour = Formate.getTwoDigitHour(new Date().getHours());
 
-				var minutes = new Date().getMinutes();
-				if(hour<10){
-					hour = "0"+hour;
-				}
-				if(minutes<10){
-					minutes = "0" + minutes;
-				}
+				var minutes = Formate.getTwoDigitMinutes(new Date().getMinutes());
+				
 				var currHour = hour + ":" + minutes;
 				var cond = false;
 				console.log("currHour:"+currHour);

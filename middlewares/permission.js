@@ -128,7 +128,6 @@ exports.checkIfHasManager = function(req, res, next){
 		}else if(!perResult){//no managers in lock
 			if(req.route.stack.length > 1){
 				req.body.type = 0;
-				console.log("type:"+req.body.type);
 				next();
 			} else {
 				Message.messageRes(req, res, 404, "error", "No manager");
@@ -246,7 +245,6 @@ exports.addPermission = function(req,res, next){
 		end7   = formate.formateHour(req.body.end7);
 
 	var validation = false; 
-	console.log("type:"+req.body.type);
 	
 	if(frequency == "always"){
 		validation = valid.checkPermissionVars(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
