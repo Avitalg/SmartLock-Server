@@ -195,41 +195,28 @@ exports.login = function(req, res){
 	var username = req.body.username,
 		password = req.body.password;
 
-		// fetch user and test password verification
-	    User.findOne({ username: username }, function(err, user) {
+	// fetch user and test password verification
+    User.findOne({ username: username }, function(err, user) {
 
-
-	    	if(!user){
-				 Message.messageRes(req, res, 404, "error", "User with the username "+username+" isn't exist");
-			 }else if(err){
-				 Message.messageRes(req, res, 500, "error", err);
-			 } else {
-				 user.comparePassword(password, function(err, isMatch) {
-		            if (err){
-		            	Message.messageRes(req, res, 200, "error", err);
-		            }else{
-		            	if(isMatch){
-		            		Message.messageRes(req, res, 200, "success", "User can login");		            		
-		            	} else {
-		            		Message.messageRes(req, res, 200, "error", "wrong password");
-		            	}
-		            }
-		            console.log(password+":"+ isMatch); // -> Password123: true
-		        });
-			 }
-
-	        // test a matching password
-	        user.comparePassword('Password123', function(err, isMatch) {
-	            if (err) throw err;
-	            console.log('Password123:', isMatch); // -> Password123: true
+    	if(!user){
+			 Message.messageRes(req, res, 404, "error", "User with the username "+username+" isn't exist");
+		 }else if(err){
+			 Message.messageRes(req, res, 500, "error", err);
+		 } else {
+			 user.comparePassword(password, function(err, isMatch) {
+	            if (err){
+	            	Message.messageRes(req, res, 200, "error", err);
+	            }else{
+	            	if(isMatch){
+	            		req.session.user = user;
+	            		Message.messageRes(req, res, 200, "success", "User can login");		            		
+	            	} else {
+	            		Message.messageRes(req, res, 200, "error", "wrong password");
+	            	}
+	            }
 	        });
-
-	        // test a failing password
-	        user.comparePassword('123Password', function(err, isMatch) {
-	            if (err) throw err;
-	            console.log('123Password:', isMatch); // -> 123Password: false
-	        });
-	    });
+		 }
+    });
 
 
 };
