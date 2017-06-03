@@ -96,3 +96,16 @@ exports.updateLockRequest = function (req,res,next) {
         }
 
 };
+exports.updatelocalButtonAction = function (req,res,next){
+    var lockId = req.params.lockId,
+        action  = req.body.action,
+        fingerprintId = req.body.action;
+    if(action!= 'lock'|| action != unlock){
+        res.statusCode(404).end();
+    }
+    if(fingerprintId) {
+        //identify user by fingerprintId
+    }
+    //write logs
+    res.status(200).end();
+}
