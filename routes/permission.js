@@ -7,7 +7,7 @@ module.exports = function(app){
     app.get('/api/getPermissionsByUser/:username', permissions.getPermissionsByUser);
     app.get('/api/getPermissionsByLock/:lockid', permissions.getPermissionsByLock);
     app.get('/api/getLockManager/:lockid', permissions.getLockManager);
-    app.post('/api/addPermission', /*permissions.checkIfManager ,*/permissions.addPermission, permissions.sendEmail);
+    app.post('/api/addPermission', permissions.checkIfHasManager ,permissions.addPermission, permissions.sendEmail);
     app.delete('/api/removePermission/:username/:lockid', permissions.removePermission);
     app.delete('/api/removeUserPermissions/:username', permissions.removeUserPermissions);
     app.delete('/api/removeLockPermissions/:lockid', permissions.removeLockPermissions);

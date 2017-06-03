@@ -119,15 +119,20 @@ exports.getLockManager = function(req, res){
 
 };
 
-exports.checkIfManager = function(req, res, next){
-	var lockid = req.params.lockid,
-		superuser = req.params.superuser;
+exports.checkIfHasManager = function(req, res, next){
+	var lockid = req.params.lockid;
 
-	Permission.findOne({"lockid":lockid, "username":superuser, "type":0}, function(err,perResult){
+	Permission.findOne({"lockid":lockid, "type":0}, function(err,perResult){
 		if(err){
 			Message.messageRes(req, res, 500, "error", err);
-		}else if(!perResult){
-			Message.messageRes(req, res, 404, "error", "No manager");
+		}else if(!perResult){//no managers in lock
+			if(req.route.stack.length > 1){
+				req.body.type = 0;
+				console.log("type:"+req.body.type);
+				next();
+			} else {
+				Message.messageRes(req, res, 404, "error", "No manager");
+			}
 		}else{
 			if(req.route.stack.length > 1){
 				next();
@@ -241,7 +246,7 @@ exports.addPermission = function(req,res, next){
 		end7   = formate.formateHour(req.body.end7);
 
 	var validation = false; 
-
+	console.log("type:"+req.body.type);
 	
 	if(frequency == "always"){
 		validation = valid.checkPermissionVars(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,

@@ -3,9 +3,9 @@ var Message = require('../middlewares/message');
 
 exports.writeLog = function(req, res){
 	var filename = "logs.json",
-		  username = req.body.username,
-      lockid = req.body.lockid;
-      action = req.params.action,
+		  username = (req.params.username)? req.params.username : req.body.username,
+      lockid = (req.params.lockid)? req.params.lockid : req.body.lockid,
+      action = (req.params.action)? req.params.action : req.body.action,
       physicId = req.physicId;
 
     var logs = JSON.parse(fs.readFileSync(filename, 'utf8'));
