@@ -9,18 +9,19 @@
   },
   "author": "Avital Glazer",
   "license": "ISC",
-  "repository" :{
-   "type" : "git",
-   "url" : "https://github.com/Avitalg/SmartLock-Server"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Avitalg/SmartLock-Server"
   },
   "dependencies": {
     "body-parser": "^1.15.2",
+    "ejs": "^1.0.0",
     "express": "^4.13.4",
+    "express-session": "^1.7.6",
+    "fs": "0.0.1-security",
     "moment": "^2.18.1",
     "mongoose": "^4.4.20",
-    "nodemailer": "^4.0.1",
-    "ejs": "^1.0.0",
-    "express-session": "^1.7.6"
+    "nodemailer": "^4.0.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",

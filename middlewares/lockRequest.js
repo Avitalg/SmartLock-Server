@@ -3,6 +3,7 @@
  */
 var valid = require('../helpers/validation');
 var Message = require('./message');
+var logs = require('../helpers/logs');
 
 var requests = {};
 var lockRequestQueue = {};
@@ -12,6 +13,7 @@ exports.requestLockAction = function(req,res,next){
             action = req.params.action,//validate legal type
             physicId = req.physicId, //get physicId from db
             time = new  Date().getTime();
+
         if(!valid.checkLockAction(action)){
             console.log("action");
             Message.messageRes(req, res, 404, "error", "undefine action");
@@ -47,6 +49,8 @@ exports.requestLockAction = function(req,res,next){
         }
 
         console.log(lockRequestQueue);
+
+        logs.writeLog(req, res);
 
         lockRequestQueue[lockId].push(requestLock);
         res.status(201).json({'status': 'request created', 'requestId' : requestId});

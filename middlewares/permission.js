@@ -6,6 +6,7 @@ var moment = require('moment');
 var valid = require('../helpers/validation');
 var formate = require('../helpers/formate');
 var nodemailer = require('nodemailer');
+var Logs = require('../helpers/logs');
 
 var _this = this;
 
@@ -44,7 +45,7 @@ exports.getPermission = function(req,res){
 };
 
 
-exports.getPermissionsByUser = function(req,res){
+exports.getPermissionsByUser = function(req, res, next){
 	var username = req.params.username;
 
 	if(!valid.checkEmail(username)){
@@ -56,7 +57,15 @@ exports.getPermissionsByUser = function(req,res){
 			} else if(!perResult){
 				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
 			} else {
-				Message.messageRes(req, res, 200, "success", perResult);
+
+				if(req.route.stack.length > 1){
+					console.log("next");
+					req.UserPer = perResult;
+					next();
+				} else {
+					Message.messageRes(req, res, 200, "success", perResult);					
+				}
+	
 			}
 		});
 	}
@@ -356,6 +365,7 @@ exports.removePhysicalId = function(req, res, next){
  			}else if(err){
  				Message.messageRes(req, res, 200, "error", "Can't remove physicalId");
  			} else {
+ 				req.physicId = parseInt(permission.physicalId);
  				permission.physicalId = undefined;
  				permission.save();
  				//if next function was defined
@@ -622,5 +632,45 @@ exports.sendEmail = function(req, res){
 		};
 	});
 
+
+};
+
+
+exports.getUserLogs = function(req, res){
+	var logs = Logs.getLogs();
+	var userPermissions = req.UserPer;
+	var relevantLogs = [];
+
+	if(userPermissions){
+		for(var i=0; i<userPermissions.length; i++){
+
+			var perType = userPermissions[i].type;
+
+			switch(perType){
+				//manager
+				case 0:
+					for(var j=0; j< logs.length; j++){
+						if(logs[j].lockid == userPermissions[i].lockid){
+							relevantLogs.push(logs[j]);
+						}
+					}
+					break;
+				//user
+				case 1:case 2:
+					for(var j=0; j< logs.length; j++){
+						if((logs[j].lockid == userPermissions[i].lockid) && (logs[j].username == userPermissions[i].username) ){
+							relevantLogs.push(logs[j]);
+						}
+					}
+					break;
+			}
+		}
+		console.log("bofer");
+		Message.messageRes(req, res, 200, "success", relevantLogs);
+	} else {
+		Message.messageRes(req, res, 200, "error", "No permissions");
+	}
+	
+	return;
 
 };
