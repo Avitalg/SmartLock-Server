@@ -15,19 +15,6 @@ var findMinimumPhysId = function(pIds){
 	return -1;
 };
 
-exports.getUsernameByPhsicId = function(req, res, next){
-	var lockid = req.params.lockid,
-		physicalId = req.physicalId;
-
-		Permission.findOne({"lockid":lockid, "physicalId": physicalId}, function(err,perResult){
-			if(perResult){
-				req.params.username = perResult.username;
-			}
-			next();
-		});
-
-};
-
 exports.getPhysicalId = function(req, res, next){
 	var lockid = req.params.lockid;
 	

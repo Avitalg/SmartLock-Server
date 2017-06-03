@@ -59,7 +59,6 @@ exports.getPermissionsByUser = function(req, res, next){
 			} else {
 
 				if(req.route.stack.length > 1){
-					console.log("next");
 					req.UserPer = perResult;
 					next();
 				} else {
@@ -668,7 +667,6 @@ exports.getUserLogs = function(req, res){
 					break;
 			}
 		}
-		console.log("bofer");
 		Message.messageRes(req, res, 200, "success", relevantLogs);
 	} else {
 		Message.messageRes(req, res, 200, "error", "No permissions");

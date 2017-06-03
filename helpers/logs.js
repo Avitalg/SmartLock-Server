@@ -41,7 +41,6 @@ var writeLogToFile = function(req, res){
 
   fs.writeFile(filename, JSON.stringify(logs), 'utf8');
 
-  console.log(logs);
 };
 
 exports.getLogs = function(){
