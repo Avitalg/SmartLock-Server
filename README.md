@@ -107,6 +107,10 @@ https://smartlockproject.herokuapp.com/api/addUserPhoto
     Method : POST   
     params : username & image(url)   
 
+https://smartlockproject.herokuapp.com/api/login  
+    Method : POST   
+    params : username & password   
+
 https://smartlockproject.herokuapp.com/api/updateUser/:username/:nusername/:phone 
     Method : PUT  
     params : username & nusername (new username) & phone  
