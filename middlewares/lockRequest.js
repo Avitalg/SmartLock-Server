@@ -76,6 +76,7 @@ exports.checkLockRequest = function (req,res,next) {
             var lockreq = lockRequestQueue[req.params.lockId].shift();
             if(requests[lockreq.requestId].time+100000>now){ //
                 res.status(200).json(lockreq);
+                return;
             }
         }
 
@@ -87,8 +88,7 @@ exports.updateLockRequest = function (req,res,next) {
             status = req.body.status;
         if (!requestId) {
             res.status(404).json({status:"missing requestId"});
-        }
-        if(!requests[requestId]){
+        }else if(!requests[requestId]){
             res.status(500).json({status:"illegel requestId"});
         }else{
             requests[requestId].status = status;
