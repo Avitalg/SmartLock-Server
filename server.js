@@ -15,6 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.use(session({
   name: 'slock',
   secret: 'foo',
+  rolling: true,
   saveUninitialized: false,
   resave: false,
    cookie: {
