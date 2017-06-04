@@ -35,48 +35,44 @@ exports.getLock = function(req, res){
 };
 
 exports.getLocksByUser = function(req, res){
-	if(req.session && req.session.user){//check if user loged in
-		var username = req.session.user.username;
+	var username = req.params.username;
 
-		if(!username){
-			Message.messageRes(req, res, 404, "error", "username wasn't entered");
-		}else if(!valid.checkEmail(username)) {
-			Message.messageRes(req, res, 200, "error", "username is Invalid email");
-		}else{
-			Permission.findOne({'username':username}, function(err, perRes){
-				if(err){
-					Message.messageRes(req, res, 500, "error", err);
-				}else if(!perRes){
-					Message.messageRes(req, res, 404, "error", "username doesn't exist");
-				}else{
-					var locks = [];
+	if(!username){
+		Message.messageRes(req, res, 404, "error", "username wasn't entered");
+	}else if(!valid.checkEmail(username)) {
+		Message.messageRes(req, res, 200, "error", "username is Invalid email");
+	}else{
+		Permission.findOne({'username':username}, function(err, perRes){
+			if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			}else if(!perRes){
+				Message.messageRes(req, res, 404, "error", "username doesn't exist");
+			}else{
+				var locks = [];
 
-					if(!perRes.length){
-						locks.push(perRes.lockid);
-					} else {
-						for(var i=0; i<perRes.length; i++){
-							locks.push(perRes[i].lockid);
-						}	
+				if(!perRes.length){
+					locks.push(perRes.lockid);
+				} else {
+					for(var i=0; i<perRes.length; i++){
+						locks.push(perRes[i].lockid);
+					}	
+				}
+				
+				Lock.find({"lockid":{$in:locks}},function(err,data){
+					if(err){
+						Message.messageRes(req, res, 500, "error", err);
+					}else{
+						Message.messageRes(req, res, 200, "success", data);
+
 					}
 					
-					Lock.find({"lockid":{$in:locks}},function(err,data){
-						if(err){
-							Message.messageRes(req, res, 500, "error", err);
-						}else{
-							Message.messageRes(req, res, 200, "success", data);
-
-						}
-						
-					})
-				}
-			});
-		}
-		return;
-
-	} else {
-		Message.messageRes(req, res, 500, "error", "user didn't login");
+				})
+			}
+		});
 	}
-	
+	return;
+
+
 };
 
 exports.addLock = function(req,res){

@@ -1,5 +1,5 @@
 var express = require('express');
-var session = require('client-sessions');
+var session = require('express-session');
 var app = express();
 var bodyParser = require('body-parser');
 
@@ -9,12 +9,8 @@ var db = require('./database');
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
-app.use(session({
-  cookieName: 'slock',
-  secret: 'random_string_goes_here',
-  duration: 30 * 60 * 1000,
-  activeDuration: 5 * 60 * 1000,
-}));
+app.use(session({secret: 'ssshhhhh'}));
+
 
 var port = process.env.PORT || 3000;
 
