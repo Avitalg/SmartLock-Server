@@ -27,7 +27,7 @@ app.use(session({
 
 var port = process.env.PORT || 3000;
 
-var whiteListDomains = ["https://www.smartlockproj.com", "https://smartlockproj.com", "http://127.0.0.1:8000"];
+var whiteListDomains = ["https://smartlockproj.com", "http://127.0.0.1:8000"];
 
 app.set('port', port);
 app.use('/', express.static('./public'));
