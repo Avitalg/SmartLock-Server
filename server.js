@@ -19,7 +19,7 @@ app.use(session({
   resave: false,
    cookie: {
       httpOnly: false,
-      secure: true	
+      secure: false	
    },
    store: new FileStore()
 }));
