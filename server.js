@@ -32,6 +32,7 @@ var port = process.env.PORT || 3000;
 app.set('port', port);
 app.use('/', express.static('./public'));
 app.use(function(req, res, next){
+	res.header('Access-Control-Allow-Credentials', 'true');
 	res.header('Access-Control-Allow-Origin', "https://smartlockproj.com");
 	res.header('Access-Control-Allow-Header', "Origin, X-Requested-With, Content-Type, Accept");
 	app.set('json spaces', 4);
