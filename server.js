@@ -15,7 +15,7 @@ var port = process.env.PORT || 3000;
 app.set('port', port);
 app.use('/', express.static('./public'));
 app.use(function(req, res, next){
-	res.header("Access-Control-Allow-Credentials", 'true');
+	// res.header("Access-Control-Allow-Credentials", 'true');
 	res.header('Access-Control-Allow-Origin', "*");
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
 	res.header('Access-Control-Allow-Header', "Origin, X-Requested-With, Content-Type, Accept");
@@ -25,8 +25,7 @@ app.use(function(req, res, next){
 });
 app.use(session({
   name: 'slock',
-  secret: 'dsdskkj34jlk3lkdjlkfdj3434',
-  store: sessionStore, 
+  secret: 'dsdskkj34jlk3lkdjlkfdj3434', 
   resave: false,
   saveUninitialized: true,
    cookie: {
