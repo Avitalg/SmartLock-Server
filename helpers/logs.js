@@ -5,9 +5,17 @@ var Permission  = require('../models/permission');
 exports.writeLog = function(req, res){  
   req.params.username = (req.params.username)? req.params.username : req.body.username,
   req.params.lockid = (req.params.lockid)? req.params.lockid : req.body.lockid,
-  req.params.action = (req.params.action)? req.params.action : req.body.action,
+  req.params.action = (req.params.action)? req.params.action : req.body.action;
+  
+  if(!req.params.username && req.session && req.session.user){
+    req.params.username = req.session.user.username;
+  }
 
-  getUsernameByPhsicId(req, res, writeLogToFile);
+  if(!req.params.username){
+    getUsernameByPhsicId(req, res, writeLogToFile);
+  } else {
+    writeLogToFile(req,res);  
+  }
 
 };
 

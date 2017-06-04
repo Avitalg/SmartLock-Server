@@ -15,23 +15,30 @@ exports.getUsers = function(req,res){
 };
 
 exports.getUser = function(req,res){
-	var username= req.params.username,
-		lockid = req.params.lockid;
+	console.log("getUser");
+	console.log(req.session);
 
-	if(!username){
-        Message.messageRes(req, res, 404, "error", "username wasn't supplied");
-	}else{	
-		User.findOne({"username":username}, function(err,user){
-			if(err){
-				Message.messageRes(req, res, 500, "error", err);
-			}else if(!user){
-				Message.messageRes(req, res, 404, "error", "User doesn't exist");
-			}else{	
-				Message.messageRes(req, res, 200, "success", user);
-			}
-		});
+	if(req.session && req.session.user){
+		var username = req.session.user.username;
+		if(!username){
+	        Message.messageRes(req, res, 404, "error", "username wasn't supplied");
+		}else{	
+			User.findOne({"username":username}, function(err,user){
+				if(err){
+					Message.messageRes(req, res, 500, "error", err);
+				}else if(!user){
+					Message.messageRes(req, res, 404, "error", "User doesn't exist");
+				}else{	
+					Message.messageRes(req, res, 200, "success", user);
+				}
+			});
+		}
+		return;
+	} else {
+		Message.messageRes(req, res, 404, "error", "Not logged in");
 	}
-	return;
+
+	
 };
 
 exports.getUsersByLock = function(req, res){
@@ -194,43 +201,35 @@ exports.changePassword = function(req,res){
 exports.login = function(req, res){
 	var username = req.body.username,
 		password = req.body.password;
+		sess = req.session;
 
+		console.log("sess:")
+		console.log(sess);
+		console.log("isLoggedIn:"+sess.isLoggedIn);
 		// fetch user and test password verification
 	    User.findOne({ username: username }, function(err, user) {
-	    	req.session.isLoggedIn = false;   
 	    	if(!user){
 				 Message.messageRes(req, res, 404, "error", "User with the username "+username+" isn't exist");
 			 }else if(err){
 				 Message.messageRes(req, res, 500, "error", err);
 			 } else {
 				 user.comparePassword(password, function(err, isMatch) {
-
 		            if (err){
 		            	Message.messageRes(req, res, 200, "error", err);
 		            }else{
 		            	if(isMatch){
-		            		Message.messageRes(req, res, 200, "success", "User can login");		
-		            		req.session.user = user;
-		            		req.session.isLoggedIn = true;            		
+		            		sess.isLoggedIn = true;  	
+		            		sess.user = user;
+		            		Message.messageRes(req, res, 200, "success", "User can login");	
 		            	} else {
+		            		sess.isLoggedIn = false;   
 		            		Message.messageRes(req, res, 200, "error", "wrong password");  
 		            	}
 		            }
-		            console.log(password+":"+ isMatch); // -> Password123: true
+		            
 		        });
 			 }
 
-	        // test a matching password
-	        user.comparePassword('Password123', function(err, isMatch) {
-	            if (err) throw err;
-	            console.log('Password123:', isMatch); // -> Password123: true
-	        });
-
-	        // test a failing password
-	        user.comparePassword('123Password', function(err, isMatch) {
-	            if (err) throw err;
-	            console.log('123Password:', isMatch); // -> 123Password: false
-	        });
 	    });
 
 

@@ -46,30 +46,36 @@ exports.getPermission = function(req,res){
 
 
 exports.getPermissionsByUser = function(req, res, next){
-	var username = req.params.username;
+	
+	if(req.session && req.session.user){
+		var username = req.session.user.username;
 
 	if(!valid.checkEmail(username)){
 		Message.messageRes(req, res, 200, "error", "username is Invalid email");
-	} else {
-		Permission.find({"username":username}, function(err,perResult){
-			if(err){
-				Message.messageRes(req, res, 500, "error", err);
-			} else if(!perResult){
-				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
-			} else {
-
-				if(req.route.stack.length > 1){
-					req.UserPer = perResult;
-					next();
+		} else {
+			Permission.find({"username":username}, function(err,perResult){
+				if(err){
+					Message.messageRes(req, res, 500, "error", err);
+				} else if(!perResult){
+					Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
 				} else {
-					Message.messageRes(req, res, 200, "success", perResult);					
-				}
-	
-			}
-		});
-	}
 
-	return;
+					if(req.route.stack.length > 1){
+						req.UserPer = perResult;
+						next();
+					} else {
+						Message.messageRes(req, res, 200, "success", perResult);					
+					}
+		
+				}
+			});
+		}
+
+		return;
+	} else {
+		Message.messageRes(req, res, 200, "error", "Not logged in");
+	}
+	
 };
 
 exports.getPermissionsByLock = function(req,res, next){
@@ -640,6 +646,10 @@ exports.getUserLogs = function(req, res){
 	var userPermissions = req.UserPer;
 	var relevantLogs = [];
 
+	console.log(req.session.user.username);
+	console.log(req.params.username);
+	console.log(userPermissions);
+	console.log(logs);
 	if(userPermissions){
 		for(var i=0; i<userPermissions.length; i++){
 

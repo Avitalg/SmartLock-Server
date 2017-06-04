@@ -2,6 +2,8 @@ var express = require('express');
 var session = require('express-session');
 var app = express();
 var bodyParser = require('body-parser');
+var FileStore = require('session-file-store')(session);
+
 
 process.env.ENV_VAR = process.env.ENV_VAR || "qa";
 
@@ -9,11 +11,17 @@ var db = require('./database');
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+
 app.use(session({
-	secret: 'ssshhhhh',
-	name: 'slock',
-	resave: false,
-	saveUninitialized: false
+  name: 'slock',
+  secret: 'foo',
+  saveUninitialized: false,
+  resave: false,
+   cookie: {
+      httpOnly: false,
+      secure: false	
+   },
+   store: new FileStore()
 }));
 
 
