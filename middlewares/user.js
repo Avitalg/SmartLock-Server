@@ -15,8 +15,27 @@ exports.getUsers = function(req,res){
 };
 
 exports.getUser = function(req,res){
-	console.log("getUser");
-	console.log(req.session);
+	var user;
+	if(req.session && req.session.user){
+		user = req.session.user;
+		user.password = undefined;
+		Message.messageRes(req, res, 200, "success", user);
+		return;
+	}
+	Message.messageRes(req, res, 200, "error", "Not logged in");
+};
+
+exports.isLoggedIn = function(req, res){
+	if(req.session && req.session.user){
+		Message.messageRes(req, res, 200, "success", "true");
+		return;
+	}
+
+	Message.messageRes(req, res, 200, "success", "false");
+};
+
+exports.getLoggedInUser = function(req, res){
+	var user;
 
 	if(req.session && req.session.user){
 		var username = req.session.user.username;
@@ -29,16 +48,15 @@ exports.getUser = function(req,res){
 				}else if(!user){
 					Message.messageRes(req, res, 404, "error", "User doesn't exist");
 				}else{	
+					user.password = undefined;
 					Message.messageRes(req, res, 200, "success", user);
 				}
 			});
 		}
 		return;
 	} else {
-		Message.messageRes(req, res, 404, "error", "Not logged in");
+		Message.messageRes(req, res, 200, "error", "Not logged in");
 	}
-
-	
 };
 
 exports.getUsersByLock = function(req, res){

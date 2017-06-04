@@ -4,6 +4,8 @@ var permissions = require('../middlewares/permission');
 module.exports = function(app){
     app.get('/api/getUsers', users.getUsers);
     app.get('/api/getUser', users.getUser);
+    app.get('/api/isLoggedIn', users.isLoggedIn);
+    app.get('/api/getLoggedInUser', users.getLoggedInUser);
     app.get('/api/getUsersByLock/:lockid', permissions.getPermissionsByLock, users.getUsersByLock);
     app.post('/api/addUser', users.addUser);
     app.post('/api/addUserPhoto', users.addUserPhoto);
