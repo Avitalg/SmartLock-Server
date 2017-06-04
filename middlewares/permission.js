@@ -23,58 +23,50 @@ exports.getPermissions = function(req,res){
 };
 
 exports.getPermission = function(req,res){
-	var lockid = req.params.lockid;
-	if(req.session && req.session.user){
-		var username = req.session.user.username;
+	var username= req.params.username,
+		lockid = req.params.lockid;
 
-		if(!username && !lockid){
-			Message.messageRes(req, res, 200, "error", "username or lockid didn't supplied");
-		}else if(!valid.checkEmail(username)) {
-			Message.messageRes(req, res, 200, "error", "username is Invalid email");
-		}else {
-			Permission.findOne({"username":username, "lockid":lockid}, function(err,perResult){
-				if(err){
-					Message.messageRes(req, res, 500, "error", err);
-				} else if(!perResult){
-					Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
-				} else {
-					Message.messageRes(req, res, 200, "success", perResult);
-				}
-			});
-		}
-	} else {
-		Message.messageRes(req, res, 200, "error", "user need to be logged-in");
+	if(!username && !lockid){
+		Message.messageRes(req, res, 200, "error", "username or lockid didn't supplied");
+	}else if(!valid.checkEmail(username)) {
+		Message.messageRes(req, res, 200, "error", "username is Invalid email");
+	}else {
+		Permission.findOne({"username":username, "lockid":lockid}, function(err,perResult){
+			if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			} else if(!perResult){
+				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
+			} else {
+				Message.messageRes(req, res, 200, "success", perResult);
+			}
+		});
 	}
 	return;
 };
 
 
 exports.getPermissionsByUser = function(req, res, next){
-	if(req.session && req.session.user){
-		var username = req.session.user.username;
+	var username = req.params.username;
 
-		if(!valid.checkEmail(username)){
-			Message.messageRes(req, res, 200, "error", "username is Invalid email");
-		} else {
-			Permission.find({"username":username}, function(err,perResult){
-				if(err){
-					Message.messageRes(req, res, 500, "error", err);
-				} else if(!perResult){
-					Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
-				} else {
-
-					if(req.route.stack.length > 1){
-						req.UserPer = perResult;
-						next();
-					} else {
-						Message.messageRes(req, res, 200, "success", perResult);					
-					}
-		
-				}
-			});
-		}
+	if(!valid.checkEmail(username)){
+		Message.messageRes(req, res, 200, "error", "username is Invalid email");
 	} else {
-		Message.messageRes(req, res, 200, "error", "user didn't log-in");
+		Permission.find({"username":username}, function(err,perResult){
+			if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			} else if(!perResult){
+				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
+			} else {
+
+				if(req.route.stack.length > 1){
+					req.UserPer = perResult;
+					next();
+				} else {
+					Message.messageRes(req, res, 200, "success", perResult);					
+				}
+	
+			}
+		});
 	}
 
 	return;
@@ -124,32 +116,6 @@ exports.getLockManager = function(req, res){
 	});
 	return;
 
-};
-
-exports.checkIfManager = function(req, res, next){
-	var lockid = (req.body.lockid)? req.body.lockid : req.params.lockid;
-	if(req.session && req.session.user){
-		var username = req.session.user.username;
-
-		Permission.findOne({"username":username,"lockid":lockid}, function(err,perResult){
-		if(err){
-			Message.messageRes(req, res, 500, "error", err);
-		}else if(!perResult){//no managers in lock
-			Message.messageRes(req, res, 404, "error", "user "+ username + " doesn't have permissions to lock "+lockid);
-		}else if(perResult.type!=0){
-			Message.messageRes(req, res, 200, "error", "Don't have permissions");
-		}else{
-			if(req.route.stack.length > 1){
-				next();
-			} else {
-				Message.messageRes(req, res, 200, "success", "Is manager");
-			}
-		}
-	});
-	return;
-	} else {
-		Message.messageRes(req, res, 200, "error", "user didn't log-in");
-	}
 };
 
 exports.checkIfHasManager = function(req, res, next){
@@ -581,17 +547,17 @@ exports.changeUserType = function(req, res){
 };
 
 exports.updatePhysicalId = function(req,res,next){
-	var lockid = req.params.lockid,
+	var username = req.params.username,
+		lockid = req.params.lockid,
 		physicalId = req.physicId;
-	if(req.session && req.session.user){
-		var username = req.session.user.username;
-		if(!username && !lockid){
-			Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
-		} else {
+
+	if(!username && !lockid){
+		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
+	} else {
 		 	if(physicalId > -1){
 		 		Permission.findOne({ "username":username, "lockid":lockid, $or:[{"type":1}, {"type":0}] }, function (err, permission){
 		 			if(!permission){
-		 				Message.messageRes(req, res, 404, "error", "Don't have permission");
+		 				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
 		 			}else if(err){
 		 				Message.messageRes(req, res, 500, "error", err);
 		 			} else {
@@ -609,11 +575,7 @@ exports.updatePhysicalId = function(req,res,next){
 		 		Message.messageRes(req, res, 200, "error", "Can't update physicalId");
 		 	}
 
-		}
-	} else {
-		Message.messageRes(req, res, 200, "error", "User doesn't log-in");
 	}
-	
 	return;
 };
 

@@ -9,9 +9,9 @@ https://smartlockproject.herokuapp.com/api/getLock/:lockid
     Method : GET  
     Params : lockid  
 
-https://smartlockproject.herokuapp.com/api/getLocksByUser  
+https://smartlockproject.herokuapp.com/api/getLocksByUser/:username  
     Method : GET  
-    Notes : user need to be logged in
+    Params : username   
 
 https://smartlockproject.herokuapp.comapi/addLock  
     Method : POST  
@@ -31,14 +31,13 @@ https://smartlockproject.herokuapp.com/api/updateLockStatus/:username/:lockid/:l
 https://smartlockproject.herokuapp.com/api/getPermissions  
     Method : GET  
 
-https://smartlockproject.herokuapp.com/api/getPermission/:lockid  
+https://smartlockproject.herokuapp.com/api/getPermission/:userid/:lockid  
     Method : GET  
-    params : lockid  
-    Notes : user need to be logged in
+    params : userid & lockid  
 
-https://smartlockproject.herokuapp.com/api/getPermissionsByUser    
+https://smartlockproject.herokuapp.com/api/getPermissionsByUser/:username    
     Method : GET   
-    Notes : user need to be logged in
+    params : username   
 
 https://smartlockproject.herokuapp.com/api/getPermissionsByLock/:lockid   
     Method : GET  
@@ -57,44 +56,40 @@ https://smartlockproject.herokuapp.com/api/addPermission
             end1, end2,....,end7 - end1 us the hour od the ending permission in day 1.  
             example:  
             start1=10:00, end1=17:00 -> on Sunday he will get permission from 10 to 5 PM.  
-            date - if frequency is once - you can enter the date and only start1 + end1.
-    Notes : user need to be logged in  
+            date - if frequency is once - you can enter the date and only start1 + end1.  
 
 
 
-https://smartlockproject.herokuapp.com/api/removePermission/:username/:lockid/  
+https://smartlockproject.herokuapp.com/api/removePermission/:userid/:lockid/  
     Method : DELETE  
-    params : username & lockid  
-    Notes : user need to be logged in
+    params : userid & lockid  
 
-https://smartlockproject.herokuapp.com/api/updatePermission/:username/:lockid/:frequency/:start1/:end1/:start2/:end2/:start3/:end3/:start4/:end4/:start5/:end5/:start6/:end6/:start7/:end7  
+https://smartlockproject.herokuapp.com/api/updatePermission/:userid/:lockid/:frequency/:start1/:end1/:start2/:end2/:start3/:end3/:start4/:end4/:start5/:end5/:start6/:end6/:start7/:end7  
     Method : PUT  
-    params: username & lockid & frequency & start1-7 & end1-7  
+    params: userid & lockid & frequency & start1-7 & end1-7  
 
-https://smartlockproject.herokuapp.com/api/updatePermission/:username/:lockid/:frequency/:date/:start1/:end1  
+https://smartlockproject.herokuapp.com/api/updatePermission/:userid/:lockid/:frequency/:date/:start1/:end1  
     Method : PUT  
-    params: username & lockid & frequency & start1 & end1
+    params: userid & lockid & frequency & start1 & end1
             & date (format: YYYY-MM-DD)
-    Notes : user need to be logged in  
 
-https://smartlockproject.herokuapp.com/api/changeUserType/:username/:lockid/:type
+https://smartlockproject.herokuapp.com/api/changeUserType/:userid/:lockid/:type
     Method : PUT
-    params: username & lockid &
+    params: userid & lockid &
             type (0- manager, 1-user with physical id 2- user without physical id)
-    Notes : user need to be logged in  
 
-https://smartlockproject.herokuapp.com/api/updatePhysicalId/:lockid
+https://smartlockproject.herokuapp.com/api/updatePhysicalId/:username/:lockid
     Method : PUT
-    params: lockid 
-    Notes : user need to be logged in
+    params: username & lockid 
 
 ## USER
+
 https://smartlockproject.herokuapp.com/api/getUsers 
     Method : GET  
 
-https://smartlockproject.herokuapp.com/api/getUser/:username 
+https://smartlockproject.herokuapp.com/api/getUser/:userid 
     Method : GET  
-    params : username 
+    params : userid  
 
 https://smartlockproject.herokuapp.com/api/getUsersByLock/:lockid
     Method : GET  
@@ -110,8 +105,7 @@ https://smartlockproject.herokuapp.com/api/addUser
 
 https://smartlockproject.herokuapp.com/api/addUserPhoto  
     Method : POST   
-    params : image(url) 
-    Notes : user need to be logged in  
+    params : username & image(url)   
 
 https://smartlockproject.herokuapp.com/api/login  
     Method : POST   

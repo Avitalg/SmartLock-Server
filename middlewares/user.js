@@ -85,33 +85,30 @@ exports.addUser = function(req,res){
 };
 
 exports.addUserPhoto = function(req, res){
-	var image = req.body.image;
+	var nusername = req.body.username,
+		image = req.body.image;
 
-	if(req.session && reeq.session.user){
-		var username = req.session.user.username;
-		if(!username){
-	        Message.messageRes(req, res, 500, "error", "No username or new username was entered");
-			return;
-		}else if(!valid.checkEmail(username)){
-			Message.messageRes(req, res, 200, "error", "Invalid email");
-		} else if(!valid.checkUrl(image)){
-			Message.messageRes(req, res, 200, "error", "Invalid image url");
-		}else {
-			User.findOne({"username": username }, function (err, user){
-				if(!user){
-					Message.messageRes(req, res, 404, "error", "User with the username "+username+" isn't exist");
-				}else if(err){
-					Message.messageRes(req, res, 500, "error", err);
-				} else {
-					user.image = image;
-					user.save();
-					next();
-				}
-			});
-		}
-	} else {
-		Message.messageRes(req, res, 200, "error", "user need to be logged in");
+	if(!username){
+        Message.messageRes(req, res, 500, "error", "No username or new username was entered");
+		return;
+	}else if(!valid.checkEmail(username)){
+		Message.messageRes(req, res, 200, "error", "Invalid email");
+	} else if(!valid.checkUrl(image)){
+		Message.messageRes(req, res, 200, "error", "Invalid image url");
+	}else {
+		User.findOne({"username": username }, function (err, user){
+			if(!user){
+				Message.messageRes(req, res, 404, "error", "User with the username "+username+" isn't exist");
+			}else if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			} else {
+				user.image = image;
+				user.save();
+				next();
+			}
+		});
 	}
+
 
 	return;
 };
@@ -197,7 +194,7 @@ exports.changePassword = function(req,res){
 exports.login = function(req, res){
 	var username = req.body.username,
 		password = req.body.password;
-	console.log("login");
+
 	// fetch user and test password verification
     User.findOne({ username: username }, function(err, user) {
 
@@ -211,7 +208,6 @@ exports.login = function(req, res){
 	            	Message.messageRes(req, res, 200, "error", err);
 	            }else{
 	            	if(isMatch){
-	            		console.log(user);
 	            		req.session.user = user;
 	            		Message.messageRes(req, res, 200, "success", "User can login");		            		
 	            	} else {
@@ -220,9 +216,7 @@ exports.login = function(req, res){
 	            }
 	        });
 		 }
-		
     });
-
 
 
 };

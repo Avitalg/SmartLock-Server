@@ -36,8 +36,6 @@ exports.getLock = function(req, res){
 
 exports.getLocksByUser = function(req, res){
 	if(req.session && req.session.user){//check if user loged in
-		console.log("get locks:");
-		console.log(req.session.user.username);
 		var username = req.session.user.username;
 
 		if(!username){
@@ -45,8 +43,7 @@ exports.getLocksByUser = function(req, res){
 		}else if(!valid.checkEmail(username)) {
 			Message.messageRes(req, res, 200, "error", "username is Invalid email");
 		}else{
-			console.log("user:"+username);
-			Permission.find({'username':username}, function(err, perRes){
+			Permission.findOne({'username':username}, function(err, perRes){
 				if(err){
 					Message.messageRes(req, res, 500, "error", err);
 				}else if(!perRes){
@@ -61,8 +58,6 @@ exports.getLocksByUser = function(req, res){
 							locks.push(perRes[i].lockid);
 						}	
 					}
-
-					console.log(locks);
 					
 					Lock.find({"lockid":{$in:locks}},function(err,data){
 						if(err){
@@ -91,7 +86,6 @@ exports.addLock = function(req,res){
 	if(!lock){
 		Message.messageRes(req, res, 500, "error", "No lockid was entered");
 	} else if(!valid.checkStatus(status)) {
-		console.log(status);
 		Message.messageRes(req, res, 500, "error", "Wrong lock status");
 	}else{
 		var newlock = new Lock({

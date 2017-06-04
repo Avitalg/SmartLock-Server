@@ -3,21 +3,11 @@ var Message = require('../middlewares/message');
 var Permission  = require('../models/permission');
 
 exports.writeLog = function(req, res){  
-  req.params.username = (req.params.username)? req.params.username : req.body.username;
-  req.params.lockid = (req.params.lockid)? req.params.lockid : req.body.lockid;
-  req.params.action = (req.params.action)? req.params.action : req.body.action;
+  req.params.username = (req.params.username)? req.params.username : req.body.username,
+  req.params.lockid = (req.params.lockid)? req.params.lockid : req.body.lockid,
+  req.params.action = (req.params.action)? req.params.action : req.body.action,
 
-  if(!req.params.username && req.session && req.session.user){
-    console.log("username:log-"+ req.session.user.username);
-    reeq.params.username = req.session.user.username;
-  }
-  
-  if(!req.params.username){
-    getUsernameByPhsicId(req, res, writeLogToFile);
-  } else{
-    writeLogToFile(req, res);
-  }
-
+  getUsernameByPhsicId(req, res, writeLogToFile);
 
 };
 

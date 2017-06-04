@@ -1,5 +1,5 @@
 var express = require('express');
-var session = require('express-session');
+var session = require('client-sessions');
 var app = express();
 var bodyParser = require('body-parser');
 
@@ -9,29 +9,24 @@ var db = require('./database');
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+app.use(session({
+  cookieName: 'slock',
+  secret: 'random_string_goes_here',
+  duration: 30 * 60 * 1000,
+  activeDuration: 5 * 60 * 1000,
+}));
 
 var port = process.env.PORT || 3000;
 
 app.set('port', port);
 app.use('/', express.static('./public'));
 app.use(function(req, res, next){
-	// res.header("Access-Control-Allow-Credentials", 'true');
 	res.header('Access-Control-Allow-Origin', "*");
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
 	res.header('Access-Control-Allow-Header', "Origin, X-Requested-With, Content-Type, Accept");
 	app.set('json spaces', 4);
 	res.set('Content-Type', "application/json");
 	next();
 });
-app.use(session({
-  name: 'slock',
-  secret: 'dsdskkj34jlk3lkdjlkfdj3434', 
-  resave: false,
-  saveUninitialized: true,
-   cookie: {
-      path: "/",
-   }
-}));
 
 require('./routes/lockRequest')(app);
 require('./routes/lock')(app);
