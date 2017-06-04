@@ -197,21 +197,23 @@ exports.login = function(req, res){
 
 		// fetch user and test password verification
 	    User.findOne({ username: username }, function(err, user) {
-
-
+	    	req.session.isLoggedIn = false;   
 	    	if(!user){
 				 Message.messageRes(req, res, 404, "error", "User with the username "+username+" isn't exist");
 			 }else if(err){
 				 Message.messageRes(req, res, 500, "error", err);
 			 } else {
 				 user.comparePassword(password, function(err, isMatch) {
+
 		            if (err){
 		            	Message.messageRes(req, res, 200, "error", err);
 		            }else{
 		            	if(isMatch){
-		            		Message.messageRes(req, res, 200, "success", "User can login");		            		
+		            		Message.messageRes(req, res, 200, "success", "User can login");		
+		            		req.session.user = user;
+		            		req.session.isLoggedIn = true;            		
 		            	} else {
-		            		Message.messageRes(req, res, 200, "error", "wrong password");
+		            		Message.messageRes(req, res, 200, "error", "wrong password");  
 		            	}
 		            }
 		            console.log(password+":"+ isMatch); // -> Password123: true

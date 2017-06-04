@@ -9,7 +9,12 @@ var db = require('./database');
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
-app.use(session({secret: 'ssshhhhh'}));
+app.use(session({
+	secret: 'ssshhhhh',
+	name: 'slock',
+	resave: false,
+	saveUninitialized: false
+}));
 
 
 var port = process.env.PORT || 3000;

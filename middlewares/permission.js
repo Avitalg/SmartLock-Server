@@ -252,85 +252,82 @@ exports.addPermission = function(req,res, next){
 		validation = valid.checkShortPermissionVars(username,lockid,frequency, date, type, start1,end1);
 	}
 
-	var checkUser = valid.checkUserExist(username);
 
-	checkUser.then(function(result){
+	if(result){
+		if(!username && !lockid){
+			Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
+		} else if(validation!="ok"){
+			Message.messageRes(req, res, 200, "error", validation);
+		}else{
+			var permission = new Permission({
+				username: username,
+				lockid: lockid,
+				frequency: frequency,
+				type: type
+			});
 
-		if(result){
-			if(!username && !lockid){
-				Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
-			} else if(validation!="ok"){
-				Message.messageRes(req, res, 200, "error", validation);
-			}else{
-				var permission = new Permission({
-					username: username,
-					lockid: lockid,
-					frequency: frequency,
-					type: type
-				});
-
-				switch(frequency) {
-					case "always":
-						delete permission.date;
-						delete permission.hours;
-						permission.duration = {
-							Sunday: {
-								start: start1,
-								end: end1
-							},
-							Monday: {
-								start: start2,
-								end: end2
-							},
-							Tuesday: {
-								start: start3,
-								end: end3
-							},
-							Wednesday: {
-								start: start4,
-								end: end4
-							},
-							Thursday: {
-								start: start5,
-								end: end5
-							},
-							Friday: {
-								start: start6,
-								end: end6
-							},
-							Saturday: {
-								start: start7,
-								end: end7
-							}
-						};
-						break;
-					case "once":
-						delete permission.duration;
-						permission.date = formate.formateDate(date);
-						permission.hours = {
-							start : start1,
-							end : end1
+			switch(frequency) {
+				case "always":
+					delete permission.date;
+					delete permission.hours;
+					permission.duration = {
+						Sunday: {
+							start: start1,
+							end: end1
+						},
+						Monday: {
+							start: start2,
+							end: end2
+						},
+						Tuesday: {
+							start: start3,
+							end: end3
+						},
+						Wednesday: {
+							start: start4,
+							end: end4
+						},
+						Thursday: {
+							start: start5,
+							end: end5
+						},
+						Friday: {
+							start: start6,
+							end: end6
+						},
+						Saturday: {
+							start: start7,
+							end: end7
 						}
-				}
-
-				//if User exist, won't save him.
-				Permission.findOneAndUpdate({"username": username, "lockid": lockid}, permission, {upsert:true},
-					function(err, doc){
-						if (err){
-							Message.messageRes(req, res, 500, "error", "Permission already exists");
-						}else{
-							if(req.route.stack.length > 1){
-								next();
-							}
-							Message.messageRes(req, res, 200, "success", "Permission was saved");
-						}
-					});
+					};
+					break;
+				case "once":
+					delete permission.duration;
+					permission.date = formate.formateDate(date);
+					permission.hours = {
+						start : start1,
+						end : end1
+					}
 			}
-			return;
-		} else {
-			Message.messageRes(req, res, 500, "error", "User doesn't exist");
+
+			//if User exist, won't save him.
+			Permission.findOneAndUpdate({"username": username, "lockid": lockid}, permission, {upsert:true},
+				function(err, doc){
+					if (err){
+						Message.messageRes(req, res, 500, "error", "Permission already exists");
+					}else{
+						if(req.route.stack.length > 1){
+							next();
+						}
+						Message.messageRes(req, res, 200, "success", "Permission was saved");
+					}
+				});
 		}
-	});
+		return;
+	} else {
+		Message.messageRes(req, res, 500, "error", "User doesn't exist");
+	}
+	
 	
 };
 
