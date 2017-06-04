@@ -13,7 +13,6 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 app.use(session({
-  name: 'slock',
   secret: 'foo',
   rolling: true,
   saveUninitialized: false,
