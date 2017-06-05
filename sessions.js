@@ -11,7 +11,7 @@ module.exports = function() {
 	resave: true,
 	cookie: {
 	    httpOnly: false,
-	    secure: false,
+	    secure: true,
 	    domain: consts.domain,
 	    maxAge: 24*60*60*1000 //one hour
 	},
