@@ -1,8 +1,9 @@
 var express = require('express');
-var session = require('express-session');
+//var session = require('express-session');
+const session = require("client-sessions");
 var app = express();
 var bodyParser = require('body-parser');
-var MongoStore = require('connect-mongo')(session);
+//var MongoStore = require('connect-mongo')(clientSessions);
 var cors = require('cors');
 var livereload  = require("connect-livereload");
 
@@ -22,17 +23,32 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 app.use(session({
-  secret: 'foo',
-  rolling: true,
-  saveUninitialized: false,
-  resave: true,
-   cookie: {
-      httpOnly: false,
-      secure: false,
-      maxAge: 24*60*60*1000 //one hour
-   },
-   store: new MongoStore({url : db.mongoUrl})
+    cookieName: 'mySession', // cookie name dictates the key name added to the request object
+    secret: 'blargadeeblargblarg', // should be a large unguessable string
+    duration: 24 * 60 * 60 * 1000, // how long the session will stay valid in ms
+    activeDuration: 1000 * 60 * 5 // if exp
+
+  //rolling: true,
+  //saveUninitialized: false,
+  //resave: true,
+  // cookie: {
+  //    httpOnly: false,
+  //    secure: false,
+  //    maxAge: 24*60*60*1000 //one hour
+  // },
+  // store: new MongoStore({url : db.mongoUrl})
 }));
+
+app.use(function(req, res, next) {
+    if (req.mySession.seenyou) {
+        res.setHeader('X-Seen-You', 'true');
+    } else {
+        // setting a property will automatically cause a Set-Cookie response
+        // to be sent
+        req.mySession.seenyou = true;
+        res.setHeader('X-Seen-You', 'false');
+    }
+});
 
 
 app.use(livereload());
