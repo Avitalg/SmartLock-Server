@@ -253,6 +253,7 @@ exports.login = function(req, res){
 		            	if(isMatch){
 		            		sess.isLoggedIn = true;  	
 		            		sess.user = user;
+							req.session.save();
 		            		Message.messageRes(req, res, 200, "success", "User can login");	
 		            	} else {
 		            		sess.isLoggedIn = false;   

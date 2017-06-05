@@ -25,10 +25,11 @@ app.use(session({
   secret: 'foo',
   rolling: true,
   saveUninitialized: false,
-  resave: false,
+  resave: true,
    cookie: {
       httpOnly: false,
-      secure: false	
+      secure: false,
+      maxAge: 30 * 30000
    },
    store: new MongoStore({url : db.mongoUrl})
 }));
