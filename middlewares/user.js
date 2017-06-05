@@ -37,6 +37,7 @@ exports.getUser = function(req,res){
 					Message.messageRes(req, res, 200, "success", user);
 				}
 			});
+		}
 };
 
 exports.isLoggedIn = function(req, res){
