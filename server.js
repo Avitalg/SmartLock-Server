@@ -4,18 +4,18 @@ var app = express();
 var bodyParser = require('body-parser');
 var MongoStore = require('connect-mongo')(session);
 var cors = require('cors');
+var livereload  = require("connect-livereload");
+
 
 process.env.ENV_VAR = process.env.ENV_VAR || "development";
 
 var db = require('./database');
 
+var port = process.env.PORT || 3000;
 
-//var store = new MongoDBStore(
-//    {
-//        uri: db.mongoUurl,
-//        collection: 'sessions'
-//    }
-//);
+// var whiteListDomains = ["https://smartlockproj.com", "http://127.0.0.1:8000"];
+
+app.set('port', port);
 
 app.use(cors());
 app.use(bodyParser.json()); // support json encoded bodies
@@ -35,11 +35,9 @@ app.use(session({
 }));
 
 
-var port = process.env.PORT || 3000;
+app.use(livereload());
 
-// var whiteListDomains = ["https://smartlockproj.com", "http://127.0.0.1:8000"];
 
-app.set('port', port);
 app.use('/', express.static('./public'));
 app.use(function(req, res, next){
 	res.header('Access-Control-Allow-Credentials', 'true');
