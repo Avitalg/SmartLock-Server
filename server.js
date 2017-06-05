@@ -1,47 +1,23 @@
 var express = require('express');
-var session = require('express-session');
 var app = express();
 var bodyParser = require('body-parser');
-var MongoStore = require('connect-mongo')(session);
 var cors = require('cors');
-var livereload  = require("connect-livereload");
-
-
-process.env.ENV_VAR = process.env.ENV_VAR || "development";
-
+var sessions = require('./sessions.js');
 var db = require('./database');
-
-var port = process.env.PORT || 3000;
-
+var consts = require('./consts');
 // var whiteListDomains = ["https://smartlockproj.com", "http://127.0.0.1:8000"];
 
-app.set('port', port);
+app.set('port', consts.port);
 
 app.use(cors());
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
-
-app.use(session({
-  secret: 'foo',
-  rolling: true,
-  saveUninitialized: false,
-  resave: true,
-   cookie: {
-      httpOnly: false,
-      secure: false,
-      maxAge: 24*60*60*1000 //one hour
-   },
-   store: new MongoStore({url : db.mongoUrl})
-}));
-
-
-app.use(livereload());
-
+app.use(sessions());
 
 app.use('/', express.static('./public'));
 app.use(function(req, res, next){
 	res.header('Access-Control-Allow-Credentials', 'true');
-	res.header('Access-Control-Allow-Origin', "https://smartlockproj.com");
+	res.header('Access-Control-Allow-Origin', consts.headerOrigin);
 	res.header('Access-Control-Allow-Header', "Origin, X-Requested-With, Content-Type, Accept");
 	app.set('json spaces', 4);
 	res.set('Content-Type', "application/json");
@@ -54,6 +30,6 @@ require('./routes/permission')(app);
 require('./routes/user')(app);
 require('./routes/message')(app);
 
-app.listen(port);
+app.listen(consts.port);
 
-console.log('The server is running on port '+ port);
+console.log('The server is running on port '+ consts.port);

@@ -1,13 +1,7 @@
 var mongoose = require('mongoose');
-var config={
-	prodMongoUrl: 'mongodb://admin:Aa1234@ds147079.mlab.com:47079/final_project',
-	qaMongoUrl : 'mongodb://admin:191923@ds159180.mlab.com:59180/final_project-test'
-};
+var consts = require('./consts');
 
-var mongoUrl = (process.env.ENV_VAR == 'development') ? config.qaMongoUrl : config.prodMongoUrl;
-
-
-mongoose.connect(mongoUrl);
+mongoose.connect(consts.mongoUrl);
 db = mongoose.connection;
 
 db.on('error', function(err){
@@ -27,4 +21,3 @@ db.on('reconnected', function(){
 	console.info('Mongoose reconnected!');
 });
 
-exports.mongoUrl = mongoUrl;
