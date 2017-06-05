@@ -4,10 +4,10 @@ var config={
 	qaMongoUrl : 'mongodb://admin:191923@ds159180.mlab.com:59180/final_project-test'
 };
 
-var mongoUurl = (process.env.ENV_VAR == 'qa') ? config.qaMongoUrl : config.prodMongoUrl;
+var mongoUrl = (process.env.ENV_VAR == 'development') ? config.qaMongoUrl : config.prodMongoUrl;
 
 
-mongoose.connect(mongoUurl);
+mongoose.connect(mongoUrl);
 db = mongoose.connection;
 
 db.on('error', function(err){
@@ -26,3 +26,5 @@ db.on('disconnected', function(){
 db.on('reconnected', function(){
 	console.info('Mongoose reconnected!');
 });
+
+exports.mongoUrl = mongoUrl;

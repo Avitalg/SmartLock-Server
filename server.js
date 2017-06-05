@@ -2,12 +2,21 @@ var express = require('express');
 var session = require('express-session');
 var app = express();
 var bodyParser = require('body-parser');
-var FileStore = require('session-file-store')(session);
-var cors = require('cors')
+var MongoStore = require('connect-mongo')(session);
+var cors = require('cors');
 
-process.env.ENV_VAR = process.env.ENV_VAR || "qa";
+process.env.ENV_VAR = process.env.ENV_VAR || "development";
 
 var db = require('./database');
+
+
+//var store = new MongoDBStore(
+//    {
+//        uri: db.mongoUurl,
+//        collection: 'sessions'
+//    }
+//);
+
 app.use(cors());
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
@@ -21,7 +30,7 @@ app.use(session({
       httpOnly: false,
       secure: false	
    },
-   store: new FileStore()
+   store: new MongoStore({url : db.mongoUrl})
 }));
 
 
