@@ -16,8 +16,10 @@ app.use(sessions());
 
 app.use('/', express.static('./public'));
 app.use(function(req, res, next){
+	var headerOrigin = (process.env.ENV_VAR == 'development') ? "*" : req.headers.origin;
 	res.header('Access-Control-Allow-Credentials', 'true');
-	res.header('Access-Control-Allow-Origin', consts.headerOrigin);
+	res.header('Access-Control-Allow-Origin',  headerOrigin);
+	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE');
 	res.header('Access-Control-Allow-Header', "Origin, X-Requested-With, Content-Type, Accept");
 	app.set('json spaces', 4);
 	res.set('Content-Type', "application/json");

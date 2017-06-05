@@ -7,10 +7,8 @@ var config={
 };
 
 var mongoUrl = (process.env.ENV_VAR == 'development') ? config.devMongoUrl : config.prodMongoUrl;
-var headerOrigin = (process.env.ENV_VAR == 'development') ? "*" : "https://smartlockproj.com";
 var domain = (process.env.ENV_VAR == 'development') ? "" : "smartlockproj.com";
 
 exports.mongoUrl = mongoUrl;
 exports.port = port;
-exports.headerOrigin = headerOrigin;
 exports.domain = domain;
