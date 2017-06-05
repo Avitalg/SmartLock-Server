@@ -47,6 +47,35 @@ exports.getPermission = function(req,res){
 
 exports.getPermissionsByUser = function(req, res, next){
 	
+	var username = req.params.username;
+
+	if(!valid.checkEmail(username)){
+		Message.messageRes(req, res, 200, "error", "username is Invalid email");
+		} else {
+			Permission.find({"username":username}, function(err,perResult){
+				if(err){
+					Message.messageRes(req, res, 500, "error", err);
+				} else if(!perResult){
+					Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
+				} else {
+
+					if(req.route.stack.length > 1){
+						req.UserPer = perResult;
+						next();
+					} else {
+						Message.messageRes(req, res, 200, "success", perResult);					
+					}
+		
+				}
+			});
+		}
+
+		return;
+	
+};
+
+exports.getPermissionsByUserTest = function(req, res, next){
+	
 	if(req.session && req.session.user){
 		var username = req.session.user.username;
 
