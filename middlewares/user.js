@@ -242,7 +242,7 @@ exports.login = function(req, res){
 		// fetch user and test password verification
 	    User.findOne({ username: username }, function(err, user) {
 	    	if(!user){
-				 Message.messageRes(req, res, 404, "error", "User with the username "+username+" isn't exist");
+				 Message.messageRes(req, res, 200, "error", "User with the username "+username+" isn't exist");
 			 }else if(err){
 				 Message.messageRes(req, res, 500, "error", err);
 			 } else {
