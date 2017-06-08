@@ -17,5 +17,4 @@ module.exports = function(app){
     app.put('/api/updatePermission/:username/:lockid/:frequency/:type/:date/:start1/:end1', permissions.updatePermission);
     app.put('/api/changeUserType/:username/:lockid/:type', permissions.changeUserType);
     app.put('/api/updatePhysicalId/:username/:lockid', physId.getPhysicalId, permissions.updatePhysicalId);
-    app.get('/api/getUserLogs/:username', permissions.getPermissionsByUser, permissions.getUserLogs );
 };

@@ -30,6 +30,7 @@ require('./routes/lockRequest')(app);
 require('./routes/lock')(app);
 require('./routes/permission')(app);
 require('./routes/user')(app);
+require('./routes/logs')(app);
 require('./routes/message')(app);
 
 app.listen(consts.port);

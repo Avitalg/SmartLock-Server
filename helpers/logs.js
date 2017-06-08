@@ -1,6 +1,7 @@
 var fs = require('fs');
 var Message = require('../middlewares/message');
 var Permission  = require('../models/permission');
+var Logs = require('../middlewares/logs');
 
 exports.writeLog = function(req, res){  
   req.params.username = (req.params.username)? req.params.username : req.body.username,
@@ -12,9 +13,9 @@ exports.writeLog = function(req, res){
   }
 
   if(!req.params.username){
-    getUsernameByPhsicId(req, res, writeLogToFile);
+    getUsernameByPhsicId(req, res, Logs.writeLog);
   } else {
-    writeLogToFile(req,res);  
+    Logs.writeLog(req,res);  
   }
 
 };
