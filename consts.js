@@ -6,7 +6,7 @@ var config={
 	devMongoUrl : 'mongodb://admin:191923@ds159180.mlab.com:59180/final_project-test'
 };
 
-var mongoUrl = (process.env.ENV_VAR == 'development') ? config.prodMongoUrl : config.prodMongoUrl;
+var mongoUrl = (process.env.ENV_VAR == 'development') ? config.devMongoUrl : config.prodMongoUrl;
 var domain = (process.env.ENV_VAR == 'development') ? "" : "smartlockproj.com";
 
 exports.mongoUrl = mongoUrl;
