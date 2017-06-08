@@ -13,4 +13,4 @@ exports.mongoUrl = mongoUrl;
 exports.port = port;
 exports.domain = domain;
 exports.EMAIL_USER = process.env.EMAIL_USER || "x";
-exports.EMAIL_PASS = process.env.EMAIL_USER || "x";
+exports.EMAIL_PASS = process.env.EMAIL_PASS || "x";
