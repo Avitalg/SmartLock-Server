@@ -284,6 +284,10 @@ exports.addPermission = function(req,res, next){
 		end7   = formate.formateHour(req.body.end7);
 
 	var validation = false; 
+
+	req.params.action = "addPermissions";
+
+	Logs.writeLog(req, res);
 	
 	if(frequency == "always"){
 		validation = valid.checkPermissionVars(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
@@ -293,7 +297,7 @@ exports.addPermission = function(req,res, next){
 	}
 
 
-	if(result){
+	
 		if(!username && !lockid){
 			Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
 		} else if(validation!="ok"){
@@ -364,9 +368,7 @@ exports.addPermission = function(req,res, next){
 				});
 		}
 		return;
-	} else {
-		Message.messageRes(req, res, 500, "error", "User doesn't exist");
-	}
+	
 	
 	
 };
