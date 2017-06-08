@@ -16,6 +16,7 @@ https://smartlockproject.herokuapp.com/api/getLocksByUser/:username
 https://smartlockproject.herokuapp.comapi/addLock  
     Method : POST  
     Params : lockid & lstatus (lock status)  
+            &desc (description of the lock)
 
 https://smartlockproject.herokuapp.com/api/removeLock/:lockid  
     Method : DELETE  

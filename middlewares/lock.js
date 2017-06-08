@@ -77,6 +77,7 @@ exports.getLocksByUser = function(req, res){
 
 exports.addLock = function(req,res){
 	var lock = req.body.lockid,
+		desc = req.body.desc,
 		status = req.body.lstatus;
 
 	if(!lock){

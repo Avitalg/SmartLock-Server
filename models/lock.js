@@ -11,6 +11,9 @@ var locksSchema = new schema({
     status: {
         type: String,
         required: true
+    },
+    description: {
+        type: String
     }
 },  {collection: 'locks'});
 
