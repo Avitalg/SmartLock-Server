@@ -7,6 +7,8 @@ var valid = require('../helpers/validation');
 var formate = require('../helpers/formate');
 var nodemailer = require('nodemailer');
 var Logs = require('../helpers/logs');
+var config = require('../consts');
+
 
 var _this = this;
 
@@ -651,12 +653,18 @@ exports.sendEmail = function(req, res){
 		date = req.body.date,
 		type = req.body.type;
 
+
+	if(config.EMAIL_USER =="x" || config.EMAIL_PASS == "x"){
+		console.log("config vars not defined. Email didn't sent");
+		return;
+	}
+
 	//need to secure this details
 	var transporter = nodemailer.createTransport({
 		service: 'Gmail',
 		auth: {
-		   user: 'smartlockproj@gmail.com', 
-		   pass: "SmartLock1234"
+			user: config.EMAIL_USER, 
+			pass: config.EMAIL_PASS
 		}
 	});
 
