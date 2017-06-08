@@ -49,8 +49,9 @@ exports.getPermissionsByUser = function(req, res, next){
 
 	console.log("getPermissions");
 
-	console.log("params:"+req.params);
-	
+	console.log("params:");
+	console.log(req.params);
+	console.log(req.params.username);
 	var username = req.params.username;
 
 	if(!valid.checkEmail(username)){
@@ -679,7 +680,6 @@ exports.getUserLogs = function(req, res){
 	var userPermissions = req.UserPer;
 	var relevantLogs = [];
 
-	console.log(req.session.user.username);
 	console.log(req.params.username);
 	console.log(userPermissions);
 	console.log(logs);
