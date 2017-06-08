@@ -46,6 +46,10 @@ exports.getPermission = function(req,res){
 
 
 exports.getPermissionsByUser = function(req, res, next){
+
+	console.log("getPermissions");
+
+	console.log("params:"+req.params);
 	
 	var username = req.params.username;
 
