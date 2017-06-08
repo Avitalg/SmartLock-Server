@@ -285,9 +285,6 @@ exports.addPermission = function(req,res, next){
 
 	var validation = false; 
 
-	req.params.action = "addPermissions";
-
-	Logs.writeLog(req, res);
 	
 	if(frequency == "always"){
 		validation = valid.checkPermissionVars(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
@@ -363,6 +360,8 @@ exports.addPermission = function(req,res, next){
 						if(req.route.stack.length > 1){
 							next();
 						}
+						req.params.action = "addPermissions";
+						Logs.writeLog(req, res);
 						Message.messageRes(req, res, 200, "success", "Permission was saved");
 					}
 				});
@@ -386,6 +385,8 @@ exports.removePermission = function(req,res){
 			if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			}else{
+				req.params.action = "removePermission";
+				Logs.writeLog(req, res);
 				Message.messageRes(req, res, 200, "success", "Permission was deleted successfully");
 			}
 		});
@@ -409,6 +410,8 @@ exports.removePhysicalId = function(req, res, next){
  				req.physicId = parseInt(permission.physicalId);
  				permission.physicalId = undefined;
  				permission.save();
+ 				req.params.action = "removePhysicalId";
+				Logs.writeLog(req, res);
  				//if next function was defined
  				if(req.route.stack.length > 1){
  					next();
@@ -433,7 +436,6 @@ exports.removeUserPermissions = function(req,res, next){
 			if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			}else{
-
 				if(req.route.stack.length > 1){
 					next();
 				} else {
@@ -559,7 +561,8 @@ exports.updatePermission = function(req,res){
 						break;
 
 				}
-
+				req.params.action = "updatePermission";
+				Logs.writeLog(req, res);
 				permission.save();
 				Message.messageRes(req, res, 200, "success", "succeed update permission.");
 			}
@@ -611,7 +614,8 @@ exports.updatePhysicalId = function(req,res,next){
 		 			} else {
 		 				permission.physicalId = physicalId;
 		 				permission.save();
-
+		 				req.params.action = "updatePhysicalId";
+						Logs.writeLog(req, res);
 		 				if(req.route.stack.length > 1){
 		 					next();
 		 				} else {
@@ -668,6 +672,8 @@ exports.sendEmail = function(req, res){
 			console.log(error);
 			console.log({yo: 'error' });
 		}else{
+			req.params.action = "sendEmail";
+			Logs.writeLog(req, res);
 			console.log('Message sent: ' + info.response);
 			console.log({yo: info.response});
 		};
