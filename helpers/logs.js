@@ -8,14 +8,16 @@ exports.writeLog = function(req, res){
   req.params.lockid = (req.params.lockid)? req.params.lockid : req.body.lockid,
   req.params.action = (req.params.action)? req.params.action : req.body.action;
   
-  if(!req.params.username && req.session && req.session.user){
-    req.params.username = req.session.user.username;
-  }
+  if(!!req.params.lockid){
+    if(!req.params.username && req.session && req.session.user){
+      req.params.username = req.session.user.username;
+    }
 
-  if(!req.params.username){
-    getUsernameByPhsicId(req, res, Logs.writeLog);
-  } else {
-    Logs.writeLog(req,res);  
+    if(!req.params.username){
+      getUsernameByPhsicId(req, res, Logs.writeLog);
+    } else {
+      Logs.writeLog(req,res);  
+    }  
   }
 
 };

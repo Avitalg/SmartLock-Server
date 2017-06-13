@@ -661,10 +661,10 @@ exports.sendEmail = function(req, res){
 
 	//need to secure this details
 	var transporter = nodemailer.createTransport({
-		service: 'Gmail',
+		service: 'SendGrid',
 		auth: {
-			user: config.EMAIL_USER, 
-			pass: config.EMAIL_PASS
+			user: "no-reply@smartlockproj.com", 
+			pass: "noRep578912@4"
 		}
 	});
 

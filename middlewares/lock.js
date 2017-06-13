@@ -35,7 +35,7 @@ exports.getLock = function(req, res){
 };
 
 exports.getLocksByUser = function(req, res){
-	var username = req.params.username;
+	var username = (req.params.username)? req.params.username : req.body.username;
 
 	if(!username){
 		Message.messageRes(req, res, 404, "error", "username wasn't entered");

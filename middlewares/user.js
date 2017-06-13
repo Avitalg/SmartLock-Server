@@ -231,14 +231,10 @@ exports.changePassword = function(req,res){
 };
 
 
-exports.login = function(req, res){
+exports.login = function(req, res, next){
 	var username = req.body.username,
 		password = req.body.password;
-		sess = req.session;
 
-		console.log("sess:")
-		console.log(sess);
-		console.log("isLoggedIn:"+sess.isLoggedIn);
 		// fetch user and test password verification
 	    User.findOne({ username: username }, function(err, user) {
 	    	if(!user){
@@ -251,12 +247,8 @@ exports.login = function(req, res){
 		            	Message.messageRes(req, res, 200, "error", err);
 		            }else{
 		            	if(isMatch){
-		            		sess.isLoggedIn = true;  	
-		            		sess.user = user;
-							req.session.save();
-		            		Message.messageRes(req, res, 200, "success", "User can login");	
+		            		next();
 		            	} else {
-		            		sess.isLoggedIn = false;   
 		            		Message.messageRes(req, res, 200, "error", "wrong password");  
 		            	}
 		            }

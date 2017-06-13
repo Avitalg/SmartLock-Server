@@ -18,3 +18,5 @@ module.exports = function(app){
     app.put('/api/changeUserType/:username/:lockid/:type', permissions.changeUserType);
     app.put('/api/updatePhysicalId/:username/:lockid', physId.getPhysicalId, permissions.updatePhysicalId);
 };
+
+//updatePermission
