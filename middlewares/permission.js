@@ -700,7 +700,6 @@ exports.updatePhysicalId = function(req,res,next){
 		 			} else {
 		 				permission.physicalId = physicalId;
 		 				permission.save();
-		 				req.params.action = "updatePhysicalId";
 						Logs.writeLog(req, res);
 		 				if(req.route.stack.length > 1){
 		 					next();
