@@ -70,10 +70,10 @@ exports.writeLog = function(req,res){
 				if (err){
 					console.log("log error");
 					console.log(err);
-					Message.messageRes(req, res, 200, "error", err);
+					//Message.messageRes(req, res, 200, "error", err);
 				}else{
 					console.log("log was saved");
-					Message.messageRes(req, res, 200, "success", doc);
+					//Message.messageRes(req, res, 200, "success", doc);
 				}
 			});
 	

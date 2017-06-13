@@ -87,7 +87,8 @@ exports.addLock = function(req,res){
 	}else{
 		var newlock = new Lock({
 			lockid: lock,
-			status: status
+			status: status,
+			description: desc
 		});
 
 		//if look exist, won't save him.
