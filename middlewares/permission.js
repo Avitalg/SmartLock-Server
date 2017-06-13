@@ -491,7 +491,6 @@ exports.removePhysicalId = function(req, res, next){
  				req.physicId = parseInt(permission.physicalId);
  				permission.physicalId = undefined;
  				permission.save();
- 				req.params.action = "removePhysicalId";
 				Logs.writeLog(req, res);
  				//if next function was defined
  				if(req.route.stack.length > 1){
