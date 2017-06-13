@@ -13,6 +13,11 @@ exports.requestLockAction = function(req,res,next){
             action = req.params.action,//validate legal type
             physicId = req.physicId, //get physicId from db
             time = new  Date().getTime();
+        console.log("requestLockAction");
+        console.log("user:"+ username);
+        console.log("lockid:"+lockId);
+        console.log("action:"+action);
+        console.log("physicId:"+physicId);
 
         if(!valid.checkLockAction(action)){
             console.log("action");
@@ -101,6 +106,10 @@ exports.updatelocalButtonAction = function (req,res,next){
     var lockId = req.params.lockId,
         action  = req.body.action,
         fingerprintId = req.body.fingerId;
+
+    console.log("updatelocalButtonAction");
+    console.log("lockid:"+lockId);
+    console.log("action:"+action);
 
     if(!valid.checkButtonAction(action)){
         Message.messageRes(req, res, 404, "error", "undefine action");
