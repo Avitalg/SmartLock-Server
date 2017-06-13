@@ -66,6 +66,10 @@ exports.requestLockAction = function(req,res,next){
 exports.checkLockAction = function(req,res,next){
         if(req.params.requestId && requests[req.params.requestId]){
             var responseJson = JSON.parse(JSON.stringify(requests[req.params.requestId]));
+            var now = new Date().getTime();
+            if (requests[req.params.requestId].time+30000 > now){
+                responseJson.status = 'timeout';
+            }
             if (responseJson.status != 'unhandle'){
                 delete requests[req.params.requestId];
             }
@@ -79,13 +83,14 @@ exports.checkLockAction = function(req,res,next){
 exports.checkLockRequest = function (req,res,next) {
         if(lockRequestQueue[req.params.lockId] && lockRequestQueue[req.params.lockId].length> 0) {
             var now = new Date().getTime();
-            var lockreq = lockRequestQueue[req.params.lockId].shift();
-            if(requests[lockreq.requestId].time+100000>now){ //
-                res.status(200).json(lockreq);
-                return;
+            while(lockRequestQueue[req.params.lockId].length>0){
+                var lockreq = lockRequestQueue[req.params.lockId].shift();
+                if(requests[lockreq.requestId].time+30000>now){ //
+                    res.status(200).json(lockreq);
+                    return;
+                }
             }
         }
-
         res.status(200).json({"action":"no action needed"});
 };
 
@@ -103,7 +108,7 @@ exports.updateLockRequest = function (req,res,next) {
 
 };
 
-exports.updatelocalButtonAction = function (req,res,next){
+exports.updateLocalButtonAction = function (req,res,next){
     var lockId = req.params.lockId,
         action  = req.body.action,
         fingerprintId = req.body.fingerId;
