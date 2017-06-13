@@ -239,28 +239,34 @@ exports.login = function(req, res, next){
 	var username = req.body.username,
 		password = req.body.password;
 
-		// fetch user and test password verification
-	    User.findOne({ username: username }, function(err, user) {
-	    	if(!user){
-				 Message.messageRes(req, res, 200, "error", "User with the username "+username+" isn't exist");
-			 }else if(err){
-				 Message.messageRes(req, res, 500, "error", err);
-			 } else {
-				 user.comparePassword(password, function(err, isMatch) {
-		            if (err){
-		            	Message.messageRes(req, res, 200, "error", err);
-		            }else{
-		            	if(isMatch){
-		            		next();
-		            	} else {
-		            		Message.messageRes(req, res, 200, "error", "wrong password");  
-		            	}
-		            }
-		            
-		        });
-			 }
+		if(!username){
+			Message.messageRes(req, res, 200, "error", "no username was entered");
+		} else if(!password){
+			Message.messageRes(req, res, 200, "error", "no password was entered");
+		}else{
+			// fetch user and test password verification
+		    User.findOne({ username: username }, function(err, user) {
+		    	if(!user){
+					 Message.messageRes(req, res, 200, "error", "User with the username "+username+" isn't exist");
+				 }else if(err){
+					 Message.messageRes(req, res, 500, "error", err);
+				 } else {
+					 user.comparePassword(password, function(err, isMatch) {
+			            if (err){
+			            	Message.messageRes(req, res, 200, "error", err);
+			            }else{
+			            	if(isMatch){
+			            		next();
+			            	} else {
+			            		Message.messageRes(req, res, 200, "error", "wrong password");  
+			            	}
+			            }
+			            
+			        });
+				 }
 
-	    });
+		    });
+		}
 
 
 };

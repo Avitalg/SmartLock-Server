@@ -37,6 +37,7 @@ exports.getLock = function(req, res){
 exports.getLocksByUser = function(req, res){
 	var username = (req.params.username)? req.params.username : req.body.username;
 
+
 	if(!username){
 		Message.messageRes(req, res, 404, "error", "username wasn't entered");
 	}else if(!valid.checkEmail(username)) {
@@ -46,6 +47,10 @@ exports.getLocksByUser = function(req, res){
 			if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			}else if(!perRes){
+				if(req.route.stack.length > 1){
+						Message.messageRes(req, res, 200, "success", "Has no permissions yet.");
+						return;
+				}
 				Message.messageRes(req, res, 404, "error", "username doesn't exist");
 			}else{
 				var locks = [];
