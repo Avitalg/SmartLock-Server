@@ -13,6 +13,7 @@ exports.requestLockAction = function(req,res,next){
             action = req.params.action,//validate legal type
             physicId = req.physicId, //get physicId from db
             time = new  Date().getTime();
+
         console.log("requestLockAction");
         console.log("user:"+ username);
         console.log("lockid:"+lockId);

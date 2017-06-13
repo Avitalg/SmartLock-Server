@@ -70,7 +70,7 @@ exports.writeLog = function(req,res){
 		newlog.save(function(err, doc){
 				if (err){
 					console.log("log error");
-					conosle.log(err);
+					console.log(err);
 				}else{
 					console.log("log was saved");
 				}
