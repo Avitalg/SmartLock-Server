@@ -641,14 +641,14 @@ exports.updatePermission = function(req,res){
 							return;
 						}
 						break;
-
 				}
-				req.params.action = "updatePermission";
-				Logs.writeLog(req, res);
+				
 				permission.save(function(err,doc){
 					if(err){
 						Message.messageRes(req, res, 200, "error", err);
 					}else{
+						req.params.action = "updatePermission";
+						Logs.writeLog(req, res);
 						Message.messageRes(req, res, 200, "success", "succeed update permission.");
 					}
 				});
