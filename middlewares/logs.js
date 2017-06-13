@@ -66,13 +66,14 @@ exports.writeLog = function(req,res){
 			time : time
 		});
 
-		//if look exist, won't save him.
 		newlog.save(function(err, doc){
 				if (err){
 					console.log("log error");
 					console.log(err);
+					Message.messageRes(req, res, 200, "error", err);
 				}else{
 					console.log("log was saved");
+					Message.messageRes(req, res, 200, "success", doc);
 				}
 			});
 	
