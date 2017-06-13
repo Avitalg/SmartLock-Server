@@ -10,5 +10,5 @@ module.exports = function(app) {
     app.get('/api/checkLockAction/:requestId',lockRequest.checkLockAction);
     app.get('/api/lockRequest/:lockId',lockRequest.checkLockRequest);
     app.post('/api/lockRequest/:lockId',lockRequest.updateLockRequest);
-    app.post('/api/localButtonAction/:lockId',lockRequest.updatelocalButtonAction);
+    app.post('/api/localButtonAction/:lockId',lockRequest.updateLocalButtonAction );
 };
