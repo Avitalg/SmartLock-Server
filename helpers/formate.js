@@ -43,7 +43,6 @@ exports.formateDate = function(date){
 
 	if(date){
 		date = date.split(/[\.\-\,]+/);
-
 	}
 
 	 if(date.length == 3){

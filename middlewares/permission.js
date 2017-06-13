@@ -4,7 +4,7 @@ var Permission  = require('../models/permission');
 var Message = require('./message');
 var moment = require('moment');
 var valid = require('../helpers/validation');
-var formate = require('../helpers/formate');
+var format = require('../helpers/formate');
 var nodemailer = require('nodemailer');
 var Logs = require('../helpers/logs');
 var config = require('../consts');
@@ -349,20 +349,20 @@ exports.addPermission = function(req,res, next){
 		frequency = req.body.frequency,
 		date = req.body.date,
 		type = req.body.type,
-		start1 = formate.formateHour(req.body.start1),
-		start2 = formate.formateHour(req.body.start2),
-		start3 = formate.formateHour(req.body.start3),
-		start4 = formate.formateHour(req.body.start4),
-		start5 = formate.formateHour(req.body.start5),
-		start6 = formate.formateHour(req.body.start6),
-		start7 = formate.formateHour(req.body.start7),
-		end1   = formate.formateHour(req.body.end1),
-		end2   = formate.formateHour(req.body.end2),
-		end3   = formate.formateHour(req.body.end3),
-		end4   = formate.formateHour(req.body.end4),
-		end5   = formate.formateHour(req.body.end5),
-		end6   = formate.formateHour(req.body.end6),
-		end7   = formate.formateHour(req.body.end7);
+		start1 = format.formateHour(req.body.start1),
+		start2 = format.formateHour(req.body.start2),
+		start3 = format.formateHour(req.body.start3),
+		start4 = format.formateHour(req.body.start4),
+		start5 = format.formateHour(req.body.start5),
+		start6 = format.formateHour(req.body.start6),
+		start7 = format.formateHour(req.body.start7),
+		end1   = format.formateHour(req.body.end1),
+		end2   = format.formateHour(req.body.end2),
+		end3   = format.formateHour(req.body.end3),
+		end4   = format.formateHour(req.body.end4),
+		end5   = format.formateHour(req.body.end5),
+		end6   = format.formateHour(req.body.end6),
+		end7   = format.formateHour(req.body.end7);
 
 	var validation = false; 
 
@@ -425,7 +425,7 @@ exports.addPermission = function(req,res, next){
 					break;
 				case "once":
 					delete permission.duration;
-					permission.date = formate.formateDate(date);
+					permission.date = format.formateDate(date);
 					permission.hours = {
 						start : start1,
 						end : end1
@@ -555,20 +555,20 @@ exports.updatePermission = function(req,res){
 		frequency = req.params.frequency,
 		type = req.params.type,
 		date = req.params.date,
-		start1 = formate.formateHour(req.params.start1),
-		start2 = formate.formateHour(req.params.start2),
-		start3 = formate.formateHour(req.params.start3),
-		start4 = formate.formateHour(req.params.start4),
-		start5 = formate.formateHour(req.params.start5),
-		start6 = formate.formateHour(req.params.start6),
-		start7 = formate.formateHour(req.params.start7),
-		end1   = formate.formateHour(req.params.end1),
-		end2   = formate.formateHour(req.params.end2),
-		end3   = formate.formateHour(req.params.end3),
-		end4   = formate.formateHour(req.params.end4),
-		end5   = formate.formateHour(req.params.end5),
-		end6   = formate.formateHour(req.params.end6),
-		end7   = formate.formateHour(req.params.end7);
+		start1 = format.formateHour(req.params.start1),
+		start2 = format.formateHour(req.params.start2),
+		start3 = format.formateHour(req.params.start3),
+		start4 = format.formateHour(req.params.start4),
+		start5 = format.formateHour(req.params.start5),
+		start6 = format.formateHour(req.params.start6),
+		start7 = format.formateHour(req.params.start7),
+		end1   = format.formateHour(req.params.end1),
+		end2   = format.formateHour(req.params.end2),
+		end3   = format.formateHour(req.params.end3),
+		end4   = format.formateHour(req.params.end4),
+		end5   = format.formateHour(req.params.end5),
+		end6   = format.formateHour(req.params.end6),
+		end7   = format.formateHour(req.params.end7);
 
 	var validation = false;
  
@@ -590,7 +590,8 @@ exports.updatePermission = function(req,res){
 			}else if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			} else {
-				permission.frequency = "always";
+				console.log(permission);
+				permission.frequency = frequency;
 				permission.type = type;
 				switch(frequency) {
 					case "always":
@@ -630,7 +631,7 @@ exports.updatePermission = function(req,res){
 					case "once":
 						if(!start2){
 							permission.duration = undefined;
-							permission.date = date.toLocaleString();
+							permission.date = new Date(format.formateDate(req.params.date));
 							permission.hours = {
 								start : start1,
 								end : end1
@@ -644,8 +645,13 @@ exports.updatePermission = function(req,res){
 				}
 				req.params.action = "updatePermission";
 				Logs.writeLog(req, res);
-				permission.save();
-				Message.messageRes(req, res, 200, "success", "succeed update permission.");
+				permission.save(function(err,doc){
+					if(err){
+						Message.messageRes(req, res, 200, "error", err);
+					}else{
+						Message.messageRes(req, res, 200, "success", "succeed update permission.");
+					}
+				});
 			}
 		});
 	}
