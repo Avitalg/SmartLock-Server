@@ -161,20 +161,21 @@ exports.getLockManager = function(req, res){
 };
 
 exports.checkIfHasManager = function(req, res, next){
-	var lockid = req.params.lockid;
+	var lockid = (req.params.lockid)? req.params.lockid : req.body.lockid;
 
 	Permission.findOne({"lockid":lockid, "type":0}, function(err,perResult){
 		if(err){
 			Message.messageRes(req, res, 500, "error", err);
 		}else if(!perResult){//no managers in lock
 			if(req.route.stack.length > 1){
-				req.body.type = 0;
+				req.hasManager = false;
 				next();
 			} else {
 				Message.messageRes(req, res, 404, "error", "No manager");
 			}
 		}else{
 			if(req.route.stack.length > 1){
+				req.hasManager = true;
 				next();
 			} else {
 				Message.messageRes(req, res, 200, "success", "Has manager");
@@ -263,6 +264,84 @@ exports.rightPermission = function(req, res, next){
 
 	}
 };
+
+exports.addManagerPermission = function(req, res, next){
+	 
+	var start1, start2, start3, start4, start5, start6, start7,
+		end1, end2, end3, end4, end5, end6, end7,
+		username = req.body.username,
+		lockid = req.body.lockid,
+		frequency = "always",
+		type = 0,
+		validation = "no";
+	start1 = start2 = start3 = start4 = start5 = start6 = start7 = "00:00",
+	end1 = end2 = end3 = end4 = end5 = end6 = end7   = "23:59";
+	console.log("haS MANAGE:"+req.hasManager);
+	validation = valid.checkPermissionVars(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
+		end1, end2, end3, end4, end5, end6,end7);
+
+	if(!username && !lockid){
+		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
+	} else if(validation!="ok"){
+		Message.messageRes(req, res, 200, "error", validation);
+	} else if(req.hasManager){
+		Message.messageRes(req, res, 200, "error", "lock has manager");
+	}else{
+		var permission = new Permission({
+			username: username,
+			lockid: lockid,
+			frequency: frequency,
+			type: type,
+			duration : {
+				Sunday: {
+					start: start1,
+					end: end1
+				},
+				Monday: {
+					start: start2,
+					end: end2
+				},
+				Tuesday: {
+					start: start3,
+					end: end3
+				},
+				Wednesday: {
+					start: start4,
+					end: end4
+				},
+				Thursday: {
+					start: start5,
+					end: end5
+				},
+				Friday: {
+					start: start6,
+					end: end6
+				},
+				Saturday: {
+					start: start7,
+					end: end7
+				}
+			}
+		});
+
+	//if User exist, won't save him.
+		Permission.findOneAndUpdate({"username": username, "lockid": lockid}, permission, {upsert:true},
+			function(err, doc){
+				if (err){
+					Message.messageRes(req, res, 500, "error", "Permission already exists");
+				}else{
+					req.params.action = "add manager Permissions";
+					Logs.writeLog(req, res);
+					if(req.route.stack.length > 1){
+						next();
+						return;
+					}
+					Message.messageRes(req, res, 200, "success", "Permission was saved");
+				}
+		});
+
+	}			
+}
 
 exports.addPermission = function(req,res, next){
 	var username = req.body.username,

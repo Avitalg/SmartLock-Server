@@ -98,7 +98,11 @@ exports.addUser = function(req,res){
         Message.messageRes(req, res, 500, "error", "No username was entered");
 	} else if(!valid.checkEmail(username)){
 		Message.messageRes(req, res, 200, "error", "Invalid email");
-	}  else {
+	} else if(!phone){
+		Message.messageRes(req, res, 200, "error", "Need to enter phone number");
+	}else if(!password){
+		Message.messageRes(req, res, 200, "error", "Need to enter password");
+	}else {
 		var user = new User({
 		  	username: username,
 		  	phone: phone,
