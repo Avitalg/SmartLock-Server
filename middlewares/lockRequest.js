@@ -109,14 +109,15 @@ exports.updateLockRequest = function (req,res,next) {
 };
 
 exports.updateLocalButtonAction = function (req,res,next){
-    var lockId = req.params.lockId,
+    var lockId = req.params.lockid,
         action  = req.body.action,
         fingerprintId = req.body.fingerId;
 
     console.log("updatelocalButtonAction");
     console.log("lockid:"+lockId);
     console.log("action:"+action);
-
+    console.log("fingerprintId:"+fingerprintId);
+    
     if(!valid.checkButtonAction(action)){
         Message.messageRes(req, res, 404, "error", "undefine action");
         return;

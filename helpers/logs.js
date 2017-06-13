@@ -24,7 +24,7 @@ exports.writeLog = function(req, res){
 
 var getUsernameByPhsicId = function(req, res, next){
   var lockid = req.params.lockid,
-      physicalId = req.physicId;
+      physicalId = (req.physicId) ? req.physicId:req.body.fingerId;
 
     Permission.findOne({"lockid":lockid, "physicalId": physicalId}, function(err,perResult){
       if(perResult){

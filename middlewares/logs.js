@@ -63,19 +63,19 @@ exports.writeLog = function(req,res){
 			username: username,
 			action: action,
 			physicalid: physicId,
-			time : time
+			time: time
 		});
 
 		newlog.save(function(err, doc){
-				if (err){
-					console.log("log error");
-					console.log(err);
-					//Message.messageRes(req, res, 200, "error", err);
-				}else{
-					console.log("log was saved");
-					//Message.messageRes(req, res, 200, "success", doc);
-				}
-			});
+			if (err){
+				console.log("log error");
+				console.log(err);
+				//Message.messageRes(req, res, 200, "error", err);
+			}else{
+				console.log("log was saved");
+				//Message.messageRes(req, res, 200, "success", doc);
+			}
+		});
 	
 	return;
 };
