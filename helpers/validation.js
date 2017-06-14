@@ -101,7 +101,7 @@ exports.checkHour = function(hour){
 };
 
 exports.checkStartEndHour = function(start, end){
-	return start < end || end == "00:00";
+	return start < end || end == "00:00" || (start == "0" &&end == "0");
 }
 
 exports.checkPermissionVars = function(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
