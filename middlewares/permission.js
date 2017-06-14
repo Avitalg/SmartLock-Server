@@ -83,7 +83,7 @@ exports.getPermissionsByUser = function(req, res, next){
 
 exports.getUserManageLocks = function(req, res){
 	var username = req.params.username;
-
+	var lockids =[];
 	if(!valid.checkEmail(username)){
 		Message.messageRes(req, res, 200, "error", "username is Invalid email");
 	} else {
@@ -93,7 +93,15 @@ exports.getUserManageLocks = function(req, res){
 			} else if(!perResult){
 				Message.messageRes(req, res, 200, "error", "Not a manager of any lock");
 			} else {
-				Message.messageRes(req, res, 200, "success", perResult);						
+				if(!!perResult.length){
+					for(var i=0; i< perResult.length; i++){
+						lockids.push(perResult[i].lockid);
+					}	
+				} else {
+					lockids.push(perResult.lockid);
+				}
+				
+				Message.messageRes(req, res, 200, "success", lockids);						
 			}
 		});
 	}
