@@ -282,8 +282,10 @@ exports.addManagerPermission = function(req, res, next){
 	validation = valid.checkPermissionVars(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
 		end1, end2, end3, end4, end5, end6,end7);
 
-	if(!username && !lockid){
-		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
+	if(!username){
+		Message.messageRes(req, res, 200, "error", "Need to enter username");
+	} else if(!lockid){
+		Message.messageRes(req, res, 200, "error", "need to enter lockid");
 	} else if(validation!="ok"){
 		Message.messageRes(req, res, 200, "error", validation);
 	} else if(req.hasManager){
