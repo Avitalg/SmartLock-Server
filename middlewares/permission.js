@@ -423,9 +423,10 @@ exports.addPermission = function(req,res, next){
 	}
 
 
-	
-		if(!username && !lockid){
-			Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
+		if(!username){
+			Message.messageRes(req, res, 400, "error", "Need to enter username");
+		}else if(!lockid){
+			Message.messageRes(req, res, 200, "error", "lockid weren't supplied");
 		} else if(validation!="ok"){
 			Message.messageRes(req, res, 200, "error", validation);
 		}else{
