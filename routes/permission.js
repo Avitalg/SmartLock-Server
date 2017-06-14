@@ -1,5 +1,6 @@
 var permissions = require('../middlewares/permission');
 var physId = require('../helpers/physicalId');
+var locks = require('../middlewares/lock');
 
 module.exports = function(app){
     app.get('/api/getPermissions', permissions.getPermissions);
@@ -10,7 +11,7 @@ module.exports = function(app){
     app.get('/api/getPermissionsByLock/:lockid', permissions.getPermissionsByLock);
     app.get('/api/getLockManager/:lockid', permissions.getLockManager);
     app.post('/api/checkIfHasManager',permissions.checkIfHasManager);
-    app.post('/api/addPermission', permissions.checkIfHasManager ,permissions.addPermission, permissions.sendEmail);
+    app.post('/api/addPermission', locks.getLock, permissions.checkIfHasManager ,permissions.addPermission, permissions.sendEmail);
     app.delete('/api/removePermission/:username/:lockid', permissions.removePermission);
     app.delete('/api/removeUserPermissions/:username', permissions.removeUserPermissions);
     app.delete('/api/removeLockPermissions/:lockid', permissions.removeLockPermissions);

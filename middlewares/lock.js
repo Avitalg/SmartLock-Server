@@ -15,8 +15,8 @@ exports.getLocks = function(req,res){
 	});
 };
 
-exports.getLock = function(req, res){
-	var lockid = req.params.lockid;
+exports.getLock = function(req, res, next){
+	var lockid = (req.params.lockid) ? req.params.lockid : req.body.lockid;
 
 	if(!lockid){
 		Message.messageRes(req, res, 404, "error", "Lockid wasn't entered");
@@ -27,6 +27,10 @@ exports.getLock = function(req, res){
 			}else if(!lock){
 				Message.messageRes(req, res, 404, "error", "Lock doesn't exist");
 			}else{
+				if(req.route.stack.length > 1){
+					next();
+					return;
+				}
 				Message.messageRes(req, res, 200, "success", lock);
 			}
 		});
