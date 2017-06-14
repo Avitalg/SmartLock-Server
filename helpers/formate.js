@@ -1,19 +1,21 @@
 var valid = require('../helpers/validation');
 
+var _this = this;
 
 exports.formateHour = function(hour){
-	if(valid.checkHour(hour)){
-		if(hour.length == 4){
-			hour = "0" + hour;
-		}
-	return hour;
+	if(!!hour && hour!='0'){
+		var res = hour.split(":");
+		var hour = _this.getTwoDigitHour(res[0]);
+		var minutes = _this.getTwoDigitMinutes(res[1]);
+		console.log(hour + ":" + minutes);
+		return hour + ":" + minutes;	
 	}
-
+	return hour;
 };
 
 exports.getTwoDigitHour = function(time){
 	var hour = time;
-	if(hour<10){
+	if(hour.length == 1){
 		hour = "0"+hour;
 	}
 
@@ -22,7 +24,7 @@ exports.getTwoDigitHour = function(time){
 
 exports.getTwoDigitMinutes = function(time){
 	var minutes = time;
-	if(minutes<10){
+	if(minutes.length == 1){
 		minutes = "0" + minutes;
 	}
 	return minutes;

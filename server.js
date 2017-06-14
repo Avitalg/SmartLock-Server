@@ -2,7 +2,6 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var cors = require('cors');
-var sessions = require('./sessions.js');
 var db = require('./database');
 var consts = require('./consts');
 // var whiteListDomains = ["https://smartlockproj.com", "http://127.0.0.1:8000"];
@@ -12,7 +11,6 @@ app.set('port', consts.port);
 app.use(cors());
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
-app.use(sessions());
 
 app.use('/', express.static('./public'));
 app.use(function(req, res, next){
