@@ -67,7 +67,12 @@ exports.checkLockAction = function(req,res,next){
         if(req.params.requestId && requests[req.params.requestId]){
             var responseJson = JSON.parse(JSON.stringify(requests[req.params.requestId]));
             var now = new Date().getTime();
-            if (requests[req.params.requestId].time+30000 < now){
+
+            console.log("checkLockAction");
+            console.log('reqid:'+req.params.requestId);
+            console.log(requests[req.params.requestId]);
+
+            if (requests[req.params.requestId] && (requests[req.params.requestId].time+30000 < now)){
                 responseJson.status = 'timeout';
             }
             if (responseJson.status != 'unhandle'){
