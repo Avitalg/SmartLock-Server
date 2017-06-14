@@ -103,6 +103,7 @@ exports.addUser = function(req,res){
 		  	phone: phone,
 		  	password: password
 		});
+
 		User.findOne({ "username": username }, function (err, resultUser){
 			if(!resultUser){
 					user.save(function(saveErr, newUser){
@@ -115,6 +116,7 @@ exports.addUser = function(req,res){
 			}else if(err){
                 Message.messageRes(req, res, 500, "error", err);
 			} else {
+				console.log(resultUser);
                 Message.messageRes(req, res, 200, "error", "User already exists");
 			}
 			return;
@@ -278,6 +280,7 @@ exports.login = function(req, res, next){
 									          expiresIn : 60*60*24 // expires in 24 hours
 									        });
 			            		req.token = token;
+			            		req.user = user;
 			            		console.log("token:" + token);
 			            		next();
 			            	} else {
