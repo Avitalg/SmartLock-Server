@@ -65,13 +65,13 @@ https://smartlockproject.herokuapp.com/api/removePermission/:userid/:lockid/
     Method : DELETE  
     params : userid & lockid  
 
-https://smartlockproject.herokuapp.com/api/updatePermission/:userid/:lockid/:frequency/:start1/:end1/:start2/:end2/:start3/:end3/:start4/:end4/:start5/:end5/:start6/:end6/:start7/:end7  
+https://smartlockproject.herokuapp.com/api/updatePermission/:username/:lockid/:frequency/:type/:start1/:end1/:start2/:end2/:start3/:end3/:start4/:end4/:start5/:end5/:start6/:end6/:start7/:end7  
     Method : PUT  
     params: userid & lockid & frequency & start1-7 & end1-7  
 
-https://smartlockproject.herokuapp.com/api/updatePermission/:userid/:lockid/:frequency/:date/:start1/:end1  
+https://smartlockproject.herokuapp.com/api/updatePermission/:username/:lockid/:frequency/:type/:date/:start1/:end1
     Method : PUT  
-    params: userid & lockid & frequency & start1 & end1
+    params: userid & lockid & frequency & type & start1 & end1
             & date (format: YYYY-MM-DD)
 
 https://smartlockproject.herokuapp.com/api/changeUserType/:userid/:lockid/:type

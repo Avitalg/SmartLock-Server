@@ -174,6 +174,8 @@ exports.checkIfHasManager = function(req, res, next){
 				Message.messageRes(req, res, 404, "error", "No manager");
 			}
 		}else{
+			console.log("has manager:");
+			console.log(perResult);
 			if(req.route.stack.length > 1){
 				req.hasManager = true;
 				next();
