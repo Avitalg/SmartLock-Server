@@ -754,9 +754,12 @@ exports.updatePhysicalId = function(req,res,next){
 		 				} else {//if have - take the one he has
 		 					req.physicId = permission.physicalId;
 		 				}
-		 					
-		 				Message.messageRes(req, res, 200, "success", {message : "succeed update physicalId.", physicalId : req.physicId});
 		 				
+		 				if(req.route.stack.length > 1){
+		 					next();
+		 				} else {
+		 					Message.messageRes(req, res, 200, "success", {message : "succeed update physicalId.", physicalId : req.physicId});
+		 				}
 		 			}
 		 		});
 		 	} else {
