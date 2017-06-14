@@ -348,25 +348,36 @@ exports.addManagerPermission = function(req, res, next){
 }
 
 exports.addPermission = function(req,res, next){
-	var username = req.body.username,
-		lockid = req.body.lockid,
-		frequency = req.body.frequency,
-		date = req.body.date,
-		type = req.body.type,
-		start1 = format.formateHour(req.body.start1),
-		start2 = format.formateHour(req.body.start2),
-		start3 = format.formateHour(req.body.start3),
-		start4 = format.formateHour(req.body.start4),
-		start5 = format.formateHour(req.body.start5),
-		start6 = format.formateHour(req.body.start6),
-		start7 = format.formateHour(req.body.start7),
-		end1   = format.formateHour(req.body.end1),
-		end2   = format.formateHour(req.body.end2),
-		end3   = format.formateHour(req.body.end3),
-		end4   = format.formateHour(req.body.end4),
-		end5   = format.formateHour(req.body.end5),
-		end6   = format.formateHour(req.body.end6),
+	var username, lockid, frequency, date, type, start1, start2, start3, start4, start5, start6, start7,
+		end1, end2, end3, end4, end5, end6, end7;
+	var hasManager = req.hasManager;
+	username = req.body.username;
+	lockid = req.body.lockid;
+	if(hasManager){
+		frequency = req.body.frequency;
+		date = req.body.date;
+		type = req.body.type;
+		start1 = format.formateHour(req.body.start1);
+		start2 = format.formateHour(req.body.start2);
+		start3 = format.formateHour(req.body.start3);
+		start4 = format.formateHour(req.body.start4);
+		start5 = format.formateHour(req.body.start5);
+		start6 = format.formateHour(req.body.start6);
+		start7 = format.formateHour(req.body.start7);
+		end1   = format.formateHour(req.body.end1);
+		end2   = format.formateHour(req.body.end2);
+		end3   = format.formateHour(req.body.end3);
+		end4   = format.formateHour(req.body.end4);
+		end5   = format.formateHour(req.body.end5);
+		end6   = format.formateHour(req.body.end6);
 		end7   = format.formateHour(req.body.end7);
+	} else {
+		frequency = "always";
+		type = 0,
+		start1 = start2 = start3 = start4 = start5 = start6 = start7 = "00:00";
+		end1   = end2   = end3   = end4   = end5   = end6   = end7   = "23:59";
+	}
+	
 
 	var validation = false; 
 
