@@ -81,7 +81,7 @@ exports.getPermissionsByUser = function(req, res, next){
 	
 };
 
-exports.getUserManageLocks = function(req, res){
+exports.getUserManageLocks = function(req, res, next){
 	var username = req.params.username;
 	var lockids =[];
 	if(!valid.checkEmail(username)){
@@ -101,7 +101,12 @@ exports.getUserManageLocks = function(req, res){
 					lockids.push(perResult.lockid);
 				}
 				
-				Message.messageRes(req, res, 200, "success", lockids);						
+				if(req.route.stack.length > 1){
+					req.locks = lockids;
+					next();
+				} else {
+					Message.messageRes(req, res, 200, "success", lockids);					
+				}
 			}
 		});
 	}

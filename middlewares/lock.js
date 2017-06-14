@@ -80,6 +80,26 @@ exports.getLocksByUser = function(req, res){
 
 };
 
+exports.getLocksByIds = function(req, res){
+	var locks = req.locks;
+
+	if(!locks){
+		Message.messageRes(req, res, 200, "error", "user doesn't have lock he manage");
+	}else{	
+			Lock.find({"lockid":{$in:locks}},function(err,data){
+				if(err){
+					Message.messageRes(req, res, 500, "error", err);
+				}else{
+					Message.messageRes(req, res, 200, "success", data);
+
+				}
+				
+			});
+	}
+		
+	return;
+};
+
 exports.addLock = function(req,res){
 	var lock = req.body.lockid,
 		desc = req.body.desc,
