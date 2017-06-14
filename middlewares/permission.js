@@ -58,27 +58,47 @@ exports.getPermissionsByUser = function(req, res, next){
 
 	if(!valid.checkEmail(username)){
 		Message.messageRes(req, res, 200, "error", "username is Invalid email");
-		} else {
-			Permission.find({"username":username}, function(err,perResult){
-				if(err){
-					Message.messageRes(req, res, 500, "error", err);
-				} else if(!perResult){
-					Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
+	} else {
+		Permission.find({"username":username}, function(err,perResult){
+			if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			} else if(!perResult){
+				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
+			} else {
+
+				if(req.route.stack.length > 1){
+					req.UserPer = perResult;
+					next();
 				} else {
-
-					if(req.route.stack.length > 1){
-						req.UserPer = perResult;
-						next();
-					} else {
-						Message.messageRes(req, res, 200, "success", perResult);					
-					}
-		
+					Message.messageRes(req, res, 200, "success", perResult);					
 				}
-			});
-		}
-
-		return;
 	
+			}
+		});
+	}
+
+	return;
+	
+};
+
+exports.getUserManageLocks = function(req, res){
+	var username = req.params.username;
+
+	if(!valid.checkEmail(username)){
+		Message.messageRes(req, res, 200, "error", "username is Invalid email");
+	} else {
+		Permission.find({"username":username, "type" :0}, function(err,perResult){
+			if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			} else if(!perResult){
+				Message.messageRes(req, res, 200, "error", "Not a manager of any lock");
+			} else {
+				Message.messageRes(req, res, 200, "success", perResult);						
+			}
+		});
+	}
+
+	return;
 };
 
 exports.getPermissionsByUserTest = function(req, res, next){

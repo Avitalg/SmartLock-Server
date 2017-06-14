@@ -5,6 +5,7 @@ module.exports = function(app){
     app.get('/api/getPermissions', permissions.getPermissions);
     app.get('/api/getPermission/:username/:lockid', permissions.getPermission);
     app.get('/api/getPermissionsByUser/:username', permissions.getPermissionsByUser);
+    app.get('/api/getUserManageLocks/:username', permissions.getUserManageLocks);
     app.get('/api/getPermissionsByUser', permissions.getPermissionsByUserTest);
     app.get('/api/getPermissionsByLock/:lockid', permissions.getPermissionsByLock);
     app.get('/api/getLockManager/:lockid', permissions.getLockManager);
