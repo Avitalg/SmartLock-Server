@@ -36,7 +36,7 @@ exports.getLock = function(req, res){
 
 exports.getLocksByUser = function(req, res){
 	var username = (req.params.username)? req.params.username : req.body.username;
-
+	var token = req.token;
 
 	if(!username){
 		Message.messageRes(req, res, 404, "error", "username wasn't entered");
@@ -67,7 +67,7 @@ exports.getLocksByUser = function(req, res){
 					if(err){
 						Message.messageRes(req, res, 500, "error", err);
 					}else{
-						Message.messageRes(req, res, 200, "success", data);
+						Message.messageRes(req, res, 200, "success", {"userLocks":data, "token":token});
 
 					}
 					

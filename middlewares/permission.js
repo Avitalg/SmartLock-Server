@@ -711,7 +711,6 @@ exports.updatePhysicalId = function(req,res,next){
 		 	} else {
 		 		Message.messageRes(req, res, 200, "error", "Can't update physicalId");
 		 	}
-
 	}
 	return;
 };

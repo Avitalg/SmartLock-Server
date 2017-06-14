@@ -9,8 +9,12 @@ var config={
 var mongoUrl = (process.env.ENV_VAR == 'development') ? config.devMongoUrl : config.prodMongoUrl;
 var domain = (process.env.ENV_VAR == 'development') ? "" : "smartlockproj.com";
 
-exports.mongoUrl = mongoUrl;
-exports.port = port;
-exports.domain = domain;
-exports.EMAIL_USER = process.env.EMAIL_USER || "x";
-exports.EMAIL_PASS = process.env.EMAIL_PASS || "x";
+
+module.exports ={
+	"mongoUrl" : mongoUrl,
+	"port" : port,
+	"domain" : domain,
+	"EMAIL_USER": process.env.EMAIL_USER || "x",
+	"EMAIL_PASS": process.env.EMAIL_PASS || "x",
+	'secret': 'ilovescotchyscotch'
+};

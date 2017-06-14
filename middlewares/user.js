@@ -1,6 +1,8 @@
-var User=require('../models/user');
+var User 	=require('../models/user');
 var Message = require('./message');
-var valid = require('../helpers/validation');
+var valid 	= require('../helpers/validation');
+var jwt    	= require('jsonwebtoken'); // used to create, sign, and verify tokens
+var consts 	= require('../consts');
 
 exports.getUsers = function(req,res){
 	User.find({},
@@ -251,11 +253,23 @@ exports.login = function(req, res, next){
 				 }else if(err){
 					 Message.messageRes(req, res, 500, "error", err);
 				 } else {
+				 	//authenticate a user
 					 user.comparePassword(password, function(err, isMatch) {
 			            if (err){
 			            	Message.messageRes(req, res, 200, "error", err);
 			            }else{
+			            	//if username & passwrd were correct
 			            	if(isMatch){
+			            		//create a token
+			            		user.password = undefined;
+			            		user.phone = undefined;
+			            		user.__v = undefined;
+			            		console.log("user:"+user);
+			            		var token = jwt.sign(user, consts.secret, {
+									          expiresIn : 60*60*24 // expires in 24 hours
+									        });
+			            		req.token = token;
+			            		console.log("token:" + token);
 			            		next();
 			            	} else {
 			            		Message.messageRes(req, res, 200, "error", "wrong password");  
