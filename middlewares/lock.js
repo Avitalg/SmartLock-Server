@@ -19,7 +19,7 @@ exports.getLock = function(req, res, next){
 	var lockid = (req.params.lockid) ? req.params.lockid : req.body.lockid;
 
 	if(!lockid){
-		Message.messageRes(req, res, 404, "error", "Lockid wasn't entered");
+		Message.messageRes(req, res, 200, "error", "Lockid wasn't entered");
 	}else{
 		Lock.findOne({'lockid':lockid}, function(err, lock){
 			if(err){
