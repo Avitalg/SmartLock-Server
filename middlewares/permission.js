@@ -744,10 +744,10 @@ exports.sendEmail = function(req, res){
 
 	//need to secure this details
 	var transporter = nodemailer.createTransport({
-		service: 'SendGrid',
+		service: 'gmail',
 		auth: {
-			user: "no-reply@smartlockproj.com", 
-			pass: "noRep578912@4"
+			user: config.EMAIL_USER, 
+			pass: config.EMAIL_PASS
 		}
 	});
 

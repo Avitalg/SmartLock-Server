@@ -4,7 +4,7 @@ var valid = require('../helpers/validation');
 Format string hour to be "xx:xx"
 **/
 exports.formatHour = function(hour){
-	if(valid.checkHour(hour)){
+	if(!hour && valid.checkHour(hour)){
 		if(hour.length == 4){
 			hour = "0" + hour;
 		}
@@ -43,7 +43,7 @@ change from format "DDMMYYYY" to "MMDDYYYY" - the moment library format.
 **/
 exports.formatDate = function(date){
 
-	if(date){
+	if(!!date){
 		//separate date by .\-\,
 		date = date.split(/[\.\-\,]+/);
 
