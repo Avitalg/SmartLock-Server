@@ -68,9 +68,9 @@ exports.checkLockAction = function(req,res,next){
             var responseJson = JSON.parse(JSON.stringify(requests[req.params.requestId]));
             var now = new Date().getTime();
             if (requests[req.params.requestId].time+30000 < now){
-                if(requests[req.params.requestId].action !=="addFingerprint" ||requests[req.params.requestId].action !=="delFingerprint"  ) {
+                if(requests[req.params.requestId].action !="addFingerprint" ||requests[req.params.requestId].action !="delFingerprint"  ) {
                     responseJson.status = 'timeout';
-                }else if(requests[req.params.requestId].time+60000 < now){
+                }else if(requests[req.params.requestId].time + 60000 < now){
                     responseJson.status = 'timeout';
                 }
             }
