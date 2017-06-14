@@ -1,109 +1,68 @@
 var moment = require('moment');
-var Permission  = require('../models/permission');
-var Formate = require('./formate.js');
-var User=require('../models/user');
-var mongoose = require('mongoose');
+var Format = require('./format.js');
+var validator = require("email-validator");
+var validUrl = require('valid-url');
 
+//for inside function that want to call functions from this file
 var _this = this;
 
-exports.checkPermissions = function(username, lockid){
-	var promise = new mongoose.Promise;
-
-	return Permission.findOne({"username":username, "lockid":lockid}).exec().then(
-		function(perResult){
-			if(!perResult){
-				return "Permission doesn't exist";
-			}else{
-				var hour = Formate.getTwoDigitHour(new Date().getHours());
-
-				var minutes = Formate.getTwoDigitMinutes(new Date().getMinutes());
-				
-				var currHour = hour + ":" + minutes;
-				var cond = false;
-				console.log("currHour:"+currHour);
-				switch(perResult.frequency){
-					case "once":
-						var startHour = perResult.hours.start;
-						var endHour = perResult.hours.end;
-						var perDate = perResult.date.setHours(0,0,0,0);
-						var currDate = new Date().setHours(0,0,0,0) ;
-						cond =  perDate == currDate;
-
-						console.log("cond:"+cond);
-						console.log("starthour:"+startHour);
-						console.log("endHour:"+endHour);
-						console.log("currdate:"+currDate);
-						console.log("perDate:"+perDate);
-						break;
-					case "always":
-						var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-						var currDay = days[new Date().getDay()];
-						var hours = perResult.duration[currDay];
-						cond = true;
-						var startHour = hours.start;
-						var endHour = hours.end;
-						break;
-				}
-				
-
-				if(cond && (currHour >= startHour && (currHour <= endHour)|| endHour == "00:00") ){
-					 return "Has permissions";
-				} else {
-					return "No permissions";
-				}
-			}
-		}, function(){
-			return "Permission doesn't exist";
-		});
-
-};
-
-exports.checkUserExist = function(username){
-	var promise = new mongoose.Promise;
-
-	return User.findOne({"username":username}).exec()
-	.then(function(user){
-			if(!user){
-				return false;
-			}else{	
-				return true;
-			}
-		}, function(){
-			return false;
-		});
-	return;
-};
-
-
+/**
+email 	string that contains email
+should check email is valid
+returns  true/false
+**/
 exports.checkEmail = function(email){
-	var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-	return re.test(email);
+	return validator.validate(email);
 };
 
+/**
+freq 	string  that contains permission frequency - once\always
+return true/false if valid valuee
+**/
 exports.checkFrequency = function(freq){
 	return freq == "once" || freq == "always";
 };
 
-
+/**
+get date and check if it is a valid date
+returns true/false
+**/
 exports.checkDate = function(date){
-	var date = Formate.formateDate(date);
+	var date = format.formatDate(date);
 	return moment(date).isValid();
 };
 
+
+/**
+check permission type - should be between 0 and 2
+returns true/false
+**/
 exports.checkType = function(type){
 	return type>=0 && type<=2;
 };
 
-
+/**
+check if valid hour - xx:xx/ x:xx
+returns true if it is or if 0 
+**/
 exports.checkHour = function(hour){
 	var reg =  /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/;
 	return reg.test(hour)|| hour =="0";
 };
 
+/**
+check if start hour smaller then end hour.
+returns true if it is or if end equel to 00:00
+**/
 exports.checkStartEndHour = function(start, end){
 	return start < end || end == "00:00";
-}
+};
 
+
+/**
+check variables of permission routes - check if they all valid.
+return a message with the wrong var or ok if all valid
+**/
 exports.checkPermissionVars = function(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
 									   end1, end2, end3, end4, end5, end6,end7){
 	var message="ok";
@@ -136,6 +95,11 @@ exports.checkPermissionVars = function(username,lockid,	frequency, type, start1,
 	return message;
 };
 
+
+/**
+Check variables of temporary permitions
+return string with wrong message or ok
+**/
 exports.checkShortPermissionVars = function(username,lockid, frequency, date, type, start,end){
 	var message="ok";
 
@@ -168,29 +132,34 @@ exports.checkShortPermissionVars = function(username,lockid, frequency, date, ty
 	return message;
 };
 
+/**
+check lock status - should be open or close
+returns true/false
+**/
 exports.checkStatus = function(status){
 	return status == "open" || status == "close";
 }
 
+/**
+checks lock action - could be only addFingerprint/delFingerprint/unlock/lock/checkStatus
+returns true/false
+**/
 exports.checkLockAction = function(action){
 	return action=='addFingerprint'||action=='delFingerprint'||action=='unlock'||action=='lock'||action=='checkStatus';
 }
 
+/**
+check button action - unlock/lock
+returns true/false
+**/
 exports.checkButtonAction = function(action){
 	return action=='unlock'||action=='lock';
 }
 
+/**
+check if valid url
+returns true/false
+**/
 exports.checkUrl = function(url){
-	var pattern = new RegExp('^(https?:\/\/)?'+ // protocol
-    	'((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|'+ // domain name
-    	'((\d{1,3}\.){3}\d{1,3}))'+ // OR ip (v4) address
-    	'(\:\d+)?(\/[-a-z\d%_.~+]*)*'+ // port and path
-    	'(\?[;&a-z\d%_.~+=-]*)?'+ // query string
-    	'(\#[-a-z\d_]*)?$','i'); // fragment locater
-
-	if(!pattern.test(url)) {
-    	return false;
-	} else {
-    	return true;
-	}
+	return validUrl.isUri(url);
 }

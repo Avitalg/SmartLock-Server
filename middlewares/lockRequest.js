@@ -8,7 +8,7 @@ var logs = require('../helpers/logs');
 var requests = {};
 var lockRequestQueue = {};
 exports.requestLockAction = function(req,res,next){
-        var username = req.body.username,
+        var username = req.user.username, //from session
             lockId = req.body.lockid,
             action = req.params.action,//validate legal type
             physicId = req.physicId, //get physicId from db
@@ -23,15 +23,12 @@ exports.requestLockAction = function(req,res,next){
         if(!valid.checkLockAction(action)){
             console.log("action");
             Message.messageRes(req, res, 404, "error", "undefine action");
-            return;
         }
         if (!username) {
-            Message.messageRes(req, res, 404, "error", "missing username");
-            return;
+            Message.messageRes(req, res, 404, "error", "Need to login");
         }
         if (!lockId) {
             Message.messageRes(req, res, 404, "error", "missing lockid");
-            return;
         }
 
         var requestId = username + time;
@@ -119,12 +116,10 @@ exports.updateLocalButtonAction = function (req,res,next){
     console.log("fingerprintId:"+fingerprintId);
     
     if(!valid.checkButtonAction(action)){
-        Message.messageRes(req, res, 404, "error", "undefine action");
-        return;
+        Message.messageRes(req, res, 404, "error", "undefined action");
     }
     if (!lockId) {
         Message.messageRes(req, res, 404, "error", "missing lockid");
-        return;
     }
 
 

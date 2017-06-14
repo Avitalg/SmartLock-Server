@@ -2,8 +2,12 @@ var User 	=require('../models/user');
 var Message = require('./message');
 var valid 	= require('../helpers/validation');
 var jwt    	= require('jsonwebtoken'); // used to create, sign, and verify tokens
-var consts 	= require('../consts');
+var config 	= require('../config/main');
 
+
+/**
+get users
+**/
 exports.getUsers = function(req,res){
 	User.find({},
 	function(err,userRes){
@@ -16,15 +20,10 @@ exports.getUsers = function(req,res){
 	});
 };
 
+/**
+get user
+**/
 exports.getUser = function(req,res){
-	// var user;
-	// if(req.session && req.session.user){
-	// 	user = req.session.user;
-	// 	user.password = undefined;
-	// 	Message.messageRes(req, res, 200, "success", user);
-	// 	return;
-	// }
-	// Message.messageRes(req, res, 200, "error", "Not logged in");
 	var username = req.params.username;
 		if(!username){
 	        Message.messageRes(req, res, 404, "error", "username wasn't supplied");
@@ -42,40 +41,31 @@ exports.getUser = function(req,res){
 		}
 };
 
-exports.isLoggedIn = function(req, res){
-	if(req.session && req.session.user){
-		Message.messageRes(req, res, 200, "success", "true");
-		return;
-	}
-
-	Message.messageRes(req, res, 200, "success", "false");
-};
-
+/**
+get current logged in user
+**/
 exports.getLoggedInUser = function(req, res){
-	var user;
-
-	if(req.session && req.session.user){
-		var username = req.session.user.username;
-		if(!username){
-	        Message.messageRes(req, res, 404, "error", "username wasn't supplied");
-		}else{	
-			User.findOne({"username":username}, function(err,user){
-				if(err){
-					Message.messageRes(req, res, 500, "error", err);
-				}else if(!user){
-					Message.messageRes(req, res, 404, "error", "User doesn't exist");
-				}else{	
-					user.password = undefined;
-					Message.messageRes(req, res, 200, "success", user);
-				}
-			});
-		}
-		return;
+	if(req.user){
+		var username = req.user.username;
+		//need still to take from db in case his details was changed
+		User.findOne({"username":username}, function(err,user){
+			if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			}else if(!user){
+				Message.messageRes(req, res, 404, "error", "User doesn't exist");
+			}else{	
+				user.password = undefined;
+				Message.messageRes(req, res, 200, "success", user);
+			}
+		});		
 	} else {
-		Message.messageRes(req, res, 200, "error", "Not logged in");
+		Message.messageRes(req, res, 200, "error", "Nedd to login");
 	}
 };
 
+/**
+get all lock users
+**/
 exports.getUsersByLock = function(req, res){
 	var usernames = req.usersname;
 
@@ -91,6 +81,9 @@ exports.getUsersByLock = function(req, res){
 
 };
 
+/**
+add new user
+**/
 exports.addUser = function(req,res){
 	var username = req.body.username,
 		phone = req.body.phone,
@@ -130,12 +123,16 @@ exports.addUser = function(req,res){
 
 };
 
+
+/**
+add user photo
+**/
 exports.addUserPhoto = function(req, res){
-	var nusername = req.body.username,
+	var nusername = req.user.username,
 		image = req.body.image;
 
 	if(!username){
-        Message.messageRes(req, res, 500, "error", "No username or new username was entered");
+        Message.messageRes(req, res, 500, "error", "Not logged in");
 		return;
 	}else if(!valid.checkEmail(username)){
 		Message.messageRes(req, res, 200, "error", "Invalid email");
@@ -159,8 +156,11 @@ exports.addUserPhoto = function(req, res){
 	return;
 };
 
+/**
+delete user
+**/
 exports.removeUser = function(req,res){
-	var username= req.params.username;
+	var username= req.user.username;
 	if(!username){
         Message.messageRes(req, res, 404, "error", "Userid wasn't supplied");
 		return;
@@ -175,20 +175,23 @@ exports.removeUser = function(req,res){
 			}
 		});
 	}
-
-
 	return;
 };
 
+
+/**
+update user
+**/
 exports.updateUser = function(req,res, next){
 	var nusername = req.params.nusername,
-		username = req.params.username,
+		username = req.user.username,
 		phone = req.params.phone;
 
-	if(!username || !nusername){
-        Message.messageRes(req, res, 500, "error", "No username or new username was entered");
-		return;
-	}else if(!valid.checkEmail(username)){
+	if(!username){
+        Message.messageRes(req, res, 500, "error", "Need to login");
+	} else if(!nusername){
+        Message.messageRes(req, res, 500, "error", "No new username was entered");
+	} else if(!valid.checkEmail(username)){
 		Message.messageRes(req, res, 200, "error", "Invalid email");
 	} else {
 		User.findOne({"username": username }, function (err, user){
@@ -210,12 +213,16 @@ exports.updateUser = function(req,res, next){
 };
 
 
+/**
+change user password
+**/
 exports.changePassword = function(req,res){
-	var username = req.params.username,
+	var username = req.user.username,
 		password = req.params.password;
-	
-	 if(!username || !password){
-        Message.messageRes(req, res, 500, "error", "No username or password was entered");
+	if(!username){
+        Message.messageRes(req, res, 500, "error", "Need to login");
+	} else if(!password){
+        Message.messageRes(req, res, 500, "error", "No password was entered");
 		return;
 	}else if(!valid.checkEmail(username)){
 		 Message.messageRes(req, res, 200, "error", "Invalid email");
@@ -236,7 +243,9 @@ exports.changePassword = function(req,res){
 	return;
 };
 
-
+/**
+login route
+**/
 exports.login = function(req, res, next){
 	var username = req.body.username,
 		password = req.body.password;
@@ -260,12 +269,12 @@ exports.login = function(req, res, next){
 			            }else{
 			            	//if username & passwrd were correct
 			            	if(isMatch){
-			            		//create a token
 			            		user.password = undefined;
-			            		user.phone = undefined;
 			            		user.__v = undefined;
 			            		console.log("user:"+user);
-			            		var token = jwt.sign(user, consts.secret, {
+
+			            		//create a token
+			            		var token = jwt.sign(user, config.secret, {
 									          expiresIn : 60*60*24 // expires in 24 hours
 									        });
 			            		req.token = token;

@@ -3,6 +3,10 @@ var Message = require('./message');
 var Permission = require('../models/permission');
 var valid = require('../helpers/validation');
 
+
+/**
+returns all locks
+**/
 exports.getLocks = function(req,res){
 	Lock.find({},
 	function(err,lockRes){
@@ -15,6 +19,10 @@ exports.getLocks = function(req,res){
 	});
 };
 
+
+/**
+get specific lock
+**/
 exports.getLock = function(req, res){
 	var lockid = req.params.lockid;
 
@@ -34,35 +42,39 @@ exports.getLock = function(req, res){
 	return;
 };
 
+
+/**
+get all user's locks
+**/
 exports.getLocksByUser = function(req, res){
-	var username = (req.params.username)? req.params.username : req.body.username;
-	var token = req.token;
+	var username = req.user.username;
+	var token = req.token; //get from login
 
 	if(!username){
 		Message.messageRes(req, res, 404, "error", "username wasn't entered");
 	}else if(!valid.checkEmail(username)) {
-		Message.messageRes(req, res, 200, "error", "username is Invalid email");
+		Message.messageRes(req, res, 200, "error", "username with Invalid email");
 	}else{
+		//get user permissions
 		Permission.findOne({'username':username}, function(err, perRes){
 			if(err){
 				Message.messageRes(req, res, 500, "error", err);
-			}else if(!perRes){
+			}else if(!perRes){// no permission was found
 				if(req.route.stack.length > 1){
 						Message.messageRes(req, res, 200, "success", "Has no permissions yet.");
-						return;
 				}
-				Message.messageRes(req, res, 404, "error", "username doesn't exist");
+				Message.messageRes(req, res, 404, "error", "username doesn't have permissions");
 			}else{
 				var locks = [];
-
-				if(!perRes.length){
+				// get all locks ids
+				if(!perRes.length){ //if an object - just go the the only lockid he has
 					locks.push(perRes.lockid);
-				} else {
+				} else { // if array - go over all permissions
 					for(var i=0; i<perRes.length; i++){
 						locks.push(perRes[i].lockid);
 					}	
 				}
-				
+				//get all locks
 				Lock.find({"lockid":{$in:locks}},function(err,data){
 					if(err){
 						Message.messageRes(req, res, 500, "error", err);
@@ -80,6 +92,9 @@ exports.getLocksByUser = function(req, res){
 
 };
 
+/**
+add new lock
+**/
 exports.addLock = function(req,res){
 	var lock = req.body.lockid,
 		desc = req.body.desc,
@@ -109,6 +124,10 @@ exports.addLock = function(req,res){
 	return;
 };
 
+
+/**
+delete lock
+**/
 exports.removeLock = function(req,res){
 	var lock= req.params.lockid;
 	if(!lock){
@@ -126,6 +145,9 @@ exports.removeLock = function(req,res){
 	return;
 };
 
+/**
+update lock status - open/close
+**/
 exports.updateLockStatus= function(req,res, next){
 	var lockid = (req.params.lockid) ? req.params.lockid:req.body.lockid,
 		status = req.params.lstatus;

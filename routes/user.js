@@ -5,7 +5,6 @@ var locks = require('../middlewares/lock');
 module.exports = function(app){
     app.get('/api/getUsers', users.getUsers);
     app.get('/api/getUser/:username', users.getUser);
-    app.get('/api/isLoggedIn', users.isLoggedIn);
     app.get('/api/getLoggedInUser', users.getLoggedInUser);
     app.get('/api/getUsersByLock/:lockid', permissions.getPermissionsByLock, users.getUsersByLock);
     app.post('/api/addUserPhoto', users.addUserPhoto);

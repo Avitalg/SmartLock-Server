@@ -8,7 +8,7 @@ var locks = require('./middlewares/lock');
 var permissions = require('./middlewares/permission');
 var users = require('./middlewares/user');
 var db = require('./database');
-var consts = require('./consts');
+var consts = require('./config/main');
 // var whiteListDomains = ["https://smartlockproj.com", "http://127.0.0.1:8000"];
 
 

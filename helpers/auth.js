@@ -1,8 +1,10 @@
-var consts = require('../consts');
+var config = require('../config/main');
 var jwt     = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var Message = require('../middlewares/message');
 
-// route middleware to verify a token
+/**
+route middleware to verify a token
+**/
 exports.verifyToken = function(req, res, next) {
 
   // check header or url parameters or post parameters for token
@@ -12,29 +14,20 @@ exports.verifyToken = function(req, res, next) {
   console.log("req header:"+req.headers['x-access-token']);
   console.log("token:"+token);
 
-  // decode token
   if (token) {
-
     // verifies secret and checks exp
-    jwt.verify(token, consts.secret, function(err, sessionData) {      
+    jwt.verify(token, config.secret, function(err, sessionData) {      
       if (err) {
         Message.messageRes(req, res, 200, "error", 'Failed to authenticate token.' );   
       } else {
-        // if everything is good, save to request for use in other routes
+        // after verifying, add user to request so we could use in other routes. 
         console.log(sessionData._doc);
         req.user = sessionData._doc;    
         next();
       }
     });
 
-  } else {
-
-    // if there is no token
-    // return an error
-    return res.status(403).send({ 
-        status: "error", 
-        message: 'No token provided.' 
-    });
-
+  } else {//if no token was found - error message will send
+    Message.messageRes(req, res, 404, "error", 'No token provided.' );   
   }
 };

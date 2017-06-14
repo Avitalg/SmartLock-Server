@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
-var consts = require('./consts');
+var config = require('./config/main');
 
-mongoose.connect(consts.mongoUrl);
+mongoose.connect(config.mongoUrl);
 db = mongoose.connection;
 
 db.on('error', function(err){

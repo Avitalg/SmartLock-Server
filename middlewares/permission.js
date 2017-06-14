@@ -1,17 +1,20 @@
 "use strict";
 
 var Permission  = require('../models/permission');
-var Message = require('./message');
-var moment = require('moment');
-var valid = require('../helpers/validation');
-var format = require('../helpers/formate');
-var nodemailer = require('nodemailer');
-var Logs = require('../helpers/logs');
-var config = require('../consts');
-
+var Message 	= require('./message');
+var moment 		= require('moment');
+var valid 		= require('../helpers/validation');
+var format 		= require('../helpers/format');
+var nodemailer 	= require('nodemailer');
+var Logs 		= require('../helpers/logs');
+var config 		= require('../config/main');
+var physicId 	= require('../helpers/physicalId');
 
 var _this = this;
 
+/**
+get all permissions
+**/
 exports.getPermissions = function(req,res){
 	Permission.find({},
 	function(err,permissionRes){
@@ -24,12 +27,17 @@ exports.getPermissions = function(req,res){
 	return;
 };
 
+/**
+get user permissions
+**/
 exports.getPermission = function(req,res){
-	var username= req.params.username,
+	var username= req.user.username, // from session
 		lockid = req.params.lockid;
 
-	if(!username && !lockid){
-		Message.messageRes(req, res, 200, "error", "username or lockid didn't supplied");
+	if(!username){
+		Message.messageRes(req, res, 200, "error", "Need to login");
+	}else if(!lockid){
+		Message.messageRes(req, res, 200, "error", "lockid didn't supplied");
 	}else if(!valid.checkEmail(username)) {
 		Message.messageRes(req, res, 200, "error", "username is Invalid email");
 	}else {
@@ -50,13 +58,11 @@ exports.getPermission = function(req,res){
 exports.getPermissionsByUser = function(req, res, next){
 
 	console.log("getPermissions");
+	var username = req.user.username;
 
-	console.log("params:");
-	console.log(req.params);
-	console.log(req.params.username);
-	var username = req.params.username;
-
-	if(!valid.checkEmail(username)){
+	if(!username){
+		Message.messageRes(req, res, 200, "error", "Need to login");
+	} else if(!valid.checkEmail(username)){
 		Message.messageRes(req, res, 200, "error", "username is Invalid email");
 		} else {
 			Permission.find({"username":username}, function(err,perResult){
@@ -81,39 +87,62 @@ exports.getPermissionsByUser = function(req, res, next){
 	
 };
 
-exports.getPermissionsByUserTest = function(req, res, next){
-	
-	if(req.session && req.session.user){
-		var username = req.session.user.username;
+/**
+internal function - get user by it's physicalid
+**/
+exports.getUserByPhysicId = function(req, res, next){
+  var lockid = req.params.lockid,
+      physicalId = (req.physicId) ? req.physicId:req.body.fingerId;
 
-	if(!valid.checkEmail(username)){
-		Message.messageRes(req, res, 200, "error", "username is Invalid email");
-		} else {
-			Permission.find({"username":username}, function(err,perResult){
-				if(err){
-					Message.messageRes(req, res, 500, "error", err);
-				} else if(!perResult){
-					Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
-				} else {
+    Permission.findOne({"lockid":lockid, "physicalId": physicalId}, function(err,perResult){
+      if(perResult){
+        req.user.username = perResult.username;
+        req.user._id = perResult._id;
+      }
+      next(req, res);
+    });
 
-					if(req.route.stack.length > 1){
-						req.UserPer = perResult;
-						next();
-					} else {
-						Message.messageRes(req, res, 200, "success", perResult);					
-					}
-		
-				}
-			});
-		}
-
-		return;
-	} else {
-		Message.messageRes(req, res, 200, "error", "Not logged in");
-	}
-	
 };
 
+/**
+get all pysucal ids
+**/
+exports.getPhysicalId = function(req, res, next){
+	var lockid = req.params.lockid;
+	
+	var physicalId = [];
+	var physicValue;
+
+	Permission.find({"lockid":lockid}, function(err,perResult){
+		if(err){
+			Message.messageRes(req, res, 500, "error", err);
+		}else if(!perResult){
+			Message.messageRes(req, res, 404, "error", "Lock doesn't exist");
+		}else{
+			if(perResult.length>0){
+				//add to physicalId all physical ids that exist in this lock
+				for(var i=0; i<perResult.length; i++){
+					if(!!perResult[i].physicalId){
+						physicalId.push(perResult[i].physicalId);
+					}
+				}
+			} else { // only one permission found
+				physicalId.push(perResult.physicalId);
+			}
+			//get minimun pysical id avilable
+			physicValue = physicId.findMinimumPhysId(physicalId);
+			req.physicId = physicValue;
+
+			_this.updatePhysicalId(req,res,next);
+		}
+	});
+	return;
+
+};
+
+/**
+get all locks permissions
+**/
 exports.getPermissionsByLock = function(req,res, next){
 	var lockid = req.params.lockid;
 	var usersname=[];
@@ -126,15 +155,16 @@ exports.getPermissionsByLock = function(req,res, next){
 			}else{
 				//if given next function
 				if(req.route.stack.length > 1){
+					//get all usernames that have permissions to lock
 					for(var i=0; i<perResult.length; i++){
 						usersname.push(perResult[i].username);
 					}
 
-					req.usersname = usersname;
+					req.usersname = usersname; //transfer usernames to next route
 					next();
 
 				} else {
-					console.log("else");
+					console.log("getPermissionsByLock else (no  next)");
 					Message.messageRes(req, res, 200, "success", perResult);	
 				}
 
@@ -144,22 +174,9 @@ exports.getPermissionsByLock = function(req,res, next){
 	return;
 };
 
-exports.getLockManager = function(req, res){
-	var lockid = req.params.lockid;
-
-	Permission.findOne({"lockid":lockid, "type":0}, function(err,perResult){
-		if(err){
-				Message.messageRes(req, res, 500, "error", err);
-			}else if(!perResult){
-				Message.messageRes(req, res, 404, "error", "The lock "+lockid+" has no manager");
-			}else{
-				Message.messageRes(req, res, 200, "success", perResult);
-			}
-	});
-	return;
-
-};
-
+/**
+check if lock has manager. save data in req.hasMnager
+**/
 exports.checkIfHasManager = function(req, res, next){
 	var lockid = (req.params.lockid)? req.params.lockid : req.body.lockid;
 
@@ -186,17 +203,78 @@ exports.checkIfHasManager = function(req, res, next){
 
 };
 
+/**
+check user permissions according to what saved in db. validate permissions
+**/
+exports.validPermissions = function(username, lockid){
+	var promise = new mongoose.Promise;
+
+	return Permission.findOne({"username":username, "lockid":lockid}).exec().then(
+		function(perResult){
+			if(!perResult){
+				return "Permission doesn't exist";
+			}else{
+				//format current hour
+				var hour = format.getTwoDigitHour(new Date().getHours());
+				//format current digit
+				var minutes = format.getTwoDigitMinutes(new Date().getMinutes());
+				
+				var currHour = hour + ":" + minutes;
+				var dateCond = false; //special condition that need to happen
+				console.log("currHour:"+currHour);
+				switch(perResult.frequency){// check frequency
+					case "once":
+						var startHour = perResult.hours.start;
+						var endHour = perResult.hours.end;
+						var perDate = perResult.date.setHours(0,0,0,0);
+						var currDate = new Date().setHours(0,0,0,0) ;
+						dateCond =  perDate == currDate; // current date should be the same as saved
+
+						console.log("cond:"+cond);
+						console.log("starthour:"+startHour);
+						console.log("endHour:"+endHour);
+						console.log("currdate:"+currDate);
+						console.log("perDate:"+perDate);
+						break;
+					case "always":
+						var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+						var currDay = days[new Date().getDay()];//get current day
+						var hours = perResult.duration[currDay];// get the hours of current day
+						dateCond = true; //check according to hours
+						var startHour = hours.start;
+						var endHour = hours.end;
+						if(startHour == '0' || endHour=='0') dateCond = false; //no permissions for this day
+						break;
+				}
+				
+				//check if has permissions
+				if(dateCond && (currHour >= startHour && (currHour <= endHour)|| endHour == "00:00") ){
+					 return "Has permissions";
+				} else {
+					return "No permissions";
+				}
+			}
+		}, function(){
+			return "Permission doesn't exist";
+		});
+
+};
+
 exports.checkPermission = function(req, res, next){
-	var username= (req.params.username)? req.params.username : req.body.username,
+	var username= req.user.username,
 		lockid = (req.params.lockid)? req.params.lockid : req.body.lockid;
 		console.log("checkper:"+req.body.lockid);
-	if(!username && !lockid){
-		Message.messageRes(req, res, 404, "error", "Details weren't supplied");
+	if(!username){
+		Message.messageRes(req, res, 404, "error", "Need to login");
+	}else if(!lockid){
+		Message.messageRes(req, res, 404, "error", "lockid wasn't supplied");
 	} else if(!valid.checkEmail(username)) {
 		Message.messageRes(req, res, 200, "error", "username is Invalid email");
 	}
 	else{
-		var checkPer = valid.checkPermissions(username, lockid);
+		var checkPer = _this.validPermissions(username, lockid);
+
+		//promise - need to validate permissions and only then continue
 		checkPer.then(function(result){
 			switch(result){
 				case "Has permissions":
@@ -213,17 +291,22 @@ exports.checkPermission = function(req, res, next){
 					Message.messageRes(req, res, 404, "error", result);
 			}
 		}, function(reason) {
-  console.log(reason);
-});
-
-		
+		 	 console.log(reason);
+		});
+	
 	}
 	return;
 };
 
+/**
+**/
 exports.fingerPrintPermission = function(req, res, next){
 	var lockid = req.body.lockid,
-		username = req.body.username;
+		username = req.user.username;
+
+	if(!username){
+		Message.messageRes(req, res, 404, "error", "Need to login");
+	}
 
 	Permission.findOne({"lockid":lockid, "username":username}, function(err,perResult){
 		if(err){
@@ -231,6 +314,7 @@ exports.fingerPrintPermission = function(req, res, next){
 		}else if(!perResult){
 			Message.messageRes(req, res, 404, "error", "No permissions.");
 		}else{
+			//if manager or has permissions for fingerprint
 			if(perResult.type == 0 || perResult.type == 1){
 				if(req.route.stack.length > 1){
 					next();	
@@ -246,6 +330,11 @@ exports.fingerPrintPermission = function(req, res, next){
 	return;
 }
 
+/**
+check for the right permissions - 
+	to do fingerprint actions need fingerprint permissions
+	to do lock actions - need to check permissions (day and hours)
+**/
 exports.rightPermission = function(req, res, next){
 	var action = req.params.action;
 
@@ -265,11 +354,15 @@ exports.rightPermission = function(req, res, next){
 	}
 };
 
+
+/**
+add manager permission - always (hours and days)
+**/
 exports.addManagerPermission = function(req, res, next){
 	 
 	var start1, start2, start3, start4, start5, start6, start7,
 		end1, end2, end3, end4, end5, end6, end7,
-		username = req.body.username,
+		username = req.user.username,
 		lockid = req.body.lockid,
 		frequency = "always",
 		type = 0,
@@ -280,7 +373,9 @@ exports.addManagerPermission = function(req, res, next){
 	validation = valid.checkPermissionVars(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
 		end1, end2, end3, end4, end5, end6,end7);
 
-	if(!username && !lockid){
+	if(!username){
+		Message.messageRes(req, res, 500, "error", "Need to login");
+	} else if(!lockid){
 		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
 	} else if(validation!="ok"){
 		Message.messageRes(req, res, 200, "error", validation);
@@ -343,30 +438,33 @@ exports.addManagerPermission = function(req, res, next){
 	}			
 }
 
+/**
+add user permissions
+**/
 exports.addPermission = function(req,res, next){
 	var username = req.body.username,
 		lockid = req.body.lockid,
 		frequency = req.body.frequency,
 		date = req.body.date,
 		type = req.body.type,
-		start1 = format.formateHour(req.body.start1),
-		start2 = format.formateHour(req.body.start2),
-		start3 = format.formateHour(req.body.start3),
-		start4 = format.formateHour(req.body.start4),
-		start5 = format.formateHour(req.body.start5),
-		start6 = format.formateHour(req.body.start6),
-		start7 = format.formateHour(req.body.start7),
-		end1   = format.formateHour(req.body.end1),
-		end2   = format.formateHour(req.body.end2),
-		end3   = format.formateHour(req.body.end3),
-		end4   = format.formateHour(req.body.end4),
-		end5   = format.formateHour(req.body.end5),
-		end6   = format.formateHour(req.body.end6),
-		end7   = format.formateHour(req.body.end7);
+		start1 = format.formatHour(req.body.start1),
+		start2 = format.formatHour(req.body.start2),
+		start3 = format.formatHour(req.body.start3),
+		start4 = format.formatHour(req.body.start4),
+		start5 = format.formatHour(req.body.start5),
+		start6 = format.formatHour(req.body.start6),
+		start7 = format.formatHour(req.body.start7),
+		end1   = format.formatHour(req.body.end1),
+		end2   = format.formatHour(req.body.end2),
+		end3   = format.formatHour(req.body.end3),
+		end4   = format.formatHour(req.body.end4),
+		end5   = format.formatHour(req.body.end5),
+		end6   = format.formatHour(req.body.end6),
+		end7   = format.formatHour(req.body.end7);
 
 	var validation = false; 
 
-	
+	//validate vars
 	if(frequency == "always"){
 		validation = valid.checkPermissionVars(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
 		end1, end2, end3, end4, end5, end6,end7);
@@ -376,83 +474,84 @@ exports.addPermission = function(req,res, next){
 
 
 	
-		if(!username && !lockid){
-			Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
-		} else if(validation!="ok"){
-			Message.messageRes(req, res, 200, "error", validation);
-		}else{
-			var permission = new Permission({
-				username: username,
-				lockid: lockid,
-				frequency: frequency,
-				type: type
-			});
+	if(!username && !lockid){
+		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
+	} else if(validation!="ok"){
+		Message.messageRes(req, res, 200, "error", validation);
+	}else{
+		var permission = new Permission({
+			username: username,
+			lockid: lockid,
+			frequency: frequency,
+			type: type
+		});
 
-			switch(frequency) {
-				case "always":
-					delete permission.date;
-					delete permission.hours;
-					permission.duration = {
-						Sunday: {
-							start: start1,
-							end: end1
-						},
-						Monday: {
-							start: start2,
-							end: end2
-						},
-						Tuesday: {
-							start: start3,
-							end: end3
-						},
-						Wednesday: {
-							start: start4,
-							end: end4
-						},
-						Thursday: {
-							start: start5,
-							end: end5
-						},
-						Friday: {
-							start: start6,
-							end: end6
-						},
-						Saturday: {
-							start: start7,
-							end: end7
-						}
-					};
-					break;
-				case "once":
-					delete permission.duration;
-					permission.date = format.formateDate(date);
-					permission.hours = {
-						start : start1,
-						end : end1
+		switch(frequency) {
+			case "always":
+				delete permission.date;
+				delete permission.hours;
+				permission.duration = {
+					Sunday: {
+						start: start1,
+						end: end1
+					},
+					Monday: {
+						start: start2,
+						end: end2
+					},
+					Tuesday: {
+						start: start3,
+						end: end3
+					},
+					Wednesday: {
+						start: start4,
+						end: end4
+					},
+					Thursday: {
+						start: start5,
+						end: end5
+					},
+					Friday: {
+						start: start6,
+						end: end6
+					},
+					Saturday: {
+						start: start7,
+						end: end7
 					}
-			}
-
-			//if User exist, won't save him.
-			Permission.findOneAndUpdate({"username": username, "lockid": lockid}, permission, {upsert:true},
-				function(err, doc){
-					if (err){
-						Message.messageRes(req, res, 500, "error", "Permission already exists");
-					}else{
-						if(req.route.stack.length > 1){
-							next();
-						}
-						req.params.action = "addPermissions";
-						Logs.writeLog(req, res);
-						Message.messageRes(req, res, 200, "success", "Permission was saved");
-					}
-				});
+				};
+				break;
+			case "once":
+				delete permission.duration;
+				permission.date = format.formatDate(date);
+				permission.hours = {
+					start : start1,
+					end : end1
+				}
 		}
-		return;
-	
-	
-	
+
+		//if User exist, won't save him.
+		Permission.findOneAndUpdate({"username": username, "lockid": lockid}, permission, {upsert:true},
+			function(err, doc){
+				if (err){
+					Message.messageRes(req, res, 500, "error", "Permission already exists");
+				}else{
+					if(req.route.stack.length > 1){
+						next();
+					}
+					req.params.action = "addPermissions";
+					Logs.writeLog(req, res);
+					Message.messageRes(req, res, 200, "success", "Permission was saved");
+				}
+			});
+	}
+	return;	
 };
 
+
+/**
+delete permission
+**/
 exports.removePermission = function(req,res){
 	var username = req.params.username,
 		lockid = req.params.lockid;
@@ -475,12 +574,16 @@ exports.removePermission = function(req,res){
 	return;
 };
 
+/**
+remove user physicalId
+**/
 exports.removePhysicalId = function(req, res, next){
-	var username = req.body.username,
+	var username = req.user.username,
 		lockid = req.body.lockid;
-
-	if(!username && !lockid){
-		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
+	if(!username){
+		Message.messageRes(req, res, 404, "error", "Need to login");
+	} else if(!username && !lockid){
+		Message.messageRes(req, res, 404, "error", "username and lockid weren't supplied");
 	} else {
  		Permission.findOne({ "username":username, "lockid":lockid }, function (err, permission){
  			if(!permission){
@@ -504,6 +607,10 @@ exports.removePhysicalId = function(req, res, next){
 	return;
 };
 
+
+/**
+remove user permissions
+**/
 exports.removeUserPermissions = function(req,res, next){
 	var username = req.params.username;
 
@@ -527,6 +634,10 @@ exports.removeUserPermissions = function(req,res, next){
 	return;	
 };
 
+
+/**
+remove lock permissions
+**/
 exports.removeLockPermissions = function(req,res, next){
 	var lockid = req.params.lockid;
 
@@ -548,29 +659,33 @@ exports.removeLockPermissions = function(req,res, next){
 	return;	
 }
 
+/**
+update permission
+**/
 exports.updatePermission = function(req,res){
 	var username = req.params.username,
 		lockid = req.params.lockid,
 		frequency = req.params.frequency,
 		type = req.params.type,
 		date = req.params.date,
-		start1 = format.formateHour(req.params.start1),
-		start2 = format.formateHour(req.params.start2),
-		start3 = format.formateHour(req.params.start3),
-		start4 = format.formateHour(req.params.start4),
-		start5 = format.formateHour(req.params.start5),
-		start6 = format.formateHour(req.params.start6),
-		start7 = format.formateHour(req.params.start7),
-		end1   = format.formateHour(req.params.end1),
-		end2   = format.formateHour(req.params.end2),
-		end3   = format.formateHour(req.params.end3),
-		end4   = format.formateHour(req.params.end4),
-		end5   = format.formateHour(req.params.end5),
-		end6   = format.formateHour(req.params.end6),
-		end7   = format.formateHour(req.params.end7);
+		start1 = format.formatHour(req.params.start1),
+		start2 = format.formatHour(req.params.start2),
+		start3 = format.formatHour(req.params.start3),
+		start4 = format.formatHour(req.params.start4),
+		start5 = format.formatHour(req.params.start5),
+		start6 = format.formatHour(req.params.start6),
+		start7 = format.formatHour(req.params.start7),
+		end1   = format.formatHour(req.params.end1),
+		end2   = format.formatHour(req.params.end2),
+		end3   = format.formatHour(req.params.end3),
+		end4   = format.formatHour(req.params.end4),
+		end5   = format.formatHour(req.params.end5),
+		end6   = format.formatHour(req.params.end6),
+		end7   = format.formatHour(req.params.end7);
 
 	var validation = false;
- 
+ 	
+ 	//if frequency always
 	if(start2){
 		validation = valid.checkPermissionVars(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
 			end1, end2, end3, end4, end5, end6,end7);
@@ -630,7 +745,7 @@ exports.updatePermission = function(req,res){
 					case "once":
 						if(!start2){
 							permission.duration = undefined;
-							permission.date = new Date(format.formateDate(req.params.date));
+							permission.date = new Date(format.formatDate(req.params.date));
 							permission.hours = {
 								start : start1,
 								end : end1
@@ -658,6 +773,9 @@ exports.updatePermission = function(req,res){
 
 };
 
+/**
+change user permissions type - 0,1,2 (manager, fingerprint and regular user)
+**/
 exports.changeUserType = function(req, res){
 	var username = req.params.username,
 		lockid = req.params.lockid,
@@ -683,6 +801,9 @@ exports.changeUserType = function(req, res){
 	return;
 };
 
+/**
+update physical id
+**/
 exports.updatePhysicalId = function(req,res,next){
 	var username = req.params.username,
 		lockid = req.params.lockid,
@@ -715,6 +836,9 @@ exports.updatePhysicalId = function(req,res,next){
 	return;
 };
 
+/**
+change username
+**/
 exports.changePermissionUsername = function(req, res){
 	var nusername = req.params.nusername,
 		username = req.params.username;
@@ -728,6 +852,10 @@ exports.changePermissionUsername = function(req, res){
 
 };
 
+
+/**
+send user email about new permissions
+**/
 exports.sendEmail = function(req, res){
 	var username = req.body.username,
 		lockid = req.body.lockid,
@@ -735,18 +863,17 @@ exports.sendEmail = function(req, res){
 		date = req.body.date,
 		type = req.body.type;
 
-
+	//check if EMAIL_USER && EMAIL_PASS defined - vars on Heroku
 	if(config.EMAIL_USER =="x" || config.EMAIL_PASS == "x"){
 		console.log("config vars not defined. Email didn't sent");
 		return;
 	}
 
-	//need to secure this details
 	var transporter = nodemailer.createTransport({
-		service: 'SendGrid',
+		service: 'gmail',
 		auth: {
-			user: "no-reply@smartlockproj.com", 
-			pass: "noRep578912@4"
+			user: config.EMAIL_USER, 
+			pass: config.EMAIL_PASS
 		}
 	});
 
@@ -772,44 +899,3 @@ exports.sendEmail = function(req, res){
 
 };
 
-
-exports.getUserLogs = function(req, res){
-	var logs = Logs.getLogs();
-	var userPermissions = req.UserPer;
-	var relevantLogs = [];
-
-	console.log(req.params.username);
-	console.log(userPermissions);
-	console.log(logs);
-	if(userPermissions){
-		for(var i=0; i<userPermissions.length; i++){
-
-			var perType = userPermissions[i].type;
-
-			switch(perType){
-				//manager
-				case 0:
-					for(var j=0; j< logs.length; j++){
-						if(logs[j].lockid == userPermissions[i].lockid){
-							relevantLogs.push(logs[j]);
-						}
-					}
-					break;
-				//user
-				case 1:case 2:
-					for(var j=0; j< logs.length; j++){
-						if((logs[j].lockid == userPermissions[i].lockid) && (logs[j].username == userPermissions[i].username) ){
-							relevantLogs.push(logs[j]);
-						}
-					}
-					break;
-			}
-		}
-		Message.messageRes(req, res, 200, "success", relevantLogs);
-	} else {
-		Message.messageRes(req, res, 200, "error", "No permissions");
-	}
-	
-	return;
-
-};

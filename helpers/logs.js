@@ -1,61 +1,28 @@
-var fs = require('fs');
 var Message = require('../middlewares/message');
-var Permission  = require('../models/permission');
+var Permission  = require('../middlewares/permission');
 var Logs = require('../middlewares/logs');
 
+/**
+main function to write logs into db
+**/
 exports.writeLog = function(req, res){  
-  req.params.username = (req.params.username)? req.params.username : req.body.username,
-  req.params.lockid = (req.params.lockid)? req.params.lockid : req.body.lockid,
+  var username = req.user.username; //comes from login
+
+  //sometimes come from body and sometimes from params
+  req.params.lockid = (req.params.lockid)? req.params.lockid : req.body.lockid;
   req.params.action = (req.params.action)? req.params.action : req.body.action;
   
+  //won't save log if the lockid doesn't exist
   if(!!req.params.lockid){
-    if(!req.params.username && req.session && req.session.user){
-      req.params.username = req.session.user.username;
-    }
 
-    if(!req.params.username){
-      getUsernameByPhsicId(req, res, Logs.writeLog);
+    //if no username - the request could've been sent from the fingetprint
+    if(!username){
+      //find username by it's fingerprint
+      Permission.getUserByPhysicId(req, res, Logs.writeLog);
     } else {
+      //write log without username
       Logs.writeLog(req,res);  
     }  
   }
-
-};
-
-var getUsernameByPhsicId = function(req, res, next){
-  var lockid = req.params.lockid,
-      physicalId = (req.physicId) ? req.physicId:req.body.fingerId;
-
-    Permission.findOne({"lockid":lockid, "physicalId": physicalId}, function(err,perResult){
-      if(perResult){
-        req.params.username = perResult.username;
-      }
-      next(req, res);
-    });
-
-};
-
-var writeLogToFile = function(req, res){
-  var filename = "logs.json";
-  var logs = JSON.parse(fs.readFileSync(filename, 'utf8'));
-
-
-  var jsonLog = {
-    "username": req.params.username,
-    "lockid": req.params.lockid,
-    "action": req.params.action,
-    "physicId": req.physicId,
-    "time": new Date()
-  };
-
-  logs.push(jsonLog);
-
-  fs.writeFile(filename, JSON.stringify(logs), 'utf8');
-
-};
-
-exports.getLogs = function(){
-	var filename = "logs.json";
-    return JSON.parse(fs.readFileSync(filename, 'utf8'));
 
 };

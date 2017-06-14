@@ -16,5 +16,5 @@ module.exports ={
 	"domain" : domain,
 	"EMAIL_USER": process.env.EMAIL_USER || "x",
 	"EMAIL_PASS": process.env.EMAIL_PASS || "x",
-	'secret': 'ilovescotchyscotch'
+	'secret': process.env.SECRET || 'ilovescotchyscotch'
 };
