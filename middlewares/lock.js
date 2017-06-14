@@ -25,7 +25,7 @@ exports.getLock = function(req, res, next){
 			if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			}else if(!lock){
-				Message.messageRes(req, res, 404, "error", "Lock doesn't exist");
+				Message.messageRes(req, res, 200, "error", "Lock doesn't exist");
 			}else{
 				if(req.route.stack.length > 1){
 					next();
