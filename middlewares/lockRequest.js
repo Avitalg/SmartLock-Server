@@ -90,7 +90,7 @@ exports.checkLockRequest = function (req,res,next) {
             var now = new Date().getTime();
             while(lockRequestQueue[req.params.lockId].length>0){
                 var lockreq = lockRequestQueue[req.params.lockId].shift();
-                if(requests[lockreq.requestId].time+30000>now){ //
+                if(requests[lockreq.requestId] && (requests[lockreq.requestId].time+30000>now)){ //
                     res.status(200).json(lockreq);
                     return;
                 }
