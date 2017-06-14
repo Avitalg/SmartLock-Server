@@ -26,7 +26,6 @@ generic response message
 exports.messageRes = function(req,res, status,type, message){
     res.status(status);
     res.json({"status":type,"message": message});
-    return;
 };
 
 

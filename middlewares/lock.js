@@ -50,6 +50,7 @@ exports.getLocksByUser = function(req, res){
 	var username = req.user.username;
 	var token = req.token; //get from login
 
+	console.log(token);
 	if(!username){
 		Message.messageRes(req, res, 404, "error", "username wasn't entered");
 	}else if(!valid.checkEmail(username)) {
@@ -61,7 +62,7 @@ exports.getLocksByUser = function(req, res){
 				Message.messageRes(req, res, 500, "error", err);
 			}else if(!perRes){// no permission was found
 				if(req.route.stack.length > 1){
-						Message.messageRes(req, res, 200, "success", "Has no permissions yet.");
+						Message.messageRes(req, res, 200, "success", {"message":"Has no permissions yet.", "token":token});
 				}
 				Message.messageRes(req, res, 404, "error", "username doesn't have permissions");
 			}else{

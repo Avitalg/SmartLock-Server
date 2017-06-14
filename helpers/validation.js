@@ -1,5 +1,5 @@
 var moment = require('moment');
-var Format = require('./format.js');
+var format = require('./format.js');
 var validator = require("email-validator");
 var validUrl = require('valid-url');
 

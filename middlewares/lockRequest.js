@@ -23,12 +23,15 @@ exports.requestLockAction = function(req,res,next){
         if(!valid.checkLockAction(action)){
             console.log("action");
             Message.messageRes(req, res, 404, "error", "undefine action");
+            return;
         }
         if (!username) {
             Message.messageRes(req, res, 404, "error", "Need to login");
+            return;
         }
         if (!lockId) {
             Message.messageRes(req, res, 404, "error", "missing lockid");
+            return;
         }
 
         var requestId = username + time;
@@ -117,9 +120,11 @@ exports.updateLocalButtonAction = function (req,res,next){
     
     if(!valid.checkButtonAction(action)){
         Message.messageRes(req, res, 404, "error", "undefined action");
+        return;
     }
     if (!lockId) {
         Message.messageRes(req, res, 404, "error", "missing lockid");
+        return;
     }
 
 
