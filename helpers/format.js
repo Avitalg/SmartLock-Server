@@ -9,8 +9,10 @@ exports.formatHour = function(hour){
 		if(hour.length == 4){
 			hour = "0" + hour;
 		}
-	return hour;
 	}
+
+	return hour;
+
 
 };
 

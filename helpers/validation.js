@@ -46,7 +46,7 @@ check if valid hour - xx:xx/ x:xx
 returns true if it is or if 0 
 **/
 exports.checkHour = function(hour){
-	var reg =  /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/;
+	var reg =  /^([0-1]?[0-9]|2[0-4]):([0-5][0-9]?)(:[0-5][0-9])?$/;
 	return reg.test(hour)|| hour =="0";
 };
 
