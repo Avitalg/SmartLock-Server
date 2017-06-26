@@ -67,24 +67,26 @@ exports.writeLog = function(req,res){
 	    physicId = req.physicId,
 	    time = new Date();
 
-		var newlog = new Logs({
-			lockid: lockid,
-			username: username,
-			action: action,
-			physicalid: physicId,
-			time: time
-		});
+	    if(!!username && !!lockid){
+	    	var newlog = new Logs({
+				lockid: lockid,
+				username: username,
+				action: action,
+				physicalid: physicId,
+				time: time
+			});
 
-		newlog.save(function(err, doc){
-			if (err){
-				console.log("log error");
-				console.log(err);
-				//Message.messageRes(req, res, 200, "error", err);
-			}else{
-				console.log("log was saved");
-				//Message.messageRes(req, res, 200, "success", doc);
-			}
-		});
+			newlog.save(function(err, doc){
+				if (err){
+					console.log("log error");
+					console.log(err);
+					//Message.messageRes(req, res, 200, "error", err);
+				}else{
+					console.log("log was saved");
+					//Message.messageRes(req, res, 200, "success", doc);
+				}
+			});
+	    }		
 	
 	return;
 };

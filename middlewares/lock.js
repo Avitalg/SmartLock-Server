@@ -23,18 +23,22 @@ exports.getLocks = function(req,res){
 /**
 get specific lock
 **/
-exports.getLock = function(req, res){
-	var lockid = req.params.lockid;
+exports.getLock = function(req, res, next){
+	var lockid = (req.params.lockid) ? req.params.lockid : req.body.lockid;
 
 	if(!lockid){
-		Message.messageRes(req, res, 404, "error", "Lockid wasn't entered");
+		Message.messageRes(req, res, 200, "error", "Lockid wasn't entered");
 	}else{
 		Lock.findOne({'lockid':lockid}, function(err, lock){
 			if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			}else if(!lock){
-				Message.messageRes(req, res, 404, "error", "Lock doesn't exist");
+				Message.messageRes(req, res, 200, "error", "Lock doesn't exist");
 			}else{
+				if(req.route.stack.length > 1){
+					next();
+					return;
+				}
 				Message.messageRes(req, res, 200, "success", lock);
 			}
 		});

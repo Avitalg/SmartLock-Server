@@ -1,5 +1,6 @@
 var permissions = require('../middlewares/permission');
 var physId = require('../helpers/physicalId');
+var locks = require('../middlewares/lock');
 
 module.exports = function(app){
     app.get('/api/getPermissions', permissions.getPermissions);

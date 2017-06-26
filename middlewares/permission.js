@@ -64,26 +64,26 @@ exports.getPermissionsByUser = function(req, res, next){
 		Message.messageRes(req, res, 200, "error", "Need to login");
 	} else if(!valid.checkEmail(username)){
 		Message.messageRes(req, res, 200, "error", "username is Invalid email");
-		} else {
-			Permission.find({"username":username}, function(err,perResult){
-				if(err){
-					Message.messageRes(req, res, 500, "error", err);
-				} else if(!perResult){
-					Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
+	} else {
+		Permission.find({"username":username}, function(err,perResult){
+			if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			} else if(!perResult){
+				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
+			} else {
+
+				if(req.route.stack.length > 1){
+					req.UserPer = perResult;
+					next();
 				} else {
-
-					if(req.route.stack.length > 1){
-						req.UserPer = perResult;
-						next();
-					} else {
-						Message.messageRes(req, res, 200, "success", perResult);					
-					}
-		
+					Message.messageRes(req, res, 200, "success", perResult);					
 				}
-			});
-		}
+	
+			}
+		});
+	}
 
-		return;
+	return;
 	
 };
 
@@ -102,7 +102,6 @@ exports.getUserByPhysicId = function(req, res, next){
       next(req, res);
     });
 
-};
 
 /**
 get all pysucal ids
@@ -191,6 +190,8 @@ exports.checkIfHasManager = function(req, res, next){
 				Message.messageRes(req, res, 404, "error", "No manager");
 			}
 		}else{
+			console.log("has manager:");
+			console.log(perResult);
 			if(req.route.stack.length > 1){
 				req.hasManager = true;
 				next();
@@ -299,6 +300,7 @@ exports.checkPermission = function(req, res, next){
 };
 
 /**
+check if has fingerprint permissions
 **/
 exports.fingerPrintPermission = function(req, res, next){
 	var lockid = req.body.lockid,
@@ -374,9 +376,15 @@ exports.addManagerPermission = function(req, res, next){
 		end1, end2, end3, end4, end5, end6,end7);
 
 	if(!username){
+<<<<<<< HEAD
 		Message.messageRes(req, res, 500, "error", "Need to login");
 	} else if(!lockid){
 		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
+=======
+		Message.messageRes(req, res, 200, "error", "Need to enter username");
+	} else if(!lockid){
+		Message.messageRes(req, res, 200, "error", "need to enter lockid");
+>>>>>>> master
 	} else if(validation!="ok"){
 		Message.messageRes(req, res, 200, "error", validation);
 	} else if(req.hasManager){
@@ -442,6 +450,7 @@ exports.addManagerPermission = function(req, res, next){
 add user permissions
 **/
 exports.addPermission = function(req,res, next){
+<<<<<<< HEAD
 	var username = req.body.username,
 		lockid = req.body.lockid,
 		frequency = req.body.frequency,
@@ -461,6 +470,38 @@ exports.addPermission = function(req,res, next){
 		end5   = format.formatHour(req.body.end5),
 		end6   = format.formatHour(req.body.end6),
 		end7   = format.formatHour(req.body.end7);
+=======
+	var username, lockid, frequency, date, type, start1, start2, start3, start4, start5, start6, start7,
+		end1, end2, end3, end4, end5, end6, end7;
+	var hasManager = req.hasManager;
+	username = req.body.username;
+	lockid = req.body.lockid;
+	if(hasManager){
+		frequency = req.body.frequency;
+		date = req.body.date;
+		type = req.body.type;
+		start1 = format.formateHour(req.body.start1);
+		start2 = format.formateHour(req.body.start2);
+		start3 = format.formateHour(req.body.start3);
+		start4 = format.formateHour(req.body.start4);
+		start5 = format.formateHour(req.body.start5);
+		start6 = format.formateHour(req.body.start6);
+		start7 = format.formateHour(req.body.start7);
+		end1   = format.formateHour(req.body.end1);
+		end2   = format.formateHour(req.body.end2);
+		end3   = format.formateHour(req.body.end3);
+		end4   = format.formateHour(req.body.end4);
+		end5   = format.formateHour(req.body.end5);
+		end6   = format.formateHour(req.body.end6);
+		end7   = format.formateHour(req.body.end7);
+	} else {
+		frequency = "always";
+		type = 0,
+		start1 = start2 = start3 = start4 = start5 = start6 = start7 = "00:00";
+		end1   = end2   = end3   = end4   = end5   = end6   = end7   = "23:59";
+	}
+	
+>>>>>>> master
 
 	var validation = false; 
 
@@ -473,6 +514,7 @@ exports.addPermission = function(req,res, next){
 	}
 
 
+<<<<<<< HEAD
 	
 	if(!username && !lockid){
 		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
@@ -485,6 +527,21 @@ exports.addPermission = function(req,res, next){
 			frequency: frequency,
 			type: type
 		});
+=======
+		if(!username){
+			Message.messageRes(req, res, 400, "error", "Need to enter username");
+		}else if(!lockid){
+			Message.messageRes(req, res, 200, "error", "lockid weren't supplied");
+		} else if(validation!="ok"){
+			Message.messageRes(req, res, 200, "error", validation);
+		}else{
+			var permission = new Permission({
+				username: username,
+				lockid: lockid,
+				frequency: frequency,
+				type: type
+			});
+>>>>>>> master
 
 		switch(frequency) {
 			case "always":
@@ -819,13 +876,19 @@ exports.updatePhysicalId = function(req,res,next){
 		 			}else if(err){
 		 				Message.messageRes(req, res, 500, "error", err);
 		 			} else {
-		 				permission.physicalId = physicalId;
-		 				permission.save();
-						Logs.writeLog(req, res);
+		 				//if don't have physicalId
+		 				if(!permission.physicalId){
+		 					permission.physicalId = physicalId;
+			 				permission.save();
+							Logs.writeLog(req, res);
+		 				} else {//if have - take the one he has
+		 					req.physicId = permission.physicalId;
+		 				}
+		 				
 		 				if(req.route.stack.length > 1){
 		 					next();
 		 				} else {
-		 					Message.messageRes(req, res, 200, "success", {message : "succeed update physicalId.", physicalId : physicalId});
+		 					Message.messageRes(req, res, 200, "success", {message : "succeed update physicalId.", physicalId : req.physicId});
 		 				}
 		 			}
 		 		});

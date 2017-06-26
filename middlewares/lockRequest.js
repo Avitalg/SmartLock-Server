@@ -68,7 +68,11 @@ exports.checkLockAction = function(req,res,next){
             var responseJson = JSON.parse(JSON.stringify(requests[req.params.requestId]));
             var now = new Date().getTime();
             if (requests[req.params.requestId].time+30000 < now){
-                responseJson.status = 'timeout';
+                if(requests[req.params.requestId].action !=="addFingerprint") {
+                    responseJson.status = 'timeout';
+                }else if(requests[req.params.requestId].time + 60000 < now){
+                    responseJson.status = 'timeout';
+                }
             }
             if (responseJson.status != 'unhandle'){
                 delete requests[req.params.requestId];
@@ -85,7 +89,7 @@ exports.checkLockRequest = function (req,res,next) {
             var now = new Date().getTime();
             while(lockRequestQueue[req.params.lockId].length>0){
                 var lockreq = lockRequestQueue[req.params.lockId].shift();
-                if(requests[lockreq.requestId].time+30000>now){ //
+                if(requests[lockreq.requestId] && (requests[lockreq.requestId].time+30000>now)){ //
                     res.status(200).json(lockreq);
                     return;
                 }

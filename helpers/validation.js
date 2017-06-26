@@ -55,9 +55,8 @@ check if start hour smaller then end hour.
 returns true if it is or if end equel to 00:00
 **/
 exports.checkStartEndHour = function(start, end){
-	return start < end || end == "00:00";
-};
-
+	return start < end || end == "00:00" || (start == "0" &&end == "0");
+}
 
 /**
 check variables of permission routes - check if they all valid.
