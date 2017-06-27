@@ -9,6 +9,6 @@ module.exports = function(app){
     app.get('/api/getUsersByLock/:lockid', permissions.getPermissionsByLock, users.getUsersByLock);
     app.post('/api/addUserPhoto', users.addUserPhoto);
     app.delete('/api/removeUser/:username', permissions.removeUserPermissions, users.removeUser);
-    app.put('/api/updateUser/:username/:nusername/:phone', users.updateUser, permissions.changePermissionUsername);
-    app.put('/api/changePassword/:username/:password', users.changePassword);
+    app.put('/api/updateUser/:username/:phone', users.updateUser, permissions.changePermissionUsername);
+    app.put('/api/changePassword/:password', users.changePassword);
 };

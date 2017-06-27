@@ -130,7 +130,7 @@ exports.addUser = function(req,res){
 add user photo
 **/
 exports.addUserPhoto = function(req, res){
-	var nusername = req.user.username,
+	var username = req.user.username,
 		image = req.body.image;
 
 	if(!username){
@@ -185,7 +185,7 @@ exports.removeUser = function(req,res){
 update user
 **/
 exports.updateUser = function(req,res, next){
-	var nusername = req.params.nusername,
+	var nusername = req.params.username,
 		username = req.user.username,
 		phone = req.params.phone;
 

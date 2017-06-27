@@ -7,7 +7,6 @@ get user logs according to permissions - if lock manager will see all lock logs,
 if not manager, will see only his logs.
 **/
 exports.getUserLogs = function(req,res){
-	var username = req.user.username; // from session
 	var userPermissions = req.UserPer;// all user permissions
 	var relevantLogs = [];
 

@@ -98,6 +98,7 @@ exports.getUserByPhysicId = function(req, res, next){
       if(perResult){
         req.user.username = perResult.username;
         req.user._id = perResult._id;
+        req.user.phone = perResult.phone;
       }
       next(req, res);
     });
@@ -201,6 +202,30 @@ exports.checkIfHasManager = function(req, res, next){
 	});
 	return;
 
+};
+
+
+/**
+ * after we check if lock has manager
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.checkManagerPermissions = function(req, res, next){
+	var username = req.user.username;
+
+	if(hasManager){
+		Permission.findOne({"lockid":lockid, "username":username, type:0}, function(err,perResult){
+			if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			}else if(!perResult){//no managers in lock
+				Message.messageRes(req, res, 200, "error", "only manager can do this action.");
+			}else{
+				next();
+			}
+		});
+		return;
+	}
 };
 
 /**
@@ -840,8 +865,8 @@ exports.updatePhysicalId = function(req,res,next){
 change username
 **/
 exports.changePermissionUsername = function(req, res){
-	var nusername = req.params.nusername,
-		username = req.params.username;
+	var nusername = req.params.username,
+		username = req.user.username;
 	if(!valid.checkEmail(username) || !valid.checkEmail(nusername)){
 		Message.messageRes(req, res, 200, "error", "Invalid email");
 	} else {
