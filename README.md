@@ -121,10 +121,9 @@ https://smartlockproject.herokuapp.com/api/getUsersByLock/lockid?token=xxx
     params : lockid   
     Query  : login token    
 
-https://smartlockproject.herokuapp.com/api/removeUser/username?token=xxx    
+https://smartlockproject.herokuapp.com/api/removeUser?token=xxx
     Method : DELETE    
-    params : username   
-    Query  : login token   
+    Query  : login token
 
 https://smartlockproject.herokuapp.com/api/addUser    
     Method : POST    
