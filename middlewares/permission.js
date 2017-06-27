@@ -226,6 +226,7 @@ exports.checkManagerPermissions = function(req, res, next){
 			}else if(!perResult){//no managers in lock
 				Message.messageRes(req, res, 200, "error", "only manager can do this action.");
 			}else{
+				console.log("has manager ");
 				next();
 			}
 		});
@@ -403,7 +404,7 @@ exports.addManagerPermission = function(req, res, next){
 		validation = "no";
 	start1 = start2 = start3 = start4 = start5 = start6 = start7 = "00:00";
 	end1 = end2 = end3 = end4 = end5 = end6 = end7   = "23:59";
-	console.log("has manager:"+req.hasManager);
+	console.log("has manager addManagerPermission");
 	validation = valid.checkPermissionVars(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
 		end1, end2, end3, end4, end5, end6,end7);
 
