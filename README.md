@@ -27,7 +27,7 @@ https://smartlockproject.herokuapp.com/api/removeLock/lockid?token=xxx
     Params : lockid  
     Query : token from login
 
-https://smartlockproject.herokuapp.com/api/updateLockStatus/lockid/lstatus?token=xxx 
+https://smartlockproject.herokuapp.com/api/updateLockStatus/lockid/lstatus?token=xxx  
    Method : PUT  
    Params : lockid & lstatus (lock status) 
    Query  : login token 
@@ -35,31 +35,31 @@ https://smartlockproject.herokuapp.com/api/updateLockStatus/lockid/lstatus?token
 
 ## PERMISSION
 
-https://smartlockproject.herokuapp.com/api/getPermissions?token=xxx
-    Method : GET
+https://smartlockproject.herokuapp.com/api/getPermissions?token=xxx 
+    Method : GET 
     Query  : login token
 
-https://smartlockproject.herokuapp.com/api/getPermission/lockid?token=xxx
+https://smartlockproject.herokuapp.com/api/getPermission/lockid?token=xxx 
     Method : GET  
-    params : userid & lockid
-    Query  : login token
+    params : userid & lockid 
+    Query  : login token 
 
-https://smartlockproject.herokuapp.com/api/getPermissionsByUser?token=xxx
+https://smartlockproject.herokuapp.com/api/getPermissionsByUser?token=xxx 
     Method : GET   
-    params : username
-    Query  : login token
+    params : username 
+    Query  : login token 
 
-https://smartlockproject.herokuapp.com/api/getPermissionsByLock/lockid?token=xxx
-    Method : GET  
-    params : lockid
-    Query  : login token
+https://smartlockproject.herokuapp.com/api/getPermissionsByLock/lockid?token=xxx 
+    Method : GET   
+    params : lockid 
+    Query  : login token 
 
 
-https://smartlockproject.herokuapp.com/api/addPermission?token=xxx
+https://smartlockproject.herokuapp.com/api/addPermission?token=xxx 
     Method : POST  
-    params : username & lockid
-            frequency (always/once)
-            type (0- manager, 1-user with physical id 2- user without physical id)
+    params : username & lockid 
+            frequency (always/once) 
+            type (0- manager, 1-user with physical id 2- user without physical id) 
             start1,start2,...,start7 - start1 is the hour of the starting permission in day 1.  
             end1, end2,....,end7 - end1 us the hour od the ending permission in day 1.  
             example:  
@@ -68,65 +68,63 @@ https://smartlockproject.herokuapp.com/api/addPermission?token=xxx
     Query  : login token
 
 
-https://smartlockproject.herokuapp.com/api/removePermission/username/lockid?token=xxx
+https://smartlockproject.herokuapp.com/api/removePermission/username/lockid?token=xxx 
     Method : DELETE  
-    params : username & lockid
-    Query  : login token
+    params : username & lockid 
+    Query  : login token 
 
 
-https://smartlockproject.herokuapp.com/api/removeUserPermissions/username?token=xxx
-    Method : DELETE
-    params : username
-    Query  : login token
+https://smartlockproject.herokuapp.com/api/removeUserPermissions/username?token=xxx 
+    Method : DELETE 
+    params : username 
+    Query  : login token 
 
-https://smartlockproject.herokuapp.com/api/removeLockPermissions/lockid?token=xxx
-    Method : DELETE
-    params : lockid
-    Query  : login token
+https://smartlockproject.herokuapp.com/api/removeLockPermissions/lockid?token=xxx 
+    Method : DELETE 
+    params : lockid 
+    Query  : login token 
 
-https://smartlockproject.herokuapp.com/api/updatePermission/username/lockid/frequency/type/start1/end1/start2/end2/start3/end3/start4/end4/start5/end5/start6/end6/start7/end7
-    ?token=xxx
+https://smartlockproject.herokuapp.com/api/updatePermission/username/lockid/frequency/type/start1/end1/start2/end2/start3/end3/start4/end4/start5/end5/start6/end6/start7/end7?token=xxx  
     Method : PUT
     params: username & lockid & frequency & start1-7 & end1-7
     Query  : login token
 
-https://smartlockproject.herokuapp.com/api/updatePermission/username/lockid/frequency/type/date/start1/end1
-    ?token=xxx
+https://smartlockproject.herokuapp.com/api/updatePermission/username/lockid/frequency/type/date/start1/end1?token=xxx
     Method : PUT
     params: userid & lockid & frequency & type & start1 & end1
             & date (format: YYYY-MM-DD)
     Query  : login token
 
-https://smartlockproject.herokuapp.com/api/changeUserType/username/lockid/type?token=xxx
-    Method : PUT
-    params: username & lockid &
-            type (0- manager, 1-user with physical id 2- user without physical id)
-    Query  : login token
+https://smartlockproject.herokuapp.com/api/changeUserType/username/lockid/type?token=xxx 
+    Method : PUT 
+    params: username & lockid & 
+            type (0- manager, 1-user with physical id 2- user without physical id) 
+    Query  : login token 
 
-https://smartlockproject.herokuapp.com/api/updatePhysicalId/lockid?token=xxx
-    Method : PUT
-    params:  lockid
-    Query  : login token
+https://smartlockproject.herokuapp.com/api/updatePhysicalId/lockid?token=xxx 
+    Method : PUT 
+    params:  lockid 
+    Query  : login token 
 
 ## USER
 
-https://smartlockproject.herokuapp.com/api/getUsers?token=xxx
+https://smartlockproject.herokuapp.com/api/getUsers?token=xxx 
     Method : GET  
 
-https://smartlockproject.herokuapp.com/api/getUser/username?token=xxx
+https://smartlockproject.herokuapp.com/api/getUser/username?token=xxx 
     Method : GET  
     params : userid  
-    Query  : login token
+    Query  : login token 
 
-https://smartlockproject.herokuapp.com/api/getUsersByLock/lockid?token=xxx
+https://smartlockproject.herokuapp.com/api/getUsersByLock/lockid?token=xxx 
     Method : GET  
-    params : lockid
-    Query  : login token
+    params : lockid 
+    Query  : login token 
 
-https://smartlockproject.herokuapp.com/api/removeUser/username?token=xxx
+https://smartlockproject.herokuapp.com/api/removeUser/username?token=xxx 
     Method : DELETE  
-    params : username
-    Query  : login token
+    params : username 
+    Query  : login token 
 
 https://smartlockproject.herokuapp.com/api/addUser 
     Method : POST  
@@ -134,25 +132,25 @@ https://smartlockproject.herokuapp.com/api/addUser
 
 https://smartlockproject.herokuapp.com/api/addUserPhoto?token=xxx
     Method : POST   
-    params : image(url)
-    Query  : login token
+    params : image(url) 
+    Query  : login token 
 
 https://smartlockproject.herokuapp.com/api/login  
     Method : POST   
     params : username & password   
 
-https://smartlockproject.herokuapp.com/api/updateUser/username/phone?token=xxx
-    Method : PUT  
-    params : username(new username) & phone
-    Query  : login token
+https://smartlockproject.herokuapp.com/api/updateUser/username/phone?token=xxx 
+    Method : PUT   
+    params : username(new username) & phone 
+    Query  : login token 
 
-https://smartlockproject.herokuapp.com/api/changePassword/password?token=xxx
-    Method : PUT  
-    params : password
-    Query  : login token
+https://smartlockproject.herokuapp.com/api/changePassword/password?token=xxx 
+    Method : PUT   
+    params : password 
+    Query  : login token 
 
 
 ## LOGS
-https://smartlockproject.herokuapp.com/api/getUserLogs?token=xxx
-    Method : GET
-    Query  : login token
+https://smartlockproject.herokuapp.com/api/getUserLogs?token=xxx 
+    Method : GET 
+    Query  : login token 
