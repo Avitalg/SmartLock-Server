@@ -35,21 +35,21 @@ https://smartlockproject.herokuapp.com/api/updateLockStatus/lockid/lstatus?token
 
 ## PERMISSION
 
-https://smartlockproject.herokuapp.com/api/getPermissions?token=xxx  
+https://smartlockproject.herokuapp.com/api/getPermissions?token=xxx    
     Method : GET  
     Query  : login token 
 
-https://smartlockproject.herokuapp.com/api/getPermission/lockid?token=xxx 
+https://smartlockproject.herokuapp.com/api/getPermission/lockid?token=xxx    
     Method : GET  
     params : userid & lockid 
     Query  : login token 
 
-https://smartlockproject.herokuapp.com/api/getPermissionsByUser?token=xxx     
+https://smartlockproject.herokuapp.com/api/getPermissionsByUser?token=xxx        
     Method : GET     
     params : username    
     Query  : login token    
 
-https://smartlockproject.herokuapp.com/api/getPermissionsByLock/lockid?token=xxx 
+https://smartlockproject.herokuapp.com/api/getPermissionsByLock/lockid?token=xxx    
     Method : GET   
     params : lockid 
     Query  : login token 
@@ -121,7 +121,7 @@ https://smartlockproject.herokuapp.com/api/getUsersByLock/lockid?token=xxx
     params : lockid   
     Query  : login token    
 
-https://smartlockproject.herokuapp.com/api/removeUser?token=xxx
+https://smartlockproject.herokuapp.com/api/removeUser?token=xxx    
     Method : DELETE    
     Query  : login token
 
