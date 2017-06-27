@@ -2,35 +2,35 @@
 
 ## LOCK
 
-https://smartlockproject.herokuapp.com/api/getLocks?token=xxx
+https://smartlockproject.herokuapp.com/api/getLocks?token=xxx  
     Method : GET  
     Query : token from login
 
-https://smartlockproject.herokuapp.com/api/getLock/lockid?token=xxx
+https://smartlockproject.herokuapp.com/api/getLock/lockid?token=xxx  
     Method : GET  
-    Params : lockid
-    Query : token from login
+    Params : lockid  
+    Query : token from login  
 
-https://smartlockproject.herokuapp.com/api/getLocksByUser?token=xxx
+https://smartlockproject.herokuapp.com/api/getLocksByUser?token=xxx  
     Method : GET
     Params : username
      Query : token from login
 
-https://smartlockproject.herokuapp.comapi/addLock?token=xxx
+https://smartlockproject.herokuapp.comapi/addLock?token=xxx  
     Method : POST  
     Params : lockid & lstatus (lock status)  
-            &desc (description of the lock)
+            &desc (description of the lock)  
     Query : token from login
 
-https://smartlockproject.herokuapp.com/api/removeLock/lockid?token=xxx
+https://smartlockproject.herokuapp.com/api/removeLock/lockid?token=xxx  
     Method : DELETE  
-    Params : lockid
+    Params : lockid  
     Query : token from login
 
-https://smartlockproject.herokuapp.com/api/updateLockStatus/lockid/lstatus?token=xxx
+https://smartlockproject.herokuapp.com/api/updateLockStatus/lockid/lstatus?token=xxx 
    Method : PUT  
-   Params : lockid & lstatus (lock status)
-   Query  : login token
+   Params : lockid & lstatus (lock status) 
+   Query  : login token 
 
 
 ## PERMISSION
