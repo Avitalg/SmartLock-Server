@@ -181,6 +181,7 @@ check if lock has manager. save data in req.hasMnager
 exports.checkIfHasManager = function(req, res, next){
 	var lockid = (req.params.lockid)? req.params.lockid : req.body.lockid;
 
+	console.log("check if has manager");
 	Permission.findOne({"lockid":lockid, "type":0}, function(err,perResult){
 		if(err){
 			Message.messageRes(req, res, 500, "error", err);
@@ -205,6 +206,7 @@ exports.checkIfHasManager = function(req, res, next){
 };
 
 
+
 /**
  * after we check if lock has manager
  * @param req
@@ -212,9 +214,12 @@ exports.checkIfHasManager = function(req, res, next){
  * @param next
  */
 exports.checkManagerPermissions = function(req, res, next){
-	var username = req.user.username;
+	var username = req.user.username,
+		lockid = req.body.lockid;
 
-	if(hasManager){
+
+	console.log("checkManagerPermissions");
+	if(req.hasManager){
 		Permission.findOne({"lockid":lockid, "username":username, type:0}, function(err,perResult){
 			if(err){
 				Message.messageRes(req, res, 500, "error", err);
@@ -224,8 +229,12 @@ exports.checkManagerPermissions = function(req, res, next){
 				next();
 			}
 		});
-		return;
+
+	} else {
+		_this.addManagerPermission(req, res, _this.sendEmail(req, res));
 	}
+
+	return;
 };
 
 /**
@@ -387,14 +396,14 @@ exports.addManagerPermission = function(req, res, next){
 	 
 	var start1, start2, start3, start4, start5, start6, start7,
 		end1, end2, end3, end4, end5, end6, end7,
-		username = req.user.username,
+		username = req.body.username,
 		lockid = req.body.lockid,
 		frequency = "always",
 		type = 0,
 		validation = "no";
-	start1 = start2 = start3 = start4 = start5 = start6 = start7 = "00:00",
+	start1 = start2 = start3 = start4 = start5 = start6 = start7 = "00:00";
 	end1 = end2 = end3 = end4 = end5 = end6 = end7   = "23:59";
-	console.log("haS MANAGE:"+req.hasManager);
+	console.log("has manager:"+req.hasManager);
 	validation = valid.checkPermissionVars(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
 		end1, end2, end3, end4, end5, end6,end7);
 
@@ -445,23 +454,37 @@ exports.addManagerPermission = function(req, res, next){
 		});
 
 	//if User exist, won't save him.
-		Permission.findOneAndUpdate({"username": username, "lockid": lockid}, permission, {upsert:true},
+		Permission.findOne({"username": username, "lockid": lockid},
 			function(err, doc){
-				if (err){
+				console.log("save manager per");
+				if (!!doc){
 					Message.messageRes(req, res, 500, "error", "Permission already exists");
 				}else{
 					req.params.action = "add manager Permissions";
 					Logs.writeLog(req, res);
-					if(req.route.stack.length > 1){
+					if(req.route.stack.length > 1 && !!next){
+						console.log("next");
 						next();
 						return;
 					}
-					Message.messageRes(req, res, 200, "success", "Permission was saved");
+
+					permission.save(function(err, perResult){
+
+						if(err){
+							Message.messageRes(req, res, 200, "error", "Can't save manager permission");
+
+						} else {
+							Message.messageRes(req, res, 200, "success", "Manager permission was saved");
+
+						}
+
+					});
 				}
 		});
 
 	}			
-}
+};
+
 
 /**
 add user permissions
@@ -497,7 +520,7 @@ exports.addPermission = function(req,res, next){
 		validation = valid.checkShortPermissionVars(username,lockid,frequency, date, type, start1,end1);
 	}
 
-
+	console.log("sdsd");
 	
 	if(!username && !lockid){
 		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
@@ -513,6 +536,7 @@ exports.addPermission = function(req,res, next){
 
 		switch(frequency) {
 			case "always":
+				console.log("always");
 				delete permission.date;
 				delete permission.hours;
 				permission.duration = {
@@ -556,17 +580,31 @@ exports.addPermission = function(req,res, next){
 		}
 
 		//if User exist, won't save him.
-		Permission.findOneAndUpdate({"username": username, "lockid": lockid}, permission, {upsert:true},
+		Permission.findOne({"username": username, "lockid": lockid},
 			function(err, doc){
-				if (err){
+				if (!!doc){
 					Message.messageRes(req, res, 500, "error", "Permission already exists");
 				}else{
 					if(req.route.stack.length > 1){
 						next();
 					}
-					req.params.action = "addPermissions";
-					Logs.writeLog(req, res);
-					Message.messageRes(req, res, 200, "success", "Permission was saved");
+					console.log("find user");
+					console.log(doc);
+
+					permission.save(function(err, perSaved){
+						console.log("saved");
+						if(err){
+							Message.messageRes(req, res, 500, "error", err);
+
+						} else {
+							req.params.action = "addPermissions";
+							Logs.writeLog(req, res);
+							Message.messageRes(req, res, 200, "success", "Permission was saved");
+						}
+
+					});
+
+
 				}
 			});
 	}
