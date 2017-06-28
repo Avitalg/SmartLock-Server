@@ -24,7 +24,7 @@ exports.getUsers = function(req,res){
 get user
 **/
 exports.getUser = function(req,res){
-	var username = req.params.username;
+	var username = req.user.username;
 		if(!username){
 	        Message.messageRes(req, res, 404, "error", "username wasn't supplied");
 		}else{	
