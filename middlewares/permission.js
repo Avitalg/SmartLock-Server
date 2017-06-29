@@ -221,21 +221,21 @@ exports.checkManagerPermissions = function(req, res, next){
 
 
 	console.log("checkManagerPermissions");
-	if(req.hasManager){
-		Permission.findOne({"lockid":lockid, "username":username, type:0}, function(err,perResult){
-			if(err){
-				Message.messageRes(req, res, 500, "error", err);
-			}else if(!perResult){//no managers in lock
-				Message.messageRes(req, res, 200, "error", "only manager can do this action.");
-			}else{
-				console.log("has manager ");
-				next();
-			}
-		});
+	
+	Permission.findOne({"lockid":lockid, "username":username, type:0}, function(err,perResult){
+		if(err){
+			Message.messageRes(req, res, 200, "error", err);
+		}else if(!perResult){//no managers in lock
+			console.log(username);
+			console.log(lockid);
+			Message.messageRes(req, res, 200, "error", "only manager can do this action.");
+		}else{
+			console.log("has manager ");
+			next();
+		}
+	});
 
-	} else {
-		Message.messageRes(req, res, 200, "error", "only manager can do this action.");
-	}
+	
 
 	return;
 };
