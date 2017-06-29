@@ -9,7 +9,7 @@ gets array of pysical ids exist in db
 returns minimum value available between 0 and 162.
 if no value avilable - returns -1
 **/
-var findMinimumPhysId = function(pIds){
+exports.findMinimumPhysId = function(pIds){
 
 	for(var i =0; i<163; i++){
 		if(pIds.indexOf(i.toString())==-1){
