@@ -67,6 +67,7 @@ exports.getLocksByUser = function(req, res){
 			}else if(!perRes){// no permission was found
 				if(req.route.stack.length > 1){
 						Message.messageRes(req, res, 200, "success", {"message":"Has no permissions yet.", "token":token});
+						return;
 				}
 				Message.messageRes(req, res, 404, "error", "username doesn't have permissions");
 			}else{

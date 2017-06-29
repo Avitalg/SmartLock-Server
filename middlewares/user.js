@@ -283,6 +283,7 @@ exports.login = function(req, res, next){
 			            		req.user = user;
 			            		console.log("token:" + token);
 			            		next();
+			            		return;
 			            	} else {
 			            		Message.messageRes(req, res, 200, "error", "wrong password");  
 			            	}

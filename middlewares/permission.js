@@ -73,10 +73,13 @@ exports.getPermissionsByUser = function(req, res, next){
 				} else {
 
 					if(req.route.stack.length > 1){
+						console.log("k");
 						req.UserPer = perResult;
 						next();
+						return;
 					} else {
-						Message.messageRes(req, res, 200, "success", perResult);					
+						console.log("r");
+						Message.messageRes(req, res, 200, "success", perResult);
 					}
 		
 				}
