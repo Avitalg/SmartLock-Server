@@ -190,8 +190,7 @@ exports.checkIfHasManager = function(req, res, next){
 			Message.messageRes(req, res, 500, "error", err);
 		}else if(!perResult){//no managers in lock
 			if(req.route.stack.length > 1){
-				req.hasManager = false;
-				next();
+				_this.addManagerPermission(req, res, _this.sendEmail(req, res));
 			} else {
 				Message.messageRes(req, res, 404, "error", "No manager");
 			}
@@ -235,7 +234,7 @@ exports.checkManagerPermissions = function(req, res, next){
 		});
 
 	} else {
-		_this.addManagerPermission(req, res, _this.sendEmail(req, res));
+		Message.messageRes(req, res, 200, "error", "only manager can do this action.");
 	}
 
 	return;
