@@ -9,6 +9,7 @@ var nodemailer 	= require('nodemailer');
 var Logs 		= require('../helpers/logs');
 var config 		= require('../config/main');
 var physicId 	= require('../helpers/physicalId');
+var mongoose 	= require('mongoose');
 
 var _this = this;
 
@@ -221,7 +222,7 @@ exports.checkManagerPermissions = function(req, res, next){
 
 
 	console.log("checkManagerPermissions");
-	
+
 	Permission.findOne({"lockid":lockid, "username":username, type:0}, function(err,perResult){
 		if(err){
 			Message.messageRes(req, res, 200, "error", err);
