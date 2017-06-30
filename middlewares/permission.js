@@ -222,8 +222,9 @@ exports.checkManagerPermissions = function(req, res, next){
 
 
 	console.log("checkManagerPermissions");
-
+	console.log("manager username:"+username);
 	Permission.findOne({"lockid":lockid, "username":username, type:0}, function(err,perResult){
+		console.log(perResult);
 		if(err){
 			Message.messageRes(req, res, 200, "error", err);
 		}else if(!perResult){//no managers in lock

@@ -7,6 +7,7 @@ var auth = require('./helpers/auth');
 var locks = require('./middlewares/lock');
 var permissions = require('./middlewares/permission');
 var users = require('./middlewares/user');
+var lockRequest = require('./middlewares/lockRequest');
 
 var db = require('./database');
 var consts = require('./config/main');
