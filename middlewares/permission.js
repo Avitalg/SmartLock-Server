@@ -610,6 +610,8 @@ exports.addPermission = function(req,res, next){
 					Message.messageRes(req, res, 500, "error", "Permission already exists");
 				}else{
 					if(req.route.stack.length > 1){
+						req.subject = 'Smart Lock - New Permissions';
+						req.content = "<h1>Congratulations!</h1><p>you've been received new permissions in SmartLock app.<br>You can download the app from the app store.</p><p>Best regards,<br>Smart Lock Team.</p>";
 						next();
 					}
 					console.log("find user");
@@ -939,16 +941,22 @@ exports.changePermissionUsername = function(req, res){
 
 };
 
+exports.contactUs = function(req, res, next){
+	var username = req.body.username;
+	var message = req.body.message;
+
+	req.subject = "contact us - smartLock";
+	req.content = "<h2>Message from "+username+"</h2><div>"+message+"</div>";
+	req.body.username = "info@smartlockproj.com";
+	next();
+};
+
 
 /**
 send user email about new permissions
 **/
 exports.sendEmail = function(req, res){
-	var username = req.body.username,
-		lockid = req.body.lockid,
-		frequency = req.body.frequency,
-		date = req.body.date,
-		type = req.body.type;
+	var username = req.body.username;
 
 	//check if EMAIL_USER && EMAIL_PASS defined - vars on Heroku
 	if(config.EMAIL_USER =="x" || config.EMAIL_PASS == "x"){
@@ -967,8 +975,8 @@ exports.sendEmail = function(req, res){
 	var mailOptions = {
 		from: 'no-reply@smartLock.com', 
 		to: username, 
-		subject: 'Smart Lock - New Permissions',
-		html: "<h1>Congratulations!</h1><p>you've been received new permissions in SmartLock app.<br>You can download the app from the app store.</p><p>Best regards,<br>Smart Lock Team.</p>",
+		subject: req.subject,
+		html: req.content
 	};
 
 	transporter.sendMail(mailOptions, function(error, info){

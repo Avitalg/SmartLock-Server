@@ -61,6 +61,7 @@ write log to db
 **/
 exports.writeLog = function(req,res){
 	var username = req.user.username,
+		otheruser = req.params.otheruser,
 	    lockid = req.params.lockid,
 	    action = req.params.action,
 	    physicId = req.physicId,
@@ -70,6 +71,7 @@ exports.writeLog = function(req,res){
 	    	var newlog = new Logs({
 				lockid: lockid,
 				username: username,
+				otheruser: otheruser,
 				action: action,
 				physicalid: physicId,
 				time: time

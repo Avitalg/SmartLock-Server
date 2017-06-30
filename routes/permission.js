@@ -5,6 +5,7 @@ module.exports = function(app){
     app.get('/api/getPermission/:username/:lockid', permissions.getPermission);
     app.get('/api/getPermissionsByUser', permissions.getPermissionsByUser);
     app.get('/api/getPermissionsByLock/:lockid', permissions.getPermissionsByLock);
+    app.post('/api/contactUs', permissions.sendEmail);
     app.post('/api/addPermission', permissions.checkIfHasManager, permissions.checkManagerPermissions ,permissions.addPermission, permissions.sendEmail);
     app.delete('/api/removePermission/:username/:lockid',permissions.checkManagerPermissions, permissions.removePermission);
     app.delete('/api/removeUserPermissions/:username', permissions.removeUserPermissions);

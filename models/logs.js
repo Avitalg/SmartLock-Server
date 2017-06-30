@@ -14,6 +14,9 @@ var locksSchema = new schema({
     username: {
         type: String
     },
+    otheruser: {
+        type: String
+    },
     physicalid:{
         type: String
     },
