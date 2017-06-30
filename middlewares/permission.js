@@ -957,14 +957,15 @@ exports.contactUs = function(req, res, next){
 /**
 send user email about new permissions
 **/
-exports.sendEmail = function(req, res, next){
+exports.sendEmail = function(req, res){
 	var username = req.body.username;
+
+	console.log(username);
+	console.log(req.endMessage);
 
 	//check if EMAIL_USER && EMAIL_PASS defined - vars on Heroku
 	if(config.EMAIL_USER =="x" || config.EMAIL_PASS == "x"){
 		console.log("config vars not defined. Email didn't sent");
-		req.message="error";
-		console.log(req.endMessage);
 		if(!!req.endMessage){
 			console.log("endmsg");
 			Message.messageRes(req, res, 200, "error", "Can't send mail");
