@@ -974,7 +974,7 @@ exports.sendEmail = function(req, res){
 	}
 
 	var transporter = nodemailer.createTransport({
-		service: 'gmail',
+		service: 'Gmail',
 		auth: {
 			user: config.EMAIL_USER, 
 			pass: config.EMAIL_PASS
@@ -989,6 +989,9 @@ exports.sendEmail = function(req, res){
 	};
 
 	transporter.sendMail(mailOptions, function(error, info){
+		console.log(info);
+		console.log(error);
+		console.log("ok");
 		if(error){
 			console.log(error);
 			console.log({yo: 'error' });
@@ -998,14 +1001,18 @@ exports.sendEmail = function(req, res){
 			}
 		}else{
 			req.params.action = "sendEmail";
-			Logs.writeLog(req, res);
+			console.log("beforelog");
+			console.log("afterlog");
 			console.log('Message sent: ' + info.response);
 			console.log({yo: info.response});
 			if(!!req.endMessage){
 				Message.messageRes(req, res, 200, "success", "Thank you!");
 				return;
 			}
+			Logs.writeLog(req, res);
 		};
 	});
+
+	//Message.messageRes(req, res, 200, "error", "Can't send mail");
 
 };
