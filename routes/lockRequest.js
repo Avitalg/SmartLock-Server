@@ -9,7 +9,4 @@ var helpers = require('../helpers/lockAction')
 module.exports = function(app) {
     app.post('/api/requestLockAction/:action',permissions.rightPermission, helpers.lockActionControl, lockRequest.requestLockAction);
     app.get('/api/checkLockAction/:requestId',lockRequest.checkLockAction);
-    app.get('/api/lockRequest/:lockId',lockRequest.checkLockRequest);
-    app.post('/api/lockRequest/:lockId',lockRequest.updateLockRequest);
-    app.post('/api/localButtonAction/:lockid',lockRequest.updateLocalButtonAction );
 };
