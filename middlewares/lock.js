@@ -46,6 +46,25 @@ exports.getLock = function(req, res, next){
 	return;
 };
 
+exports.getLocksById = function(req, res){
+	var locks = req.lockids;
+
+	if(!locks){
+		Message.messageRes(req, res, 200, "error", "User doesn't have locks to manage.");
+	}else{
+		Lock.findOne({'lockid':{$in:locks}}, function(err, lock){
+			if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			}else if(!lock){
+				Message.messageRes(req, res, 200, "error", "User doesn't have locks to manage.");
+			}else{
+				Message.messageRes(req, res, 200, "success", lock);
+			}
+		});
+	}
+	return;
+};
+
 
 /**
 get all user's locks
