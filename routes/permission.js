@@ -2,7 +2,7 @@ var permissions = require('../middlewares/permission');
 
 module.exports = function(app){
     app.get('/api/getPermissions', permissions.getPermissions);
-    app.get('/api/getPermission/:lockid', permissions.getPermission);
+    app.get('/api/getPermission/:username/:lockid', permissions.getPermission);
     app.get('/api/getPermissionsByUser', permissions.getPermissionsByUser);
     app.get('/api/getPermissionsByLock/:lockid', permissions.getPermissionsByLock);
     app.post('/api/addPermission', permissions.checkIfHasManager, permissions.checkManagerPermissions ,permissions.addPermission, permissions.sendEmail);

@@ -32,11 +32,11 @@ exports.getPermissions = function(req,res){
 get user permissions
 **/
 exports.getPermission = function(req,res){
-	var username= req.user.username, // from session
+	var username= req.params.username, // from session
 		lockid = req.params.lockid;
 
 	if(!username){
-		Message.messageRes(req, res, 200, "error", "Need to login");
+		Message.messageRes(req, res, 200, "error", "Need to enter username");
 	}else if(!lockid){
 		Message.messageRes(req, res, 200, "error", "lockid didn't supplied");
 	}else if(!valid.checkEmail(username)) {

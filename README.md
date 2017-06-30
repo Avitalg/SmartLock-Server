@@ -39,14 +39,13 @@ https://smartlockproject.herokuapp.com/api/getPermissions?token=xxx
     Method : GET  
     Query  : login token 
 
-https://smartlockproject.herokuapp.com/api/getPermission/lockid?token=xxx    
+https://smartlockproject.herokuapp.com/api/getPermission/username/lockid?token=xxx    
     Method : GET  
-    params : userid & lockid 
+    params : username & lockid 
     Query  : login token 
 
 https://smartlockproject.herokuapp.com/api/getPermissionsByUser?token=xxx        
     Method : GET     
-    params : username    
     Query  : login token    
 
 https://smartlockproject.herokuapp.com/api/getPermissionsByLock/lockid?token=xxx    
