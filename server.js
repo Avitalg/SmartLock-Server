@@ -39,9 +39,14 @@ app.use(function(req, res, next){
 /******************
 ROUTES WITHOUT AUTH
 *******************/
+/**USER REQUEST**/
 app.post('/api/login', users.login, locks.getLocksByUser);
 app.post('/api/addUser', users.addUser);
 app.post('/api/openManagerAccount', permissions.checkIfHasManager, permissions.addManagerPermission, users.addUser);
+/**LOCK REQUEST**/
+app.get('/api/lockRequest/:lockId',lockRequest.checkLockRequest);
+app.post('/api/lockRequest/:lockId',lockRequest.updateLockRequest);
+app.post('/api/localButtonAction/:lockid',lockRequest.updateLocalButtonAction );
 
 app.use(auth.verifyToken);
 
