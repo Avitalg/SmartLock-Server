@@ -218,18 +218,15 @@ exports.checkIfHasManager = function(req, res, next){
  */
 exports.checkManagerPermissions = function(req, res, next){
 	var username = req.user.username,
-		lockid = req.body.lockid;
+		lockid = req.params.lockid ? req.params.lockid : req.body.lockid;
 
 
 	console.log("checkManagerPermissions");
-	console.log("manager username:"+username);
-	Permission.findOne({"lockid":lockid, "username":username, type:0}, function(err,perResult){
-		console.log(perResult);
+	console.log("check if "+ username + " is the manager of "+lockid);
+	Permission.findOne({"lockid":lockid, "username":username, "type":0}, function(err,perResult){
 		if(err){
 			Message.messageRes(req, res, 200, "error", err);
 		}else if(!perResult){//no managers in lock
-			console.log(username);
-			console.log(lockid);
 			Message.messageRes(req, res, 200, "error", "only manager can do this action.");
 		}else{
 			console.log("has manager ");
