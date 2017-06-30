@@ -948,6 +948,8 @@ exports.contactUs = function(req, res, next){
 	req.subject = "contact us - smartLock";
 	req.content = "<h2>Message from "+username+"</h2><div>"+message+"</div>";
 	req.body.username = "info@smartlockproj.com";
+	req.endMessage = true;
+	console.log("next");
 	next();
 };
 
@@ -955,12 +957,18 @@ exports.contactUs = function(req, res, next){
 /**
 send user email about new permissions
 **/
-exports.sendEmail = function(req, res){
+exports.sendEmail = function(req, res, next){
 	var username = req.body.username;
 
 	//check if EMAIL_USER && EMAIL_PASS defined - vars on Heroku
 	if(config.EMAIL_USER =="x" || config.EMAIL_PASS == "x"){
 		console.log("config vars not defined. Email didn't sent");
+		req.message="error";
+		console.log(req.endMessage);
+		if(!!req.endMessage){
+			console.log("endmsg");
+			Message.messageRes(req, res, 200, "error", "Can't send mail");
+		}
 		return;
 	}
 
@@ -983,11 +991,19 @@ exports.sendEmail = function(req, res){
 		if(error){
 			console.log(error);
 			console.log({yo: 'error' });
+			if(!!req.endMessage){
+				Message.messageRes(req, res, 200, "error", "Can't send mail");
+				return;
+			}
 		}else{
 			req.params.action = "sendEmail";
 			Logs.writeLog(req, res);
 			console.log('Message sent: ' + info.response);
 			console.log({yo: info.response});
+			if(!!req.endMessage){
+				Message.messageRes(req, res, 200, "success", "Thank you!");
+				return;
+			}
 		};
 	});
 

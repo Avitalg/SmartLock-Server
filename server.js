@@ -23,8 +23,9 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 app.use('/', express.static('./public'));
 app.use(function(req, res, next){
+	var headerOrigin = (process.env.ENV_VAR == 'development') ? "http://localhost:8887" : req.headers.origin;
 	res.header('Access-Control-Allow-Credentials', 'true');
-	res.header('Access-Control-Allow-Origin',  'smartlockproj.com');
+	res.header('Access-Control-Allow-Origin',  req.headers.origin);
 	res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE');
     res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
 	app.set('json spaces', 4);
@@ -41,7 +42,7 @@ ROUTES WITHOUT AUTH
 *******************/
 /**USER REQUEST**/
 app.post('/api/login', users.login, locks.getLocksByUser);
-app.post('/api/contactUs', permissions.sendEmail);
+app.post('/api/contactUs',  permissions.contactUs, permissions.sendEmail);
 app.post('/api/addUser', users.addUser);
 app.post('/api/openManagerAccount', permissions.checkIfHasManager, permissions.addManagerPermission, users.addUser);
 /**LOCK REQUEST**/
