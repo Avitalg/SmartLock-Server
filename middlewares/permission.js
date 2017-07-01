@@ -181,7 +181,7 @@ exports.getPermissionsByLock = function(req,res, next){
 				Message.messageRes(req, res, 404, "error", "No permissions for this lockid");
 			}else{
 				//if given next function
-				if(req.route.stack.length > 1){
+				if(req.route.stack.length > 1 && !req.hasManger){
 					//get all usernames that have permissions to lock
 					for(var i=0; i<perResult.length; i++){
 						usersname.push(perResult[i].username);
@@ -252,6 +252,7 @@ exports.checkManagerPermissions = function(req, res, next){
 			Message.messageRes(req, res, 200, "error", "only manager can do this action.");
 		}else{
 			console.log("has manager ");
+			req.hasManger = true;
 			next();
 		}
 	});
