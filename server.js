@@ -9,8 +9,12 @@ var permissions = require('./middlewares/permission');
 var users = require('./middlewares/user');
 var lockRequest = require('./middlewares/lockRequest');
 
+
 var db = require('./database');
 var consts = require('./config/main');
+
+var wilioClient = require('twilio')(config.accountSid, config.authToken);
+var authy = require('authy')(config.authyKey);
 // var whiteListDomains = ["https://smartlockproj.com", "http://127.0.0.1:8000"];
 
 
