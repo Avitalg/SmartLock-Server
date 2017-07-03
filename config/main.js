@@ -17,7 +17,7 @@ module.exports ={
 	"EMAIL_USER": process.env.EMAIL_USER || "x",
 	"EMAIL_PASS": process.env.EMAIL_PASS || "x",
 	'secret': process.env.SECRET || 'ilovescotchyscotch',
-	'accountSid': process.env.TWILIO_ACCOUNT_SID ||"ACc3804d4663cce05e00467e7c0c408283",
-	'authToken': process.env.TWILIO_AUTH_TOKEN || "bed801907e7f12034b96540742b8e7e6",
+	'accountSid': process.env.TWILIO_ACCOUNT_SID ||"xxxx",
+	'authToken': process.env.TWILIO_AUTH_TOKEN || "xxx",
 	'authyKey': process.env.AUTHY_TOKEN
 };
