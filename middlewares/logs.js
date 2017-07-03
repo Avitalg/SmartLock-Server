@@ -91,3 +91,21 @@ exports.writeLog = function(req,res){
 	
 	return;
 };
+
+/**
+deleting logs when removing permission. this callback doesn't send response but the route before it.
+**/
+exports.deleteLogs = function(req, res){
+	var username = req.params.username,
+		lockid = req.params.lockid;
+
+	Logs.remove({"username": username, "lockid": lockid}, function(err,permission){
+		if(err){
+			console.log(err);
+		}else{
+			console.log("delete user "+username+ " logs in lock "+ lockid);
+		}
+	});
+
+	return;
+};

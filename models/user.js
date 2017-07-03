@@ -1,13 +1,22 @@
 var mongoose = require('mongoose'),
  	schema = mongoose.Schema,
 	bcrypt = require('bcrypt'),
-    SALT_WORK_FACTOR = 10;
+    SALT_WORK_FACTOR = 10,// Used to generate password hash
+    config = require('../config/main');
+var wilioClient = require('twilio')(config.accountSid, config.authToken);
+var authy = require('authy')(config.authyKey);
+
 
 var userSchema = new schema({
     username: {type:String, required:true, index:{unique:true}},
     phone: {type:String, required: true},
     password: {type:String, required:true},
-    image: {type:String}
+    image: {type:String},
+    verified: {
+        type: Boolean,
+        default: false,
+    },
+    authyId: String,
 },  {collection: 'users'});
 
 //encrypt the password when saved
@@ -39,6 +48,60 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
         cb(null, isMatch);
     });
 };
+
+// Send a verification token to this user
+userSchema.methods.sendAuthyToken = function(cb) {
+    var self = this;
+
+    if (!self.authyId) {
+        // Register this user if it's a new user
+        authy.register_user(self.email, self.phone, self.countryCode,
+            function(err, response) {
+            if (err || !response.user) return cb.call(self, err);
+            self.authyId = response.user.id;
+            self.save(function(err, doc) {
+                if (err || !doc) return cb.call(self, err);
+                self = doc;
+                sendToken();
+            });
+        });
+    } else {
+        // Otherwise send token to a known user
+        sendToken();
+    }
+
+    // With a valid Authy ID, send the 2FA token for this user
+    function sendToken() {
+        authy.request_sms(self.authyId, true, function(err, response) {
+            cb.call(self, err);
+        });
+    }
+};
+
+// Test a 2FA token
+userSchema.methods.verifyAuthyToken = function(otp, cb) {
+    const self = this;
+    authy.verify(self.authyId, otp, function(err, response) {
+        cb.call(self, err, response);
+    });
+};
+
+userSchema.methods.sendMessage =
+  function(message, successCallback, errorCallback) {
+      const self = this;
+      const toNumber = `+972${self.phone}`;
+      console.log("sms sent to "+toNumber);
+      twilioClient.messages.create({
+          to: toNumber,
+          from: config.twilioNumber,
+          body: message,
+      }).then(function() {
+        successCallback();
+      }).catch(function(err) {
+        errorCallback(err);
+      });
+  };
+
 
 var User = mongoose.model('User', userSchema);
 

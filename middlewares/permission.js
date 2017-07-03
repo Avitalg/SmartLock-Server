@@ -642,7 +642,7 @@ exports.addPermission = function(req,res, next){
 /**
 delete permission
 **/
-exports.removePermission = function(req,res){
+exports.removePermission = function(req,res, next){
 	var username = req.params.username,
 		lockid = req.params.lockid;
 
@@ -658,6 +658,7 @@ exports.removePermission = function(req,res){
 				req.params.action = "removePermission";
 				Logs.writeLog(req, res);
 				Message.messageRes(req, res, 200, "success", "Permission was deleted successfully");
+				next();
 			}
 		});
 	}
@@ -702,7 +703,7 @@ exports.removePhysicalId = function(req, res, next){
 remove user permissions
 **/
 exports.removeUserPermissions = function(req,res, next){
-	var username = req.params.username;
+	var username = req.user.username;
 
 	if(!username){
 		Message.messageRes(req, res, 404, "error", "username wasn't supplied");
