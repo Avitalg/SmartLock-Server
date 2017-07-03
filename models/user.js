@@ -3,9 +3,6 @@ var mongoose = require('mongoose'),
 	bcrypt = require('bcrypt'),
     SALT_WORK_FACTOR = 10,// Used to generate password hash
     config = require('../config/main');
-var wilioClient = require('twilio')(config.accountSid, config.authToken);
-var authy = require('authy')(config.authyKey);
-
 
 var userSchema = new schema({
     username: {type:String, required:true, index:{unique:true}},
