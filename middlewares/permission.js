@@ -289,7 +289,7 @@ exports.validPermissions = function(username, lockid){
 						var currDate = new Date().setHours(0,0,0,0) ;
 						dateCond =  perDate == currDate; // current date should be the same as saved
 
-						console.log("cond:"+cond);
+						console.log("cond:"+dateCond);
 						console.log("starthour:"+startHour);
 						console.log("endHour:"+endHour);
 						console.log("currdate:"+currDate);
