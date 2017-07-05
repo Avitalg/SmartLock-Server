@@ -307,7 +307,7 @@ exports.validPermissions = function(username, lockid){
 				}
 				
 				//check if has permissions
-				if(dateCond && (currHour >= startHour && (currHour <= endHour)|| endHour == "00:00") ){
+				if(dateCond && (currHour >= startHour && (currHour <= endHour|| endHour == "00:00")) ){
 					 return "Has permissions";
 				} else {
 					return "No permissions";
