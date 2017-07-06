@@ -214,20 +214,16 @@ exports.getLockManagers = function(req, res){
 	}
 
 	Permission.find({"lockid":lockid, "type":0}, function(err,perResult){
-
+		console.log(perResult);
 		if(err){
 				Message.messageRes(req, res, 500, "error", err);
-			}else if(!perResult){
+			}else if(perResult.length == 0){//returns empty array if no managers
 				Message.messageRes(req, res, 404, "error", "No managers");
 			}else{
 
 				var usernames =[];
 				for(var i=0; i<perResult.length;i++){
 					usernames.push(perResult[i].username);
-				}
-
-				if(perResult.length == 1){
-					usernames.push(perResult.username);
 				}
 
 				Message.messageRes(req, res, 200, "success", usernames);	
