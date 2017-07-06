@@ -31,7 +31,7 @@ exports.fingerprintActions = function(req, res, next){
 		req.params.lockid = req.body.lockid ;
 	}
 	if(!req.params.username){
-		req.params.username = req.body.username ;
+		req.params.username = (req.body.username) ?  (req.body.username) : req.user.username ;
 	}
 
 	switch(fPrint){

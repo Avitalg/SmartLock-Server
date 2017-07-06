@@ -140,6 +140,8 @@ exports.getPhysicalId = function(req, res, next){
 	var physicalId = [];
 	var physicValue;
 
+	console.log("getPhysicalId");
+
 	Permission.find({"lockid":lockid}, function(err,perResult){
 		if(err){
 			Message.messageRes(req, res, 500, "error", err);
@@ -395,6 +397,8 @@ exports.fingerPrintPermission = function(req, res, next){
 	var lockid = req.body.lockid,
 		username = req.user.username;
 
+	console.log("username:"+username);
+
 	if(!username){
 		Message.messageRes(req, res, 404, "error", "Need to login");
 	}
@@ -408,6 +412,7 @@ exports.fingerPrintPermission = function(req, res, next){
 			//if manager or has permissions for fingerprint
 			if(perResult.type == 0 || perResult.type == 1){
 				if(req.route.stack.length > 1){
+					console.log("fingerPrintPermission - true");
 					next();	
 				} else {
 					Message.messageRes(req, res, 200, "success", "Has permissions.");		
