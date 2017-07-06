@@ -1002,16 +1002,13 @@ exports.sendEmail = function(req, res){
 				return;
 			}
 		}else{
-			req.params.action = "sendEmail";
-			console.log("beforelog");
-			console.log("afterlog");
+
 			console.log('Message sent: ' + info.response);
 			console.log({yo: info.response});
 			if(!!req.endMessage){
 				Message.messageRes(req, res, 200, "success", "Thank you!");
 				return;
 			}
-			Logs.writeLog(req, res);
 		};
 	});
 
