@@ -201,6 +201,10 @@ exports.getPermissionsByLock = function(req,res, next){
 	return;
 };
 
+
+/**
+get all managers of lock by it's lockid
+**/
 exports.getLockManagers = function(req, res){
 	var lockid = req.params.lockid;
 
