@@ -201,6 +201,38 @@ exports.getPermissionsByLock = function(req,res, next){
 	return;
 };
 
+exports.getLockManagers = function(req, res){
+	var lockid = req.params.lockid;
+
+	if(!lockid){
+		Message.messageRes(req, res, 404, "error", "No lockid entered");
+		return;	
+	}
+
+	Permission.find({"lockid":lockid, "type":0}, function(err,perResult){
+
+		if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			}else if(!perResult){
+				Message.messageRes(req, res, 404, "error", "No managers");
+			}else{
+
+				var usernames =[];
+				for(var i=0; i<perResult.length;i++){
+					usernames.push(perResult[i].username);
+				}
+
+				if(perResult.length == 1){
+					usernames.push(perResult.username);
+				}
+
+				Message.messageRes(req, res, 200, "success", usernames);	
+			}
+	});
+	return;
+
+};
+
 /**
 check if lock has manager. save data in req.hasMnager
 **/
