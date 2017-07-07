@@ -324,6 +324,14 @@ exports.login = function(req, res, next){
 			}else if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			} else {
+				console.log(user.verifyCode);
+				console.log(numbers);
+
+				if(!user.verifyCode || user.verifyCode.length!=4){
+					Message.messageRes(req, res, 200, "error", "Invalid code. Please send yourself another code.");
+					return;
+				}
+
 				for(var i=0; i<user.verifyCode.length;i++){
 					if(user.verifyCode[i]!=numbers[i]){
 						Message.messageRes(req, res, 200, "error", "The code is incorrect");
@@ -356,7 +364,7 @@ exports.login = function(req, res, next){
 				Message.messageRes(req, res, 500, "error", err);
 			} else {
 
-				if(user.verifyCode.length!=4){
+				if(!user.verifyCode || user.verifyCode.length!=4){
 					user.save(function(saveErr, newUser){
 						req.subject = "SmartLock - Account Verification"
 						req.content = "<h1>Account Verification</h1><div>To continue the registration process, please enter the code below</div><br><div><b>"+newUser.verifyCode[0]+" " +newUser.verifyCode[1]+" "+newUser.verifyCode[2]+" " +newUser.verifyCode[3]+"</b></div><br><div>Best regards,<br>Smart Lock Team.</div>"
