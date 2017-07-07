@@ -72,7 +72,6 @@ get all user's locks
 exports.getLocksByUser = function(req, res){
 	var username = req.user.username;
 
-	console.log(token);
 	if(!username){
 		Message.messageRes(req, res, 404, "error", "username wasn't entered");
 	}else if(!valid.checkEmail(username)) {
@@ -83,10 +82,6 @@ exports.getLocksByUser = function(req, res){
 			if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			}else if(!perRes){// no permission was found
-				// if(req.route.stack.length > 1){
-				// 		Message.messageRes(req, res, 200, "success", {"message":"Has no permissions yet.", "token":token});
-				// 		return;
-				// }
 				Message.messageRes(req, res, 404, "error", "username doesn't have permissions");
 			}else{
 				var locks = [];
