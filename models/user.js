@@ -22,13 +22,12 @@ userSchema.pre('save', function(next) {
     var user = this;
     console.log("pre save");
 
-    if(!this.isNew) {//update user - not new one
+    if(user.isModified('verifyCode')) {//change verifyCode
         console.log("update user");
         console.log(user.verifyCode);
         if(user.verifyCode.length == 0){// if code not exist - create it
             user.verifyCode = secureRandom.randomArray(4);
         }
-        return next();
     }
 
     // only hash the password if it has been modified (or is new)

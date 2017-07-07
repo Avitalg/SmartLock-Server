@@ -35,6 +35,7 @@ exports.getUser = function(req,res){
 					Message.messageRes(req, res, 404, "error", "User doesn't exist");
 				}else{	
 					user.password = undefined;
+					user.verifyCode = undefined;
 					Message.messageRes(req, res, 200, "success", user);
 				}
 			});
@@ -55,6 +56,7 @@ exports.getLoggedInUser = function(req, res){
 				Message.messageRes(req, res, 404, "error", "User doesn't exist");
 			}else{	
 				user.password = undefined;
+				user.verifyCode = undefined;
 				Message.messageRes(req, res, 200, "success", user);
 			}
 		});		
@@ -74,7 +76,18 @@ exports.getUsersByLock = function(req, res){
 			Message.messageRes(req, res, 500, "error", err);
 		}else if(userRes.length == 0){
 			Message.messageRes(req, res, 404, "error", "No Users");
-		}else{	
+		}else{
+
+			for(var i=0; i<userRes.length; i++){
+				userRes[i].password = undefined;
+				userRes[i].verifyCode = undefined;
+			}
+
+			if(!userRes.length){
+				userRes.password = undefined;
+				userRes.verifyCode = undefined;	
+			}
+
 			Message.messageRes(req, res, 200, "success", userRes);
 		}
 	});
@@ -365,6 +378,7 @@ exports.login = function(req, res, next){
 			} else {
 
 				if(!user.verifyCode || user.verifyCode.length!=4){
+					user.verifyCode = [];
 					user.save(function(saveErr, newUser){
 						req.subject = "SmartLock - Account Verification"
 						req.content = "<h1>Account Verification</h1><div>To continue the registration process, please enter the code below</div><br><div><b>"+newUser.verifyCode[0]+" " +newUser.verifyCode[1]+" "+newUser.verifyCode[2]+" " +newUser.verifyCode[3]+"</b></div><br><div>Best regards,<br>Smart Lock Team.</div>"
