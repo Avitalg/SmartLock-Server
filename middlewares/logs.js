@@ -60,38 +60,34 @@ exports.getUserLogs = function(req,res){
 write log to db
 **/
 exports.writeLog = function(req,res){
-	var username = req.user.username,
+	var username = (req.user)?req.user.username:"Local User",
 		otheruser = req.params.otheruser,
 	    lockid = req.params.lockid,
 	    action = req.params.action,
 	    physicId = req.physicId,
 	    time = new Date();
 
-	    if(!username){
-	    	username = "Local User";
-	    }
+    if(!!lockid){
+    	var newlog = new Logs({
+			lockid: lockid,
+			username: username,
+			otheruser: otheruser,
+			action: action,
+			physicalid: physicId,
+			time: time
+		});
 
-	    if(!!lockid){
-	    	var newlog = new Logs({
-				lockid: lockid,
-				username: username,
-				otheruser: otheruser,
-				action: action,
-				physicalid: physicId,
-				time: time
-			});
-
-			newlog.save(function(err, doc){
-				if (err){
-					console.log("log error");
-					console.log(err);
-					//Message.messageRes(req, res, 200, "error", err);
-				}else{
-					console.log("log was saved");
-					//Message.messageRes(req, res, 200, "success", doc);
-				}
-			});
-	    }		
+		newlog.save(function(err, doc){
+			if (err){
+				console.log("log error");
+				console.log(err);
+				//Message.messageRes(req, res, 200, "error", err);
+			}else{
+				console.log("log was saved");
+				//Message.messageRes(req, res, 200, "success", doc);
+			}
+		});
+    }		
 	console.log("log wasn't saved");
 	return;
 };

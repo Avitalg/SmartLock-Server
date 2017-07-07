@@ -6,7 +6,7 @@ var Logs = require('../middlewares/logs');
 main function to write logs into db
 **/
 exports.writeLog = function(req, res){  
-  var username = req.user.username; //comes from login
+  var username = (req.user)? req.user.username:""; //comes from login
 
   //sometimes come from body and sometimes from params
   req.params.lockid = (req.params.lockid)? req.params.lockid : req.body.lockid;
