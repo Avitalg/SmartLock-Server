@@ -84,7 +84,7 @@ exports.getUsersByLock = function(req, res){
 /**
 add new user
 **/
-exports.addUser = function(req,res){
+exports.addUser = function(req,res, next){
 	var username = req.body.username,
 		phone = req.body.phone,
 		password = req.body.password;
@@ -108,9 +108,13 @@ exports.addUser = function(req,res){
 			if(!resultUser){
 					user.save(function(saveErr, newUser){
 					if(saveErr){
-                        Message.messageRes(req, res, 500, "error", saveErr);
+						console.log(saveErr);
+                        Message.messageRes(req, res, 500, "error", "server error");
 					} else{
+						req.subject = "SmartLock - Account Verification"
+						req.content = "<h1>Account Verification</h1><div>To continue the registration process, please enter the code below</div><br><div><b>"+newUser.verifyCode[0]+" " +newUser.verifyCode[1]+" "+newUser.verifyCode[2]+" " +newUser.verifyCode[3]+"</b></div><br><div>Best regards,<br>Smart Lock Team.</div>"
                         Message.messageRes(req, res, 200, "success", {"message":"User was saved", "userid": newUser._id});
+                        next();
    					}
    				});
 			}else if(err){
@@ -262,12 +266,16 @@ exports.login = function(req, res, next){
 		    	if(!user){
 					 Message.messageRes(req, res, 200, "error", "User with the username "+username+" isn't exist");
 				 }else if(err){
-					 Message.messageRes(req, res, 500, "error", err);
+				 	console.log(err);
+					 Message.messageRes(req, res, 500, "error", "server error");
+				 }else if(!user.verified){
+				 	 Message.messageRes(req, res, 200, "error", "Need to verify mail first");
 				 } else {
 				 	//authenticate a user
 					 user.comparePassword(password, function(err, isMatch) {
 			            if (err){
-			            	Message.messageRes(req, res, 200, "error", err);
+			            	console.log(err);
+			            	Message.messageRes(req, res, 500, "error", "server error");
 			            }else{
 			            	//if username & passwrd were correct
 			            	if(isMatch){
@@ -279,11 +287,7 @@ exports.login = function(req, res, next){
 			            		var token = jwt.sign(user, config.secret, {
 									          expiresIn : 60*60*24 // expires in 24 hours
 									        });
-			            		req.token = token;
-			            		req.user = user;
-			            		console.log("token:" + token);
-			            		next();
-			            		return;
+			            		Message.messageRes(req, res, 200, "success", {"token":token});
 			            	} else {
 			            		Message.messageRes(req, res, 200, "error", "wrong password");  
 			            	}
@@ -294,8 +298,83 @@ exports.login = function(req, res, next){
 
 		    });
 		}
-
+	return;
 
 };
 
- 
+ exports.checkValidCode = function(req, res){
+ 	var username = req.body.username;
+ 	var num1 = req.body.num1;
+ 	var num2 = req.body.num2;
+ 	var num3 = req.body.num3;
+ 	var num4 = req.body.num4;
+ 	var numbers = [num1, num2, num3, num4];
+
+ 	if(!username){
+        Message.messageRes(req, res, 200, "error", "Need to enter mail");
+		return;
+	}else if(!valid.checkEmail(username)){
+		Message.messageRes(req, res, 200, "error", "Invalid email");
+	} else if(isNaN(num1)|| isNaN(num2) || isNaN(num3)|| isNaN(num4)){
+		Message.messageRes(req, res, 200, "error", "One or more of the numbers are incorrect");
+	}else {
+		User.findOne({"username": username }, function (err, user){
+			if(!user){
+				Message.messageRes(req, res, 404, "error", "User with the username "+username+" isn't exist");
+			}else if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			} else {
+				for(var i=0; i<user.verifyCode.length;i++){
+					if(user.verifyCode[i]!=numbers[i]){
+						Message.messageRes(req, res, 200, "error", "The code is incorrect");
+						return;
+					}
+				}
+
+				user.verified = true;
+				user.save();
+				Message.messageRes(req, res, 200, "success", "Has successfully identified the code");
+			}
+		});
+	}
+
+
+ };
+
+ exports.sendValidCode = function(req, res, next){
+ 	var username = req.body.username;
+
+ 	if(!username){
+        Message.messageRes(req, res, 200, "error", "Need to enter mail");
+		return;
+	}else if(!valid.checkEmail(username)){
+		Message.messageRes(req, res, 200, "error", "Invalid email");
+	}else {
+		User.findOne({"username": username }, function (err, user){
+			if(!user){
+				Message.messageRes(req, res, 404, "error", "User with the username "+username+" isn't exist");
+			}else if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			} else {
+
+				if(user.verifyCode.length!=4){
+					user.save(function(saveErr, newUser){
+						req.subject = "SmartLock - Account Verification"
+						req.content = "<h1>Account Verification</h1><div>To continue the registration process, please enter the code below</div><br><div><b>"+newUser.verifyCode[0]+" " +newUser.verifyCode[1]+" "+newUser.verifyCode[2]+" " +newUser.verifyCode[3]+"</b></div><br><div>Best regards,<br>Smart Lock Team.</div>"
+		                Message.messageRes(req, res, 200, "success", "mail was sent");
+		                next();
+					});
+				}
+
+				if(user.verifyCode.length == 4){
+					req.subject = "SmartLock - Account Verification"
+					req.content = "<h1>Account Verification</h1><div>To continue the registration process, please enter the code below</div><br><div><b>"+user.verifyCode[0]+" " +user.verifyCode[1]+" "+user.verifyCode[2]+" " +user.verifyCode[3]+"</b></div><br><div>Best regards,<br>Smart Lock Team.</div>"
+	                Message.messageRes(req, res, 200, "success", "mail was sent");
+	                next();
+				}
+				
+			}
+		});
+	}
+
+ };

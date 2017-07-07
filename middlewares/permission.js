@@ -998,7 +998,7 @@ send user email about new permissions
 **/
 exports.sendEmail = function(req, res){
 	var username = req.body.username;
-
+	var username = "avitalg91@gmail.com";
 	console.log(username);
 	console.log(req.endMessage);
 

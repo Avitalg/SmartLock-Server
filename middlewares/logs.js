@@ -67,7 +67,11 @@ exports.writeLog = function(req,res){
 	    physicId = req.physicId,
 	    time = new Date();
 
-	    if(!!username && !!lockid){
+	    if(!username){
+	    	username = "Local User";
+	    }
+
+	    if(!!lockid){
 	    	var newlog = new Logs({
 				lockid: lockid,
 				username: username,
@@ -88,7 +92,7 @@ exports.writeLog = function(req,res){
 				}
 			});
 	    }		
-	
+	console.log("log wasn't saved");
 	return;
 };
 

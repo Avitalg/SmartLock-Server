@@ -18,14 +18,16 @@
     "bcrypt": "^1.0.2",
     "body-parser": "^1.17.2",
     "cors": "^2.8.3",
+    "crypto": "0.0.3",
     "email-validator": "^1.0.7",
     "express": "^4.13.4",
     "jsonwebtoken": "^7.4.1",
     "moment": "^2.18.1",
     "mongoose": "^4.10.6",
+    "morgan": "^1.8.2",
     "nodemailer": "^4.0.1",
-    "valid-url": "^1.0.9",
-    "morgan": "^1.8.2"
+    "secure-random": "^1.1.1",
+    "valid-url": "^1.0.9"
   },
   "devDependencies": {
     "chai": "^3.5.0",
