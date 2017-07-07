@@ -45,7 +45,7 @@ app.post('/api/login', users.login);
 app.post('/api/contactUs', permissions.contactUs, permissions.sendEmail);
 app.post('/api/addUser', users.addUser, permissions.sendEmail);
 app.post('/api/openManagerAccount', permissions.checkIfHasManager, permissions.addManagerPermission, users.addUser,  permissions.sendEmail);
-app.post('/api/validation', users.checkValidCode);
+app.post('/api/validationCode', users.checkValidCode);
 app.post('/api/sendValidCode', users.sendValidCode, permissions.sendEmail);
 /**LOCK REQUEST**/
 app.get('/api/lockRequest/:lockId',lockRequest.checkLockRequest);

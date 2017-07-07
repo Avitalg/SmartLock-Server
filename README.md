@@ -126,7 +126,15 @@ https://smartlockproject.herokuapp.com/api/removeUser?token=xxx
 
 https://smartlockproject.herokuapp.com/api/addUser    
     Method : POST    
-    params : username & phone & password    
+    params : username & phone & password  
+
+https://smartlockproject.herokuapp.com/api/validationCode    
+    Method : POST    
+    params : username & num1 & num2 & num3 & num4  - user name and 4 numbers from mail     
+
+https://smartlockproject.herokuapp.com/api/sendValidCode    
+    Method : POST    
+    params : username 
 
 https://smartlockproject.herokuapp.com/api/addUserPhoto?token=xxx    
     Method : POST     

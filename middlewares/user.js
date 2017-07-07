@@ -343,7 +343,6 @@ exports.login = function(req, res, next){
 
  exports.sendValidCode = function(req, res, next){
  	var username = req.body.username;
-
  	if(!username){
         Message.messageRes(req, res, 200, "error", "Need to enter mail");
 		return;
@@ -361,7 +360,7 @@ exports.login = function(req, res, next){
 					user.save(function(saveErr, newUser){
 						req.subject = "SmartLock - Account Verification"
 						req.content = "<h1>Account Verification</h1><div>To continue the registration process, please enter the code below</div><br><div><b>"+newUser.verifyCode[0]+" " +newUser.verifyCode[1]+" "+newUser.verifyCode[2]+" " +newUser.verifyCode[3]+"</b></div><br><div>Best regards,<br>Smart Lock Team.</div>"
-		                Message.messageRes(req, res, 200, "success", "mail was sent");
+						req.endMessage = true;
 		                next();
 					});
 				}
@@ -369,7 +368,7 @@ exports.login = function(req, res, next){
 				if(user.verifyCode.length == 4){
 					req.subject = "SmartLock - Account Verification"
 					req.content = "<h1>Account Verification</h1><div>To continue the registration process, please enter the code below</div><br><div><b>"+user.verifyCode[0]+" " +user.verifyCode[1]+" "+user.verifyCode[2]+" " +user.verifyCode[3]+"</b></div><br><div>Best regards,<br>Smart Lock Team.</div>"
-	                Message.messageRes(req, res, 200, "success", "mail was sent");
+					req.endMessage = true;
 	                next();
 				}
 				
