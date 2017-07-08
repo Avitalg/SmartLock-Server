@@ -15,6 +15,10 @@ var userSchema = new schema({
         default: false,
     },
     verifyCode: [String],
+    forgotPass: {
+        type: Boolean,
+        default: false
+    }
 },  {collection: 'users'});
 
 //encrypt the password when saved

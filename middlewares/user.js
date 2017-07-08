@@ -246,6 +246,7 @@ exports.changePassword = function(req,res){
 		            	//if username & passwrd were correct
 		            	if(isMatch){
 		            		user.password = password;
+		            		user.forgotPass = false;
 				 			user.save();
 		            		Message.messageRes(req, res, 200, "success", "Password changed successfully");
 		            	} else {
@@ -288,7 +289,7 @@ exports.forgotPassword = function(req, res, next){
 			 	 for(var i=0; i<renderPassword.length; i++){
 			 	 	newPass += renderPassword[i];
 			 	 }
-
+			 	 user.forgotPass = true;
 				 user.password = newPass;
 
 				 user.save(function(err, newUser){
@@ -346,9 +347,9 @@ exports.login = function(req, res, next){
 
 			            		//create a token
 			            		var token = jwt.sign(user, config.secret, {
-									          expiresIn : 60*60*24 // expires in 24 hours
+									          expiresIn : 60*60*12 // expires in 12 hours
 									        });
-			            		Message.messageRes(req, res, 200, "success", {"token":token});
+			            		Message.messageRes(req, res, 200, "success", {"forgot_password": user.forgotPass, "token":token});
 			            	} else {
 			            		Message.messageRes(req, res, 200, "error", "wrong password");  
 			            	}
