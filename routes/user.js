@@ -10,4 +10,5 @@ module.exports = function(app){
     app.delete('/api/removeUser', permissions.removeUserPermissions, users.removeUser);
     app.put('/api/updateUser/:username/:phone', users.updateUser, permissions.changePermissionUsername);
     app.put('/api/changePassword/:password/:oldpass', users.changePassword);
+    app.post('/api/sendMemberMessage', users.sendMemberMessage, permissions.sendEmail)
 };

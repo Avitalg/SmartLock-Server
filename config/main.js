@@ -14,7 +14,7 @@ module.exports ={
 	"mongoUrl" : mongoUrl,
 	"port" : port,
 	"domain" : domain,
-	"EMAIL_USER": process.env.EMAIL_USER || "x",
-	"EMAIL_PASS": process.env.EMAIL_PASS || "x",
+	"EMAIL_USER": process.env.EMAIL_USER || "smartlockproj@gmail.com",
+	"EMAIL_PASS": process.env.EMAIL_PASS || "SmartLock1234",
 	'secret': process.env.SECRET || 'ilovescotchyscotch'
 };

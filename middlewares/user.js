@@ -450,3 +450,36 @@ exports.login = function(req, res, next){
 	}
 
  };
+
+ exports.sendMemberMessage = function(req, res, next){
+ 	var username = req.user.username;
+ 	var sendtoUser = req.body.username;
+ 	var message = req.body.message;
+
+ 	if(!sendtoUser){
+ 		Message.messageRes(req, res, 200, "error", "You must enter an email address.");
+ 		return;
+ 	} else if(!valid.checkEmail(sendtoUser)){
+		Message.messageRes(req, res, 200, "error", "Invalid email"); 
+		return;		
+ 	}
+
+ 	if(!message){
+ 		Message.messageRes(req, res, 200, "error", "You must enter a message."); 	
+ 		return;	
+ 	}
+
+ 	User.findOne({"username":sendtoUser}, function(err,user){
+		if(err){
+			Message.messageRes(req, res, 500, "error", err);
+		}else if(!user){
+			Message.messageRes(req, res, 404, "error", "User "+sendtoUser+" doesn't exist");
+		}else{	
+			req.subject = "SmartLock - New Message";
+			req.content = "<h1>New Message</h1><div>You received a message from <b>"+username+"</b>.</div><br><div>Message:</div><blockquote>"+message+"</blockquote><br><br><div>Best regards,<br>Smart Lock Team.</div>";
+			req.endMessage = true;
+		    next();
+		}
+	});
+
+ };
