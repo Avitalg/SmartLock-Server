@@ -33,9 +33,7 @@ app.use(function(req, res, next){
 	next();
 });
 
-/**************
-****ROUTES*****
-***************/
+
 
 /******************
 ROUTES WITHOUT AUTH
@@ -54,6 +52,9 @@ app.post('/api/localButtonAction/:lockid',lockRequest.updateLocalButtonAction);
 
 app.use(auth.verifyToken);
 
+/**************
+****ROUTES*****
+***************/
 require('./routes/lockRequest')(app);
 require('./routes/lock')(app);
 require('./routes/permission')(app);

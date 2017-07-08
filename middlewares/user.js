@@ -26,7 +26,7 @@ get user
 exports.getUser = function(req,res){
 	var username = req.user.username;
 		if(!username){
-	        Message.messageRes(req, res, 404, "error", "username wasn't supplied");
+	        Message.messageRes(req, res, 404, "error", "User not logged in");
 		}else{	
 			User.findOne({"username":username}, function(err,user){
 				if(err){
@@ -42,28 +42,6 @@ exports.getUser = function(req,res){
 		}
 };
 
-/**
-get current logged in user
-**/
-exports.getLoggedInUser = function(req, res){
-	if(req.user){
-		var username = req.user.username;
-		//need still to take from db in case his details was changed
-		User.findOne({"username":username}, function(err,user){
-			if(err){
-				Message.messageRes(req, res, 500, "error", err);
-			}else if(!user){
-				Message.messageRes(req, res, 404, "error", "User doesn't exist");
-			}else{	
-				user.password = undefined;
-				user.verifyCode = undefined;
-				Message.messageRes(req, res, 200, "success", user);
-			}
-		});		
-	} else {
-		Message.messageRes(req, res, 200, "error", "Nedd to login");
-	}
-};
 
 /**
 get all lock users
@@ -213,16 +191,21 @@ exports.updateUser = function(req,res, next){
 	} else if(!valid.checkEmail(username)){
 		Message.messageRes(req, res, 200, "error", "Invalid email");
 	} else {
-		User.findOne({"username": username }, function (err, user){
+		User.findOne({"username": nusername }, function (err, user){
 			if(!user){
-				Message.messageRes(req, res, 404, "error", "User with the username "+username+" isn't exist");
-			}else if(err){
-				Message.messageRes(req, res, 500, "error", err);
-			} else {
 				user.username = nusername;
 				user.phone = phone;
 				user.save();
 				next();
+			}else if(err){
+				Message.messageRes(req, res, 500, "error", err);
+			} else {
+				if(username==nusername){
+					user.phone = phone;
+					user.save();
+					return next();
+				}
+				Message.messageRes(req, res, 404, "error", "User with the username "+username+" already exists");
 			}
 		});
 	}

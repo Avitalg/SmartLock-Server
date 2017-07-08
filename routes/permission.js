@@ -12,8 +12,8 @@ module.exports = function(app){
     app.delete('/api/removeUserPermissions/:username', permissions.removeUserPermissions);
     app.delete('/api/removeLockPermissions/:lockid', permissions.removeLockPermissions);
     app.put('/api/updatePermission/:username/:lockid/:frequency/:type/:start1/:end1/:start2/:end2/:start3/:end3/:start4/:end4' +
-        '/:start5/:end5/:start6/:end6/:start7/:end7', permissions.updatePermission);
-    app.put('/api/updatePermission/:username/:lockid/:frequency/:type/:date/:start1/:end1', permissions.updatePermission);
+        '/:start5/:end5/:start6/:end6/:start7/:end7', permissions.checkManagerPermissions, permissions.updatePermission);
+    app.put('/api/updatePermission/:username/:lockid/:frequency/:type/:date/:start1/:end1', permissions.checkManagerPermissions, permissions.updatePermission);
     app.put('/api/changeUserType/:username/:lockid/:type', permissions.changeUserType);
     app.put('/api/updatePhysicalId/:lockid', permissions.getPhysicalId, permissions.updatePhysicalId);
 };
