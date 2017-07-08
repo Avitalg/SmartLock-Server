@@ -223,7 +223,7 @@ exports.changePassword = function(req,res){
 	var username = req.user.username,
 		password = req.params.password,
 		oldpass = req.params.oldpass;
-		
+
 	if(!username){
         Message.messageRes(req, res, 500, "error", "Need to login");
 	} else if(!password){
@@ -270,7 +270,7 @@ gets user's email as username
 */
 exports.forgotPassword = function(req, res, next){
 	var username = req.params.username;
-
+	req.body.username = username;
 	if(!username){
         Message.messageRes(req, res, 500, "error", "No email entered");
 	} else if(!valid.checkEmail(username)){
