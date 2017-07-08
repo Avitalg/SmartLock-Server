@@ -272,6 +272,8 @@ gets user's email as username
 exports.forgotPassword = function(req, res, next){
 	var username = req.params.username;
 	req.body.username = username;
+
+	console.log(username);
 	if(!username){
         Message.messageRes(req, res, 500, "error", "No email entered");
 	} else if(!valid.checkEmail(username)){
@@ -296,11 +298,12 @@ exports.forgotPassword = function(req, res, next){
 				 	if(err){
 				 		Message.messageRes(req, res, 404, "error", "Can't save changes - try later.");
 				 	} else {
+				 		console.log(newPass);
 				 		req.endMessage = true;
 				 		var message = "According to your request,  we sent you your new password.<br><br> Your new password is:<br><b>"+newPass+"</b><br><br><div>Best regards,<br>Smart Lock Team</div>";
 				 		req.subject = "smartLock - Forgot Password";
 						req.content = "<h1>Forgot Password</h1><div>"+message+"</div>";
-
+						console.log("before mail");
 				 		next();
 				 	}
 				 });
