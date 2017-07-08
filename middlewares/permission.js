@@ -121,7 +121,12 @@ exports.getUserByPhysicId = function(req, res, next){
       physicalId = (req.physicId) ? req.physicId:req.body.fingerId;
 
     Permission.findOne({"lockid":lockid, "physicalId": physicalId}, function(err,perResult){
+    	console.log("perResult");
+    	console.log(perResult);
       if(perResult){
+      	if(!req.user){
+      		req.user = {};
+      	}
         req.user.username = perResult.username;
         req.user._id = perResult._id;
         req.user.phone = perResult.phone;
