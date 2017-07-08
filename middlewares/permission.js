@@ -836,7 +836,7 @@ exports.updatePermission = function(req,res){
 				permission.frequency = frequency;
 
 				if(permission.type!=2 && type==2){ // delete physicalId if the type changed from 0/1 to 2
-					physicalId = undefined;
+					permission.physicalId = undefined;
 				}
 
 				permission.type = type;
