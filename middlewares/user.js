@@ -256,7 +256,6 @@ exports.changePassword = function(req,res){
 		            
 		        });
 				 
-				 Message.messageRes(req, res, 200, "success", "succeed update user's details.");
 			 }
 		 });
 	 }
