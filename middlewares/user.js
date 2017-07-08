@@ -3,6 +3,7 @@ var Message = require('./message');
 var valid 	= require('../helpers/validation');
 var jwt    	= require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config 	= require('../config/main');
+var secureRandom = require('secure-random');
 
 
 /**
@@ -238,6 +239,53 @@ exports.changePassword = function(req,res){
 				 user.password = password;
 				 user.save();
 				 Message.messageRes(req, res, 200, "success", "succeed update user's details.");
+			 }
+		 });
+	 }
+
+	return;
+};
+
+
+/**
+forgot password - send random password to user's mail.
+gets user's email as username
+*/
+exports.forgotPassword = function(req, res, next){
+	var username = req.body.username;
+
+	if(!username){
+        Message.messageRes(req, res, 500, "error", "No email entered");
+	} else if(!valid.checkEmail(username)){
+		 Message.messageRes(req, res, 200, "error", "Invalid email");
+	 } else {
+		 User.findOne({ "username": username }, function (err, user){
+			 if(!user){
+				 Message.messageRes(req, res, 404, "error", "User with the username "+username+" isn't exist");
+			 }else if(err){
+				 Message.messageRes(req, res, 500, "error", err);
+			 } else {
+			 	 var renderPassword = secureRandom.randomArray(4);
+			 	 var newPass = "";
+
+			 	 for(var i=0; i<renderPassword.length; i++){
+			 	 	newPass += renderPassword[i];
+			 	 }
+
+				 user.password = newPass;
+
+				 user.save(function(err, newUser){
+				 	if(err){
+				 		Message.messageRes(req, res, 404, "error", "Can't save changes - try later.");
+				 	} else {
+				 		req.endMessage = true;
+				 		var message = "According to your request,  we sent you your new password.<br><br> Your new password is:<br><b>"+newPass+"</b><br><br><div>Best regards,<br>Smart Lock Team</div>";
+				 		req.subject = "smartLock - Forgot Password";
+						req.content = "<h1>Forgot Password</h1><div>"+message+"</div>";
+
+				 		next();
+				 	}
+				 });
 			 }
 		 });
 	 }
