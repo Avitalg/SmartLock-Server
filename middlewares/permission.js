@@ -94,7 +94,7 @@ exports.getPermissionsByUser = function(req, res, next){
 exports.getManagerLocks = function(req, res, next){
 	var username = req.user.username;
 	var lockids = [];
-	Permission.findOne({"username":username, "type":0}, function(err,perResult){
+	Permission.find({"username":username, "type":0}, function(err,perResult){
 		if(err){
 			Message.messageRes(req, res, 500, "error", err);
 		}else if(!perResult){//no manager of any lock

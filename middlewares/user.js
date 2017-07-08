@@ -468,11 +468,15 @@ exports.login = function(req, res, next){
  		Message.messageRes(req, res, 200, "error", "You must enter a message."); 	
  		return;	
  	}
+ 	console.log("sendtoUser");
+ 	console.log(sendtoUser);
 
- 	User.findOne({"username":sendtoUser}, function(err,user){
+ 	User.findOne({"username":username}, function(err,user){
+ 		console.log(err);
 		if(err){
 			Message.messageRes(req, res, 500, "error", err);
 		}else if(!user){
+			console.log(user);
 			Message.messageRes(req, res, 404, "error", "User "+sendtoUser+" doesn't exist");
 		}else{	
 			req.subject = "SmartLock - New Message";

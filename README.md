@@ -155,6 +155,10 @@ https://smartlockproject.herokuapp.com/api/changePassword/password/oldpass?token
     params : password & oldpass(old password)
     Query  : login token   
 
+https://smartlockproject.herokuapp.com/api/sendMemberMessage?token=xxx   
+    Method : POST    
+    params : username - where to send the mail & message - content of the mail
+    Query  : login token   
 
 ## LOGS
 https://smartlockproject.herokuapp.com/api/getUserLogs?token=xxx   

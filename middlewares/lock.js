@@ -56,7 +56,7 @@ exports.getLocksById = function(req, res){
 	if(!locks){
 		Message.messageRes(req, res, 200, "error", "User doesn't have locks to manage.");
 	}else{
-		Lock.findOne({'lockid':{$in:locks}}, function(err, lock){
+		Lock.find({'lockid':{$in:locks}}, function(err, lock){
 			if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			}else if(!lock){
