@@ -4,7 +4,7 @@ var locks = require('../middlewares/lock');
 
 module.exports = function(app){
     app.get('/api/getPermissions', permissions.getPermissions);
-    app.get('/api/getPermission/:username/:lockid', permissions.getPermission);
+    app.get('/api/getPermission/:username/:lockid', permissions.checkUserOrManager, permissions.getPermission);
     app.get('/api/getPermissionsByUser', permissions.getPermissionsByUser);
     app.get('/api/getPermissionsByLock/:lockid', permissions.checkManagerPermissions, permissions.getPermissionsByLock);
     app.get('/api/getLockManagers/:lockid',permissions.checkManagerPermissions, permissions.getLockManagers);

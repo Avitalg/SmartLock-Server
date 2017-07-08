@@ -265,6 +265,18 @@ exports.checkIfHasManager = function(req, res, next){
 };
 
 
+/**
+Check if manager or the user itself ask for this information
+*/
+exports.checkUserOrManager = function(req, res, next){
+	var username = req.user.username,
+		requested = req.params.username;
+
+	if(username==requested){
+		return next();
+	}
+	_this.checkManagerPermissions(req, res, next);
+};
 
 /**
  * after we check if lock has manager
