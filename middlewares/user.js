@@ -221,7 +221,9 @@ change user password
 **/
 exports.changePassword = function(req,res){
 	var username = req.user.username,
-		password = req.params.password;
+		password = req.params.password,
+		oldpass = req.params.oldpass;
+		
 	if(!username){
         Message.messageRes(req, res, 500, "error", "Need to login");
 	} else if(!password){
@@ -236,8 +238,23 @@ exports.changePassword = function(req,res){
 			 }else if(err){
 				 Message.messageRes(req, res, 500, "error", err);
 			 } else {
-				 user.password = password;
-				 user.save();
+			 	user.comparePassword(oldpass, function(err, isMatch) {
+		            if (err){
+		            	console.log(err);
+		            	Message.messageRes(req, res, 500, "error", "server error");
+		            }else{
+		            	//if username & passwrd were correct
+		            	if(isMatch){
+		            		user.password = password;
+				 			user.save();
+		            		Message.messageRes(req, res, 200, "success", "Password changed successfully");
+		            	} else {
+		            		Message.messageRes(req, res, 200, "error", "wrong password");  
+		            	}
+		            }
+		            
+		        });
+				 
 				 Message.messageRes(req, res, 200, "success", "succeed update user's details.");
 			 }
 		 });
@@ -252,7 +269,7 @@ forgot password - send random password to user's mail.
 gets user's email as username
 */
 exports.forgotPassword = function(req, res, next){
-	var username = req.body.username;
+	var username = req.params.username;
 
 	if(!username){
         Message.messageRes(req, res, 500, "error", "No email entered");

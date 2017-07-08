@@ -9,5 +9,5 @@ module.exports = function(app){
     app.post('/api/addUserPhoto', users.addUserPhoto);
     app.delete('/api/removeUser', permissions.removeUserPermissions, users.removeUser);
     app.put('/api/updateUser/:username/:phone', users.updateUser, permissions.changePermissionUsername);
-    app.put('/api/changePassword/:password', users.changePassword);
+    app.put('/api/changePassword/:password/:oldpass', users.changePassword);
 };

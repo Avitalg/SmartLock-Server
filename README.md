@@ -150,9 +150,9 @@ https://smartlockproject.herokuapp.com/api/updateUser/username/phone?token=xxx
     params : username(new username) & phone   
     Query  : login token   
 
-https://smartlockproject.herokuapp.com/api/changePassword/password?token=xxx   
+https://smartlockproject.herokuapp.com/api/changePassword/password/oldpass?token=xxx   
     Method : PUT    
-    params : password   
+    params : password & oldpass(old password)
     Query  : login token   
 
 

@@ -40,7 +40,7 @@ ROUTES WITHOUT AUTH
 *******************/
 /**USER REQUEST**/
 app.post('/api/login', users.login);
-app.post('/api/forgotPassword', users.forgotPassword, permissions.sendEmail);
+app.put('/api/forgotPassword/:username', users.forgotPassword, permissions.sendEmail);
 app.post('/api/contactUs', permissions.contactUs, permissions.sendEmail);
 app.post('/api/addUser', users.addUser, permissions.sendEmail);
 app.post('/api/openManagerAccount', permissions.checkIfHasManager, permissions.addManagerPermission, users.addUser,  permissions.sendEmail);
