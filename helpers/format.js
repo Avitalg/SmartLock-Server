@@ -1,5 +1,5 @@
 var valid = require('../helpers/validation');
-
+var moment = require('moment-timezone');
 /**
 Format string hour to be "xx:xx"
 **/
@@ -14,6 +14,22 @@ exports.formatHour = function(hour){
 	return hour;
 
 
+};
+
+exports.getLocalDates = function(permissions){
+	
+	for(var i=0;i<permissions.length; i++){
+		if(!!permissions[i].date){
+			var date = new Date(permissions[i].date.setHours(permissions[i].date.getHours() + 3));
+			permissions[i].date = date;
+		}
+	}
+//Asia/Jerusalem
+	if(permissions.length == 0){
+		permissions.date = new Date(permissions.date.toString());	
+	}
+
+	return permissions;
 };
 
 /**

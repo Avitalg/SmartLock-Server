@@ -43,6 +43,7 @@ exports.getPermission = function(req,res){
 		Message.messageRes(req, res, 200, "error", "username is Invalid email");
 	}else {
 		Permission.findOne({"username":username, "lockid":lockid}, function(err,perResult){
+
 			if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			} else if(!perResult){
@@ -57,8 +58,6 @@ exports.getPermission = function(req,res){
 
 
 exports.getPermissionsByUser = function(req, res, next){
-
-	console.log("getPermissions");
 	var username = req.user.username;
 
 	if(!username){
@@ -72,14 +71,11 @@ exports.getPermissionsByUser = function(req, res, next){
 				} else if(!perResult){
 					Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
 				} else {
-
 					if(req.route.stack.length > 1){
-						console.log("k");
 						req.UserPer = perResult;
 						next();
 						return;
 					} else {
-						console.log("r");
 						Message.messageRes(req, res, 200, "success", perResult);
 					}
 		
@@ -100,6 +96,7 @@ exports.getManagerLocks = function(req, res, next){
 		}else if(!perResult){//no manager of any lock
 			next();
 		}else{
+
 			if(!perResult.length){
 				lockids.push(perResult.lockid);
 			}
@@ -117,10 +114,14 @@ exports.getManagerLocks = function(req, res, next){
 internal function - get user by it's physicalid
 **/
 exports.getUserByPhysicId = function(req, res, next){
-  var lockid = req.params.lockid,
+  	var lockid = req.params.lockid,
       physicalId = (req.physicId) ? req.physicId:req.body.fingerId;
 
-    Permission.findOne({"lockid":lockid, "physicalId": physicalId}, function(err,perResult){
+    if(!physicalId){
+    	return next(req, res);
+    }
+
+  	Permission.findOne({"lockid":lockid, "physicalId": physicalId}, function(err,perResult){
     	console.log("perResult");
     	console.log(perResult);
       if(perResult){
@@ -182,6 +183,7 @@ exports.getPermissionsByLock = function(req,res, next){
 	var usersname=[];
 	console.log("getPermissionsByLock");
 	Permission.find({"lockid":lockid}, function(err,perResult){
+
 		if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			}else if(perResult.length == 0){
@@ -467,6 +469,102 @@ exports.rightPermission = function(req, res, next){
 	}
 };
 
+/*
+add fingerprint permission - always with type 1
+*/
+exports.addFingerprintPermission = function(req, res, next){
+	var start1, start2, start3, start4, start5, start6, start7,
+		end1, end2, end3, end4, end5, end6, end7,
+		username = req.body.username,
+		lockid = req.body.lockid,
+		frequency = "always",
+		type = 1,
+		validation = "no";
+	start1 = start2 = start3 = start4 = start5 = start6 = start7 = "00:00";
+	end1 = end2 = end3 = end4 = end5 = end6 = end7   = "23:59";
+
+	validation = valid.checkPermissionVars(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
+		end1, end2, end3, end4, end5, end6,end7);
+
+	if(!username){
+		Message.messageRes(req, res, 500, "error", "Need to login");
+	} else if(!lockid){
+		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
+	} else if(validation!="ok"){
+		Message.messageRes(req, res, 200, "error", validation);
+	} else if(req.hasManager){
+		Message.messageRes(req, res, 200, "error", "lock has manager");
+	}else{
+		var permission = new Permission({
+			username: username,
+			lockid: lockid,
+			frequency: frequency,
+			type: type,
+			duration : {
+				Sunday: {
+					start: start1,
+					end: end1
+				},
+				Monday: {
+					start: start2,
+					end: end2
+				},
+				Tuesday: {
+					start: start3,
+					end: end3
+				},
+				Wednesday: {
+					start: start4,
+					end: end4
+				},
+				Thursday: {
+					start: start5,
+					end: end5
+				},
+				Friday: {
+					start: start6,
+					end: end6
+				},
+				Saturday: {
+					start: start7,
+					end: end7
+				}
+			}
+		});
+
+	//if User exist, won't save him.
+		Permission.findOne({"username": username, "lockid": lockid},
+			function(err, doc){
+				console.log("save manager per");
+				if (!!doc){
+					Message.messageRes(req, res, 500, "error", "Permission already exists");
+				}else{
+					req.params.action = "add manager Permissions";
+					Logs.writeLog(req, res);
+					if(req.route.stack.length > 1 && !!next){
+						console.log("next");
+						next();
+						return;
+					}
+
+					permission.save(function(err, perResult){
+
+						if(err){
+							Message.messageRes(req, res, 200, "error", "Can't save manager permission");
+
+						} else {
+							Message.messageRes(req, res, 200, "success", "Manager permission was saved");
+
+						}
+
+					});
+				}
+		});
+
+	}			
+
+};
+
 
 /**
 add manager permission - always (hours and days)
@@ -588,6 +686,10 @@ exports.addPermission = function(req,res, next){
 		end5   = format.formatHour(req.body.end5),
 		end6   = format.formatHour(req.body.end6),
 		end7   = format.formatHour(req.body.end7);
+
+	if(type==1 && frequency=="always"){
+		return _this.addFingerprintPermission(req,res,next);
+	}
 
 	var validation = false; 
 
