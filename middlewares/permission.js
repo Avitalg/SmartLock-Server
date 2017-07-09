@@ -537,21 +537,16 @@ exports.addFingerprintPermission = function(req, res, next){
 				if (!!doc){
 					Message.messageRes(req, res, 500, "error", "Permission already exists");
 				}else{
-					req.params.action = "add manager Permissions";
+					req.params.action = "add Permissions";
 					Logs.writeLog(req, res);
-					if(req.route.stack.length > 1 && !!next){
-						console.log("next");
-						next();
-						return;
-					}
-
+					
 					permission.save(function(err, perResult){
 
 						if(err){
-							Message.messageRes(req, res, 200, "error", "Can't save manager permission");
+							Message.messageRes(req, res, 200, "error", "Can't save permission");
 
 						} else {
-							Message.messageRes(req, res, 200, "success", "Manager permission was saved");
+							Message.messageRes(req, res, 200, "success", "permission was saved");
 
 						}
 
