@@ -492,8 +492,6 @@ exports.addFingerprintPermission = function(req, res, next){
 		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
 	} else if(validation!="ok"){
 		Message.messageRes(req, res, 200, "error", validation);
-	} else if(req.hasManager){
-		Message.messageRes(req, res, 200, "error", "lock has manager");
 	}else{
 		var permission = new Permission({
 			username: username,
