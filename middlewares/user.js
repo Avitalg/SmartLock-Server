@@ -332,9 +332,7 @@ exports.login = function(req, res, next){
 				 }else if(err){
 				 	console.log(err);
 					 Message.messageRes(req, res, 500, "error", "server error");
-				 }else if(!user.verified){
-				 	 Message.messageRes(req, res, 200, "error", "Need to verify mail first");
-				 } else {
+				 }else {
 				 	//authenticate a user
 					 user.comparePassword(password, function(err, isMatch) {
 			            if (err){
@@ -351,6 +349,9 @@ exports.login = function(req, res, next){
 			            		var token = jwt.sign(user, config.secret, {
 									          expiresIn : 60*60*12 // expires in 12 hours
 									        });
+			            		if(!user.verified){
+								 	Message.messageRes(req, res, 200, "error", {"message":"Need to verify mail first", "token":token});
+								} 
 			            		Message.messageRes(req, res, 200, "success", {"forgot_password": user.forgotPass, "token":token});
 			            	} else {
 			            		Message.messageRes(req, res, 200, "error", "wrong password");  
