@@ -483,6 +483,8 @@ exports.addFingerprintPermission = function(req, res, next){
 	start1 = start2 = start3 = start4 = start5 = start6 = start7 = "00:00";
 	end1 = end2 = end3 = end4 = end5 = end6 = end7   = "23:59";
 
+	conosle.log("lockid:"+lockid);
+
 	validation = valid.checkPermissionVars(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
 		end1, end2, end3, end4, end5, end6,end7);
 
@@ -533,7 +535,6 @@ exports.addFingerprintPermission = function(req, res, next){
 	//if User exist, won't save him.
 		Permission.findOne({"username": username, "lockid": lockid},
 			function(err, doc){
-				console.log("save manager per");
 				if (!!doc){
 					Message.messageRes(req, res, 500, "error", "Permission already exists");
 				}else{
@@ -546,6 +547,7 @@ exports.addFingerprintPermission = function(req, res, next){
 							Message.messageRes(req, res, 200, "error", "Can't save permission");
 
 						} else {
+							console.log(perResult);
 							req.subject = 'Smart Lock - New Permissions';
 							req.content = "<h1>Congratulations!</h1><p>You've been received new permissions in SmartLock app.<br>You can download the app from the app store. </p><p>Click <a href='https://play.google.com/apps/testing/niravitalzohar.smartlock.smartlock'>here</a> to download the app.</p><p>Best regards,<br>Smart Lock Team.</p>";
 							next();
