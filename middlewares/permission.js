@@ -483,7 +483,7 @@ exports.addFingerprintPermission = function(req, res, next){
 	start1 = start2 = start3 = start4 = start5 = start6 = start7 = "00:00";
 	end1 = end2 = end3 = end4 = end5 = end6 = end7   = "23:59";
 
-	conosle.log("lockid:"+lockid);
+	console.log("lockid:"+lockid);
 
 	validation = valid.checkPermissionVars(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
 		end1, end2, end3, end4, end5, end6,end7);
