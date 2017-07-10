@@ -546,6 +546,9 @@ exports.addFingerprintPermission = function(req, res, next){
 							Message.messageRes(req, res, 200, "error", "Can't save permission");
 
 						} else {
+							req.subject = 'Smart Lock - New Permissions';
+							req.content = "<h1>Congratulations!</h1><p>You've been received new permissions in SmartLock app.<br>You can download the app from the app store. </p><p>Click <a href='https://play.google.com/apps/testing/niravitalzohar.smartlock.smartlock'>here</a> to download the app.</p><p>Best regards,<br>Smart Lock Team.</p>";
+							next();
 							Message.messageRes(req, res, 200, "success", "permission was saved");
 
 						}
