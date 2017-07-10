@@ -82,7 +82,7 @@ exports.getLocksByUser = function(req, res){
 		Message.messageRes(req, res, 200, "error", "username with Invalid email");
 	}else{
 		//get user permissions
-		Permission.findOne({'username':username}, function(err, perRes){
+		Permission.find({'username':username}, function(err, perRes){
 			if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			}else if(!perRes){// no permission was found
