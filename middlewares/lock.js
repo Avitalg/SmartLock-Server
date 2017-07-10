@@ -86,7 +86,7 @@ exports.getLocksByUser = function(req, res){
 			if(err){
 				Message.messageRes(req, res, 500, "error", err);
 			}else if(!perRes){// no permission was found
-				Message.messageRes(req, res, 404, "error", "username doesn't have permissions");
+				Message.messageRes(req, res, 200, "error", "username doesn't have locks");
 			}else{
 				var locks = [];
 				// get all locks ids
