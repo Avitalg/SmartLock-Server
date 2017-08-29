@@ -42,6 +42,7 @@ exports.getPermission = function(req,res){
 	}else if(!valid.checkEmail(username)) {
 		Message.messageRes(req, res, 200, "error", "username is Invalid email");
 	}else {
+		username = username.toLowerCase();
 		Permission.findOne({"username":username, "lockid":lockid}, function(err,perResult){
 
 			if(err){
@@ -122,8 +123,6 @@ exports.getUserByPhysicId = function(req, res, next){
     }
 
   	Permission.findOne({"lockid":lockid, "physicalId": physicalId}, function(err,perResult){
-    	console.log("perResult");
-    	console.log(perResult);
       if(perResult){
       	if(!req.user){
       		req.user = {};
@@ -145,8 +144,6 @@ exports.getPhysicalId = function(req, res, next){
 	
 	var physicalId = [];
 	var physicValue;
-
-	console.log("getPhysicalId");
 
 	Permission.find({"lockid":lockid}, function(err,perResult){
 		if(err){
@@ -181,7 +178,6 @@ get all locks permissions
 exports.getPermissionsByLock = function(req,res, next){
 	var lockid = req.params.lockid;
 	var usersname=[];
-	console.log("getPermissionsByLock");
 	Permission.find({"lockid":lockid}, function(err,perResult){
 
 		if(err){
@@ -200,8 +196,7 @@ exports.getPermissionsByLock = function(req,res, next){
 					next();
 
 				} else {
-					console.log("getPermissionsByLock else (no  next)");
-					Message.messageRes(req, res, 200, "success", perResult);	
+					Message.messageRes(req, res, 200, "success", perResult);
 				}
 
 				
@@ -229,7 +224,7 @@ exports.getLockManagers = function(req, res){
 			}else if(perResult.length == 0){//returns empty array if no managers
 				Message.messageRes(req, res, 404, "error", "No managers");
 			}else{
-
+				//get all usernames into array
 				var usernames =[];
 				for(var i=0; i<perResult.length;i++){
 					usernames.push(perResult[i].username);
@@ -296,21 +291,16 @@ exports.checkManagerPermissions = function(req, res, next){
 		lockid = req.params.lockid ? req.params.lockid : req.body.lockid;
 
 
-	console.log("checkManagerPermissions");
-	console.log("check if "+ username + " is the manager of "+lockid);
 	Permission.findOne({"lockid":lockid, "username":username, "type":0}, function(err,perResult){
 		if(err){
 			Message.messageRes(req, res, 200, "error", err);
 		}else if(!perResult){//no managers in lock
 			Message.messageRes(req, res, 200, "error", "only manager can do this action.");
 		}else{
-			console.log("has manager ");
 			req.hasManger = true;
 			next();
 		}
 	});
-
-	
 
 	return;
 };
@@ -319,7 +309,7 @@ exports.checkManagerPermissions = function(req, res, next){
 check user permissions according to what saved in db. validate permissions
 **/
 exports.validPermissions = function(username, lockid){
-	var promise = new mongoose.Promise;
+
 
 	return Permission.findOne({"username":username, "lockid":lockid}).exec().then(
 		function(perResult){
@@ -372,6 +362,12 @@ exports.validPermissions = function(username, lockid){
 
 };
 
+/**
+ * check if user has permissions
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.checkPermission = function(req, res, next){
 	var username= req.user.username,
 		lockid = (req.params.lockid)? req.params.lockid : req.body.lockid;
@@ -411,6 +407,7 @@ exports.checkPermission = function(req, res, next){
 };
 
 /**
+ * check if user has pingerprint permission
 **/
 exports.fingerPrintPermission = function(req, res, next){
 	var lockid = req.body.lockid,
@@ -443,7 +440,7 @@ exports.fingerPrintPermission = function(req, res, next){
 		}
 	});
 	return;
-}
+};
 
 /**
 check for the right permissions - 
@@ -469,9 +466,9 @@ exports.rightPermission = function(req, res, next){
 	}
 };
 
-/*
+/**
 add fingerprint permission - always with type 1
-*/
+**/
 exports.addFingerprintPermission = function(req, res, next){
 	var start1, start2, start3, start4, start5, start6, start7,
 		end1, end2, end3, end4, end5, end6, end7,
@@ -495,6 +492,7 @@ exports.addFingerprintPermission = function(req, res, next){
 	} else if(validation!="ok"){
 		Message.messageRes(req, res, 200, "error", validation);
 	}else{
+		username = username.toLowerCase();
 		var permission = new Permission({
 			username: username,
 			lockid: lockid,
@@ -578,7 +576,7 @@ exports.addManagerPermission = function(req, res, next){
 		validation = "no";
 	start1 = start2 = start3 = start4 = start5 = start6 = start7 = "00:00";
 	end1 = end2 = end3 = end4 = end5 = end6 = end7   = "23:59";
-	console.log("has manager addManagerPermission");
+
 	validation = valid.checkPermissionVars(username,lockid,	frequency, type, start1,start2, start3, start4, start5, start6, start7,
 		end1, end2, end3, end4, end5, end6,end7);
 
@@ -591,6 +589,8 @@ exports.addManagerPermission = function(req, res, next){
 	} else if(req.hasManager){
 		Message.messageRes(req, res, 200, "error", "lock has manager");
 	}else{
+		username = username.toLowerCase();
+
 		var permission = new Permission({
 			username: username,
 			lockid: lockid,
@@ -699,13 +699,13 @@ exports.addPermission = function(req,res, next){
 		validation = valid.checkShortPermissionVars(username,lockid,frequency, date, type, start1,end1);
 	}
 
-	console.log("sdsd");
-	
 	if(!username && !lockid){
 		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");
 	} else if(validation!="ok"){
 		Message.messageRes(req, res, 200, "error", validation);
 	}else{
+		username = username.toLowerCase();
+
 		var permission = new Permission({
 			username: username,
 			lockid: lockid,
@@ -805,6 +805,8 @@ exports.removePermission = function(req,res, next){
 	}else if(!valid.checkEmail(username)) {
 		Message.messageRes(req, res, 200, "error", "username is Invalid email");
 	}else{
+		username = username.toLowerCase();
+
 		Permission.remove({"username": username, "lockid": lockid}, function(err,permission){
 			if(err){
 				Message.messageRes(req, res, 500, "error", err);
@@ -830,7 +832,7 @@ exports.removePhysicalId = function(req, res, next){
 	} else if(!username && !lockid){
 		Message.messageRes(req, res, 404, "error", "username and lockid weren't supplied");
 	} else {
- 		Permission.findOne({ "username":username, "lockid":lockid }, function (err, permission){
+		Permission.findOne({ "username":username, "lockid":lockid }, function (err, permission){
  			if(!permission){
  				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
  			}else if(err){
@@ -902,7 +904,7 @@ exports.removeLockPermissions = function(req,res, next){
 		});
 	}
 	return;	
-}
+};
 
 /**
 update permission
@@ -1036,6 +1038,8 @@ exports.changeUserType = function(req, res){
 	} else if(!valid.checkType) {
 		Message.messageRes(req, res, 200, "error", "Wrong type");
 	}else {
+		username = username.toLowerCase();
+
 		Permission.findOne({ "username":username, "lockid":lockid }, function (err, permission){
 			if(!permission){
 				Message.messageRes(req, res, 404, "error", "Permission doesn't exist");
@@ -1095,6 +1099,8 @@ exports.changePermissionUsername = function(req, res){
 	if(!valid.checkEmail(username) || !valid.checkEmail(nusername)){
 		Message.messageRes(req, res, 200, "error", "Invalid email");
 	} else {
+		username = username.toLowerCase();
+
 		Permission.update({ "username":username}, {username: nusername}, {multi: true}, function (err){
 			Message.messageRes(req, res, 200, "success", "succeed update user's details.");
 		});
@@ -1102,6 +1108,9 @@ exports.changePermissionUsername = function(req, res){
 
 };
 
+/**
+ * Contact us form
+ */
 exports.contactUs = function(req, res, next){
 	var username = req.body.username;
 	var message = req.body.message;
@@ -1110,7 +1119,6 @@ exports.contactUs = function(req, res, next){
 	req.content = "<h2>Message from "+username+"</h2><div>"+message+"</div>";
 	req.body.username = "info@smartlockproj.com";
 	req.endMessage = true;
-	console.log("next");
 	next();
 };
 
@@ -1128,7 +1136,6 @@ exports.sendEmail = function(req, res){
 	if(config.EMAIL_USER =="x" || config.EMAIL_PASS == "x"){
 		console.log("config vars not defined. Email didn't sent");
 		if(!!req.endMessage){// check if need to send response message
-			console.log("endmsg");
 			Message.messageRes(req, res, 200, "error", "Can't send mail");
 		}
 		return;
@@ -1168,7 +1175,7 @@ exports.sendEmail = function(req, res){
 				Message.messageRes(req, res, 200, "success", "Thank you!");
 				return;
 			}
-		};
+		}
 	});
 
 	//Message.messageRes(req, res, 200, "error", "Can't send mail");
