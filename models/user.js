@@ -1,6 +1,6 @@
 var mongoose = require('mongoose'),
  	schema = mongoose.Schema,
-	bcrypt = require('bcrypt'),
+	bcrypt = require('bcryptjs'),
     secureRandom = require('secure-random');
     SALT_WORK_FACTOR = 10,// Used to generate password hash
     config = require('../config/main');

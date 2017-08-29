@@ -5,7 +5,6 @@ var jwt    	= require('jsonwebtoken'); // used to create, sign, and verify token
 var config 	= require('../config/main');
 var secureRandom = require('secure-random');
 
-
 /**
 get users
 **/
@@ -354,12 +353,13 @@ exports.login = function(req, res, next){
 
 			            		//create a token
 			            		var token = jwt.sign(user, config.secret, {
-									          expiresIn : 60*60*12 // expires in 12 hours
+									          expiresIn : 60*60*6 // expires in 6 hours
 									        });
 			            		if(!user.verified){
 								 	Message.messageRes(req, res, 200, "error", {"message":"Need to verify mail first", "token":token});
-								} 
-			            		Message.messageRes(req, res, 200, "success", {"forgot_password": user.forgotPass, "token":token});
+								} else {
+									Message.messageRes(req, res, 200, "success", {"forgot_password": user.forgotPass, "token":token});
+								}
 			            	} else {
 			            		Message.messageRes(req, res, 200, "error", "wrong password");  
 			            	}
