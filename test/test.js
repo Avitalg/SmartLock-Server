@@ -1,6 +1,3 @@
-/**
- * Created by avitalg on 4/4/2017.
- */
 var app = require("../"),
     request = request = require("supertest").agent(app.listen());
 
