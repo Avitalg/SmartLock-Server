@@ -685,8 +685,12 @@ exports.addPermission = function(req,res, next){
 		end6   = format.formatHour(req.body.end6),
 		end7   = format.formatHour(req.body.end7);
 
-	if(type==1 && frequency=="always"){
+	if(type==1){
 		return _this.addFingerprintPermission(req,res,next);
+	}
+
+	if(type==2){
+		return _this.addManagerPermission(req, res, _this.sendEmail(req, res));
 	}
 
 	var validation = false; 
