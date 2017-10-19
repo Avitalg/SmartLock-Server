@@ -690,7 +690,7 @@ exports.addPermission = function(req,res, next){
 	}
 
 	if(type==2){
-		return _this.addManagerPermission(req, res, _this.sendEmail(req, res));
+		return _this.addManagerPermission(req, res, next);
 	}
 
 	var validation = false; 
