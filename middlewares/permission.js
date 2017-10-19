@@ -685,12 +685,8 @@ exports.addPermission = function(req,res, next){
 		end6   = format.formatHour(req.body.end6),
 		end7   = format.formatHour(req.body.end7);
 
-	if(type==1){
+	if(type==1 && frequency=="always"){
 		return _this.addFingerprintPermission(req,res,next);
-	}
-
-	if(type==2){
-		_this.addManagerPermission(req, res, _this.sendEmail(req, res));
 	}
 
 	var validation = false; 
@@ -703,6 +699,7 @@ exports.addPermission = function(req,res, next){
 		validation = valid.checkShortPermissionVars(username,lockid,frequency, date, type, start1,end1);
 	}
 
+	console.log("sdsd");
 	
 	if(!username && !lockid){
 		Message.messageRes(req, res, 500, "error", "username and lockid weren't supplied");

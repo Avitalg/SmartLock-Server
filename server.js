@@ -4,7 +4,6 @@ var bodyParser = require('body-parser');
 var cors = require('cors');
 var morgan      = require('morgan');
 var auth = require('./helpers/auth');
-var locks = require('./middlewares/lock');
 var permissions = require('./middlewares/permission');
 var users = require('./middlewares/user');
 var lockRequest = require('./middlewares/lockRequest');

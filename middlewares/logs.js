@@ -1,6 +1,5 @@
 var Logs = require('../models/logs');
 var Message = require('./message');
-var Permission = require('../models/permission');
 
 /**
 get user logs according to permissions - if lock manager will see all lock logs,
@@ -67,7 +66,9 @@ exports.writeLog = function(req,res){
 	    physicId = req.physicId,
 	    time = new Date();
 
-    if(!!lockid){
+	username = username.toLowerCase();
+
+	if(!!lockid){
     	var newlog = new Logs({
 			lockid: lockid,
 			username: username,

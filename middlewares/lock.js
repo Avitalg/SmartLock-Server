@@ -47,9 +47,9 @@ exports.getLock = function(req, res, next){
 };
 
 
-/*
+/**
 Gets list of lockid and returns locks' details
-*/
+**/
 exports.getLocksById = function(req, res){
 	var locks = req.lockids;
 
