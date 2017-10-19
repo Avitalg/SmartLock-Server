@@ -25,12 +25,12 @@ describe("see api", function(){
 });
 
 
-describe("see api", function(){
-    it("go to api", function(done){
+describe("see login", function(){
+    it("go to login", function(done){
         request
-            .get("/api/*")
-            .expect(404)
-            .expect(/error/)
+            .get("/api/login")
+            .expect(200)
+            .expect(/success/)
             .end(done)
     })
 });
